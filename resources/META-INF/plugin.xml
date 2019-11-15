@@ -1,0 +1,24 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>DARTS</name>
+  <version>1.0</version>
+  <vendor>Stefano Company</vendor>
+
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+  <idea-version since-build="173.0"/>
+
+
+  <extensions defaultExtensionNs="com.intellij">
+    <checkinHandlerFactory implementation="main.extension.CommitFactory"/>
+  </extensions>
+
+  <actions>
+    <group id="MyPlugin.SampleMenu" text="TestSmell detection" description="Sample menu" popup="true">
+      <add-to-group group-id="AnalyzeMenu" anchor="last"  />
+      <action id="Myplugin.TextSmellTextualDetection" class="main.action.TextualDetectionAction" text="Execute Textual detection" description="A test menu item" />
+      <action id="Myplugin.TextSmellStructuralDetection" class="main.action.StructuralDetectionAction" text="Execute Structural detection" description="A test menu item" />
+    </group>
+  </actions>
+
+</idea-plugin>
