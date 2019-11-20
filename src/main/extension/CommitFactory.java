@@ -10,7 +10,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureIn
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 import main.testSmellDetection.IDetector;
-import main.testSmellDetection.detector.StructuralDetector;
+import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
 import org.jetbrains.annotations.NotNull;
@@ -42,11 +42,11 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 ArrayList<ClassBean> myTestClasses = TestSmellUtilities.getAllTestClasses(myPanel.getProject().getBasePath());
 
                 //Eseguo l'analisi Testuale
-                detector = new TextualDetector();
+                detector = new TextualDetector(myPanel.getProject().getBasePath());
 
-                ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture(myPanel.getProject().getBasePath());
-                ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest(myPanel.getProject().getBasePath());
-                ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion(myPanel.getProject().getBasePath());
+                ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture();
+                ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest();
+                ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion();
 
                 //Creo la ToolWindow
                 if(myTestClasses.isEmpty()){
@@ -56,11 +56,11 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 }
 
                 //Eseguo l'analisi Strutturale
-                detector = new StructuralDetector();
+                detector = new TestSmellStructuralDetector(myPanel.getProject().getBasePath());
 
-                listGFI = detector.executeDetectionForGeneralFixture(myPanel.getProject().getBasePath());
-                listETI = detector.executeDetectionForEagerTest(myPanel.getProject().getBasePath());
-                listLOCI = detector.executeDetectionForLackOfCohesion(myPanel.getProject().getBasePath());
+                listGFI = detector.executeDetectionForGeneralFixture();
+                listETI = detector.executeDetectionForEagerTest();
+                listLOCI = detector.executeDetectionForLackOfCohesion();
 
                 //Creo la ToolWindow
                 if(myTestClasses.isEmpty()){

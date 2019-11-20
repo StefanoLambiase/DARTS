@@ -19,16 +19,15 @@ public class TextualDetectionAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        IDetector detector = new TextualDetector();
-
         //Mi prendo la folder del progetto attivo
         String pFolderPath = anActionEvent.getProject().getBasePath();
+        IDetector detector = new TextualDetector(pFolderPath);
 
         //Eseguo l'analisi
         if(pFolderPath != null){
-            ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture(pFolderPath);
-            ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest(pFolderPath);
-            ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion(pFolderPath);
+            ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture();
+            ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest();
+            ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion();
 
             //Creo la ToolWindow
             if(listGFI.isEmpty() && listETI.isEmpty()){

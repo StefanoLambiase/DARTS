@@ -9,6 +9,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.MethodWithEagerTest;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import it.unisa.testSmellDiffusion.utility.ProjectStructureBuilder;
 import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 import main.testSmellDetection.IDetector;
 import org.jetbrains.annotations.NotNull;
@@ -17,26 +18,20 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class TextualDetector implements IDetector {
+    //Classe che contiene al suo interno la lista dei package, classi, classi di test, e production classes del progetto in esame.
+    public ProjectStructureBuilder psb;
+
     private TestSmellTextualDetector tsm;
+    String pFolderPath;
 
     /**
      * Costruttore usato per instanziare un detector usabile ovunque
      */
-    public TextualDetector(){
+    public TextualDetector(String pFolderPath){
+        psb = new ProjectStructureBuilder(pFolderPath);
         tsm = new TestSmellTextualDetector();
+        this.pFolderPath = pFolderPath;
     }
-
-
-    public ArrayList<ClassBean> getAllTestClassesInTheProject(@NotNull String pFolderPath){
-        System.out.println("\nDETECTOR: sono il TextualDetector, inizio a lavorare:\nEcco la path del progetto attivo: "+pFolderPath);
-        ArrayList<ClassBean> myTestClasses = TestSmellUtilities.getAllTestClasses(pFolderPath);
-        System.out.println("\nEcco le classi trovate:");
-        for (ClassBean cb : myTestClasses){
-            System.out.println("\n"+cb.toString());
-        }
-        return myTestClasses;
-    }
-
 
     /**
      * Verifica la presenza di classi affette da GeneralFixture all'interno delle classi di test passate
@@ -111,35 +106,32 @@ public class TextualDetector implements IDetector {
     //Metodi dell'interfaccia usati in virtù dello Strategy Desgin Pattern
 
     /**
-     * Metodo per ottenere le informazioni riguardanti gli Smells GeneralFixture presenti in un dato progetto
-     * @param pFolderPath la folder del progetto da analizzare
+     * Metodo per ottenere le informazioni riguardanti gli Smells GeneralFixture presenti in un dato progetto.
      * @return una lista delle informazioni sugli smells
      */
     @Override
-    public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture(@NotNull String pFolderPath) {
-        return executeDetectionForGeneralFixture(getAllTestClassesInTheProject(pFolderPath));
+    public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture() {
+        return executeDetectionForGeneralFixture(psb.getAllTestClasses());
     }
 
     /**
-     * Metodo per ottenere le informazioni riguardanti gli Smells EagerTest presenti in un dato progetto
-     * @param pFolderPath la folder del progetto da analizzare
+     * Metodo per ottenere le informazioni riguardanti gli Smells EagerTest presenti in un dato progetto.
      * @return una lista delle informazioni sugli smells
      */
     @Override
-    public ArrayList<EagerTestInfo> executeDetectionForEagerTest(@NotNull String pFolderPath) {
-        return executeDetectionForEagerTest(getAllTestClassesInTheProject(pFolderPath), TestSmellUtilities.getAllClasses(pFolderPath));
+    public ArrayList<EagerTestInfo> executeDetectionForEagerTest() {
+        return executeDetectionForEagerTest(psb.getAllTestClasses(), psb.getAllClasses());
     }
 
     /**
-     * Metodo per ottenere le informazioni riguardanti gli Smells LackOfCohesion presenti in un dato progetto
-     * @param pFolderPath la folder del progetto da analizzare
+     * Metodo per ottenere le informazioni riguardanti gli Smells LackOfCohesion presenti in un dato progetto.
      * @return la lista delle informazioni sugli smells
      */
     @Override
-    public ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion(@NotNull String pFolderPath){
+    public ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion(){
         //Parte relativa a LackOfCohesion
         System.out.println("\nDETECTOR: inizio a cercare per LackOfCohesion: ");
-        ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion = tsm.checkLackOfCohesion(getAllTestClassesInTheProject(pFolderPath), pFolderPath);
+        ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion = tsm.checkLackOfCohesion(psb.getAllTestClasses(), pFolderPath);
 
         return classesWithLackOfCohesion;
     }

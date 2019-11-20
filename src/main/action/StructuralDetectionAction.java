@@ -2,12 +2,11 @@ package main.action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.editor.Editor;
 import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.testSmellDetection.IDetector;
-import main.testSmellDetection.detector.StructuralDetector;
+import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,20 +19,24 @@ public class StructuralDetectionAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        IDetector detector = new StructuralDetector();
-        Editor editor = (Editor) anActionEvent.getDataContext().getData("editor");
-        //Eseguo l'analisi
-        ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture(anActionEvent.getProject().getBasePath());
-        ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest(anActionEvent.getProject().getBasePath());
-        ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion(anActionEvent.getProject().getBasePath());
+        //Mi prendo la folder del progetto attivo
+        String pFolderPath = anActionEvent.getProject().getBasePath();
+        IDetector detector = new TestSmellStructuralDetector(pFolderPath);
 
-        //Creo la ToolWindow
-        if(listGFI.isEmpty() && listETI.isEmpty()){
-            System.out.println("\nNon si è trovato alcuno Smell");
+        //Eseguo l'analisi
+        if(pFolderPath != null){
+            ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture();
+            ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest();
+            ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion();
+
+            //Creo la ToolWindow
+            if(listGFI.isEmpty() && listETI.isEmpty()){
+                System.out.println("\nNon si è trovato alcuno Smell");
+            } else {
+                new TestSmellWindowFactory().registerToolWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
+            }
         } else {
-            new TestSmellWindowFactory().registerToolWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
+            System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
         }
     }
-
-
 }

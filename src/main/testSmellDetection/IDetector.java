@@ -8,9 +8,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public interface IDetector {
-    ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture(@NotNull String pFolderPath);
+    ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture();
 
-    ArrayList<EagerTestInfo> executeDetectionForEagerTest(@NotNull String pFolderPath);
+    ArrayList<EagerTestInfo> executeDetectionForEagerTest();
 
-    ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion(@NotNull String pFolderPath);
+    ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion();
 }
