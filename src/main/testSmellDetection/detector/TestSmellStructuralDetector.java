@@ -13,14 +13,16 @@ import java.util.ArrayList;
 
 public class TestSmellStructuralDetector implements IDetector{
     //Classe che contiene al suo interno la lista dei package, classi, classi di test, e production classes del progetto in esame.
-    public ProjectStructureBuilder psb;
+    private ProjectStructureBuilder psb;
 
     //Valori usati nella detection di GeneralFixture e che potrebbero essere modificati dall'utente.
-    int numberOfProductionTypes = 3;
-    int numberOfObjectUsesInSetup = 3;
+    private int numberOfProductionTypes;
+    private int numberOfObjectUsesInSetup;
 
     public TestSmellStructuralDetector(String pFolderPath){
         psb = new ProjectStructureBuilder(pFolderPath);
+        numberOfProductionTypes = 3;
+        numberOfObjectUsesInSetup = 3;
     }
 
     @Override

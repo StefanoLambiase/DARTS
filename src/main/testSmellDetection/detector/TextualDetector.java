@@ -10,7 +10,6 @@ import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureIn
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import it.unisa.testSmellDiffusion.utility.ProjectStructureBuilder;
-import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 import main.testSmellDetection.IDetector;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,10 +18,10 @@ import java.util.Vector;
 
 public class TextualDetector implements IDetector {
     //Classe che contiene al suo interno la lista dei package, classi, classi di test, e production classes del progetto in esame.
-    public ProjectStructureBuilder psb;
+    private ProjectStructureBuilder psb;
 
     private TestSmellTextualDetector tsm;
-    String pFolderPath;
+    private String pFolderPath;
 
     /**
      * Costruttore usato per instanziare un detector usabile ovunque
@@ -38,7 +37,7 @@ public class TextualDetector implements IDetector {
      * @param testClasses le classi di test da analizzare
      * @return un array con le informazioni sulle classi affette da GeneralFixture
      */
-    public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture(@NotNull ArrayList<ClassBean> testClasses){
+    private ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture(@NotNull ArrayList<ClassBean> testClasses){
         //Parte relativa a GeneralFixture
         System.out.println("\nDETECTOR: inizio a cercare per GENERAL FIXTURE: ");
         ArrayList<GeneralFixtureInfo> classesWithGeneralFixture = tsm.checkGeneralFixture(testClasses);
@@ -72,7 +71,7 @@ public class TextualDetector implements IDetector {
      * @param allClassesInTheProject tutte le classi presente nel progetto. Necessarie per trovare la production class
      * @return un array con le informazioni sulle classi affette da EagerTest
      */
-    public ArrayList<EagerTestInfo> executeDetectionForEagerTest(@NotNull ArrayList<ClassBean> testClasses, @NotNull Vector<ClassBean> allClassesInTheProject){
+    private ArrayList<EagerTestInfo> executeDetectionForEagerTest(@NotNull ArrayList<ClassBean> testClasses, @NotNull Vector<ClassBean> allClassesInTheProject){
         //Parte relativa a EagerTest
         System.out.println("\nDETECTOR: inizio a cercare per EagerTest: ");
         ArrayList<EagerTestInfo> classesWithEagerTest = tsm.checkEagerTest(testClasses, allClassesInTheProject);
@@ -131,9 +130,8 @@ public class TextualDetector implements IDetector {
     public ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion(){
         //Parte relativa a LackOfCohesion
         System.out.println("\nDETECTOR: inizio a cercare per LackOfCohesion: ");
-        ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion = tsm.checkLackOfCohesion(psb.getAllTestClasses(), pFolderPath);
 
-        return classesWithLackOfCohesion;
+        return tsm.checkLackOfCohesion(psb.getAllTestClasses(), pFolderPath);
     }
 
 

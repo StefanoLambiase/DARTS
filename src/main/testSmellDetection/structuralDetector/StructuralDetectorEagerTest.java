@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import it.unisa.testSmellDiffusion.beans.ClassBean;
 import it.unisa.testSmellDiffusion.beans.MethodBean;
-import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 
 /**
  * Questa classe sfrutta metriche strutturali per stabilire se una classe di test è affetta da Eager Test.

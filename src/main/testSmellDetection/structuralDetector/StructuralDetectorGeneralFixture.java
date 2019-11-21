@@ -3,7 +3,6 @@ package main.testSmellDetection.structuralDetector;
 import java.util.ArrayList;
 
 import it.unisa.testSmellDiffusion.beans.*;
-import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 
 /**
  * Questa classe sfrutta metriche strutturali per stabilire se una classe di test è affetta da GeneralFixture.
