@@ -111,6 +111,7 @@ public class ClassWithGeneralFixturePanel extends JPanel {
 
             listOfMethodsPanel.add(methodPanel);
         }
+
         this.setLayout(new GridLayout(1,2));
         this.add(classNameLabel);
         this.add(listOfMethodsPanel);

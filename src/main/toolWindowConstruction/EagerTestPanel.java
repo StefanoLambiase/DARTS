@@ -33,19 +33,16 @@ public class EagerTestPanel extends JPanel {
             dettagliLabel.setHorizontalAlignment(SwingConstants.CENTER);
             topPanel.add(dettagliLabel);
 
-            //Mi prendo le dimensioni dello schermo
-            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-            int width = gd.getDisplayMode().getWidth();
-            int height = gd.getDisplayMode().getHeight();
-
-            topPanel.setMinimumSize(new Dimension(width-70,40));
-            topPanel.setPreferredSize(new Dimension(width-70, 40));
-            topPanel.setMaximumSize(new Dimension(width-70, 40));
+            //Imposto le dimensioni
+            topPanel.setMinimumSize(new Dimension(Integer.MAX_VALUE,1000));
+            topPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,1000));
             this.add(topPanel);
 
             //Parte relativa alla creazione delle singole info per ogni classe affetta da EagerTest
             for(EagerTestInfo eti : classesWithEagerTest){
-                this.add(new ClassWithEagerTestPanel(eti, project));
+                JPanel classPanel = new ClassWithEagerTestPanel(eti, project);
+                classPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 5000));
+                this.add(classPanel);
             }
         } else {
             JPanel emptyPanel = new JPanel(new GridLayout(1,1));

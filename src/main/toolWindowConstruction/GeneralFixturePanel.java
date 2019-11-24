@@ -36,19 +36,15 @@ public class GeneralFixturePanel extends JPanel{
             dettagliMetodi.setHorizontalAlignment(SwingConstants.CENTER);
             topPanel.add(dettagliMetodi);
 
-            //Mi prendo le dimensioni dello schermo
-            GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-            int width = gd.getDisplayMode().getWidth();
-            int height = gd.getDisplayMode().getHeight();
-
-            topPanel.setMinimumSize(new Dimension(width-70,40));
-            topPanel.setPreferredSize(new Dimension(width-70, 40));
-            topPanel.setMaximumSize(new Dimension(width-70, 40));
+            //Imposto le dimensioni
+            topPanel.setMinimumSize(new Dimension(Integer.MAX_VALUE,1000));
+            topPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE,1000));
             this.add(topPanel);
 
             //Parte relativa alla creazione delle singole info per ogni classe affetta da GeneralFixture
             for(GeneralFixtureInfo gfi : classesWithGeneralFixture){
                 JPanel classPanel = new ClassWithGeneralFixturePanel(gfi,project);
+                classPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 5000));
                 this.add(classPanel);
             }
         } else {

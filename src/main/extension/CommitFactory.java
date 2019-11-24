@@ -13,6 +13,7 @@ import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
+import main.toolWindowConstruction.WindowTest;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -48,11 +49,11 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest();
                 ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion();
 
-                //Creo la ToolWindow
-                if(myTestClasses.isEmpty()){
-                    System.out.println("\nNon si e' committata alcuna classe di test");
+                //Creo la window
+                if(listGFI.isEmpty() && listETI.isEmpty()){
+                    System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
-                    new TestSmellWindowFactory().registerToolWindow(true, false, myPanel.getProject(), listGFI, listETI, listLOCI);
+                    WindowTest.createWindow(true, false, myPanel.getProject(), listGFI, listETI, listLOCI);
                 }
 
                 //Eseguo l'analisi Strutturale
@@ -62,11 +63,11 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 listETI = detector.executeDetectionForEagerTest();
                 listLOCI = detector.executeDetectionForLackOfCohesion();
 
-                //Creo la ToolWindow
-                if(myTestClasses.isEmpty()){
-                    System.out.println("\nNon si e' committata alcuna classe di test");
+                //Creo la window
+                if(listGFI.isEmpty() && listETI.isEmpty()){
+                    System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
-                    new TestSmellWindowFactory().registerToolWindow(false, true, myPanel.getProject(), listGFI, listETI, listLOCI);
+                    WindowTest.createWindow(false, true, myPanel.getProject(), listGFI, listETI, listLOCI);
                 }
                 //Chiamata finale per completare il commit
                 return super.beforeCheckin();
