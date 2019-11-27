@@ -13,7 +13,6 @@ import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
-import main.toolWindowConstruction.WindowTest;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -53,7 +52,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 if(listGFI.isEmpty() && listETI.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
-                    WindowTest.createWindow(true, false, myPanel.getProject(), listGFI, listETI, listLOCI);
+                    TestSmellWindowFactory.createWindow(true, false, myPanel.getProject(), listGFI, listETI, listLOCI);
                 }
 
                 //Eseguo l'analisi Strutturale
@@ -67,7 +66,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 if(listGFI.isEmpty() && listETI.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
-                    WindowTest.createWindow(false, true, myPanel.getProject(), listGFI, listETI, listLOCI);
+                    TestSmellWindowFactory.createWindow(false, true, myPanel.getProject(), listGFI, listETI, listLOCI);
                 }
                 //Chiamata finale per completare il commit
                 return super.beforeCheckin();

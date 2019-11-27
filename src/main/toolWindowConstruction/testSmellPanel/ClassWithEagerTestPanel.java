@@ -4,13 +4,11 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
-import com.intellij.ui.content.ContentManager;
 import it.unisa.testSmellDiffusion.beans.MethodBean;
 import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.MethodWithEagerTest;
 import main.refactor.IRefactor;
 import main.refactor.strategy.EagerTestStrategy;
-import main.toolWindowConstruction.TestSmellWindowFactory;
 
 import javax.swing.*;
 import javax.swing.border.Border;

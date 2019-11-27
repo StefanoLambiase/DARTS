@@ -1,17 +1,10 @@
 package main.action;
 
 
-import com.intellij.ide.projectView.ProjectViewSettings;
-import com.intellij.ide.projectView.impl.nodes.PackageUtil;
-import com.intellij.ide.projectView.impl.nodes.ProjectViewDirectoryHelper;
-import com.intellij.ide.util.treeView.AbstractTreeNode;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ProjectRootManager;
-import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
-import com.intellij.util.containers.ContainerUtil;
 import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
@@ -19,7 +12,6 @@ import main.psi.ConverterUtils;
 import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
-import main.toolWindowConstruction.WindowTest;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -46,7 +38,7 @@ public class TextualDetectionAction extends AnAction {
             if(listGFI.isEmpty() && listETI.isEmpty()){
                 System.out.println("\nNon si è trovato alcuno Smell");
             } else {
-                new TestSmellWindowFactory().registerToolWindow(true, false, anActionEvent.getProject(), listGFI, listETI, listLOCI);
+                new TestSmellToolWindowFactory().registerToolWindow(true, false, anActionEvent.getProject(), listGFI, listETI, listLOCI);
             }
         } else {
             System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
@@ -71,7 +63,7 @@ public class TextualDetectionAction extends AnAction {
             if(listGFI.isEmpty() && listETI.isEmpty()){
                 System.out.println("\nNon si è trovato alcuno Smell");
             } else {
-                WindowTest.createWindow(true, false, anActionEvent.getProject(), listGFI, listETI, listLOCI);
+                TestSmellWindowFactory.createWindow(true, false, anActionEvent.getProject(), listGFI, listETI, listLOCI);
             }
         } else {
             System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");

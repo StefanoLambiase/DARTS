@@ -7,9 +7,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureIn
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TestSmellStructuralDetector;
-import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
-import main.toolWindowConstruction.WindowTest;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class StructuralDetectionAction extends AnAction {
             if(listGFI.isEmpty() && listETI.isEmpty()){
                 System.out.println("\nNon si è trovato alcuno Smell");
             } else {
-                new TestSmellWindowFactory().registerToolWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
+                new TestSmellToolWindowFactory().registerToolWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
             }
         } else {
             System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
@@ -59,7 +57,7 @@ public class StructuralDetectionAction extends AnAction {
             if(listGFI.isEmpty() && listETI.isEmpty()){
                 System.out.println("\nNon si è trovato alcuno Smell");
             } else {
-                WindowTest.createWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
+                TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
             }
         } else {
             System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
