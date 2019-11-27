@@ -52,7 +52,6 @@ public class ClassWithLackOfCohesionPanel extends JPanel {
                 detailsFrame.setVisible(true);
             }
         });
-
         refactoringButton.addActionListener(e -> {
 
             IRefactor refactor = new LackOfCohesionStrategy(loci, project);
