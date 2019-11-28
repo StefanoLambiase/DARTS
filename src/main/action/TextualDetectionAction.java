@@ -54,21 +54,11 @@ public class TextualDetectionAction extends AnAction {
         //Mi prendo la folder del progetto attivo
         String pFolderPath = anActionEvent.getProject().getBasePath();
         IDetector detector = new TextualDetector(pFolderPath);
+
+        /* ANALISI NUOVA. COMMENTARE PRIMA DI USARE L'ALTRA. */
         ArrayList<PsiClass> classes = usePSI(anActionEvent.getProject());
-        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE CLASSI DI TEST:");
-        ArrayList<PsiClass> testClasses = TestSmellUtilities.getAllTestClasses(classes);
-        if(testClasses.size() > 0){
-            for(PsiClass psiClass : testClasses){
-                System.out.println("\n" + psiClass.getName());
-            }
-        }
-        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE PRODUCTION CLASSES:");
-        ArrayList<PsiClass> productionClasses = TestSmellUtilities.getAllProductionClasses(classes, testClasses);
-        if(productionClasses.size() > 0){
-            for(PsiClass psiClass : productionClasses){
-                System.out.println("\n" + psiClass.getName());
-            }
-        }
+
+        /* ANALISI VECCHIA, DECOMMENTARE SE SI VUOLE USARE. */
         /*
         //Eseguo l'analisi
         if(pFolderPath != null){
@@ -91,6 +81,22 @@ public class TextualDetectionAction extends AnAction {
 
     public ArrayList<PsiClass> usePSI(Project myProject){
         ArrayList<PsiClass> classes = ConverterUtilities.getClassesFromPackages(myProject);
+
+        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE CLASSI DI TEST:");
+        ArrayList<PsiClass> testClasses = TestSmellUtilities.getAllTestClasses(classes);
+        if(testClasses.size() > 0){
+            for(PsiClass psiClass : testClasses){
+                System.out.println("\n" + psiClass.getName());
+            }
+        }
+        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE PRODUCTION CLASSES:");
+        ArrayList<PsiClass> productionClasses = TestSmellUtilities.getAllProductionClasses(classes, testClasses);
+        if(productionClasses.size() > 0){
+            for(PsiClass psiClass : productionClasses){
+                System.out.println("\n" + psiClass.getName());
+            }
+        }
+
         return classes;
     }
 
