@@ -1,4 +1,4 @@
-package main.psi;
+package main.utility;
 
 import com.intellij.ide.projectView.ProjectViewSettings;
 import com.intellij.ide.projectView.impl.nodes.PackageUtil;
@@ -12,10 +12,15 @@ import com.intellij.util.containers.ContainerUtil;
 
 import java.util.*;
 
-public abstract class ConverterUtils {
+public abstract class ConverterUtilities {
 
-
+    /**
+     * Restituisce un array contenenti tutte le classi del progetto in esame sotto forma di PsiClass.
+     * @param myProject il progetto in esame.
+     * @return un array contenente tutte le classi del progetto in esame.
+     */
     public static ArrayList<PsiClass> getClassesFromPackages(Project myProject){
+        System.out.println("############ Sono ConverterUtilities. Inizio la conversione del progetto. ################");
         ArrayList<PsiClass> classes = new ArrayList<>();
 
         ArrayList<PsiPackage> packages = getPackages(myProject);
@@ -23,9 +28,10 @@ public abstract class ConverterUtils {
             recursiveResearch(psiPackage, classes);
         }
 
+        System.out.println("############ Sono ConverterUtilities. Ecco le classi trovate. ################\n");
         for(PsiClass psiClass : classes){
-            System.out.println("\nClassi trovate: " + psiClass.getName() + "\n");
-            System.out.println(" METODI");
+            System.out.println("CLASSE TROVATA: " + psiClass.getName() + "\n");
+            System.out.println(" METODI:\n");
             for(PsiMethod psiMethod : psiClass.getAllMethods()){
                 System.out.println(psiMethod.getName());
                 if(psiMethod.getBody() != null)
@@ -36,6 +42,8 @@ public abstract class ConverterUtils {
         return classes;
     }
 
+
+    /* METODI DI SUPPORTO */
     private static ArrayList<PsiPackage> getPackages(Project myProject) {
         ProjectViewSettings viewSettings = new ProjectViewSettings() {
             @Override
@@ -92,7 +100,7 @@ public abstract class ConverterUtils {
 
         for (final VirtualFile root : sourceRoots) {
             final PsiDirectory directory = psiManager.findDirectory(root);
-            System.out.println("\nPsiDirectory: " + directory.getName());
+            System.out.println("PsiDirectory: " + directory.getName());
             if (directory == null) {
                 continue;
             }
@@ -117,9 +125,9 @@ public abstract class ConverterUtils {
                 topLevelPackages.add(directoryPackage);
             }
         }
-        System.out.println("#################################################################################################################################################");
+        System.out.println("#################################################################################################################################################\n");
         for(PsiPackage psiPackage : topLevelPackages){
-            System.out.println("\nPacchetti trovati: " + psiPackage.getName() + "\n");
+            System.out.println("Pacchetto trovato: " + psiPackage.getName() + "\n");
         }
         return new ArrayList<PsiPackage>(topLevelPackages);
     }
@@ -127,13 +135,13 @@ public abstract class ConverterUtils {
 
     private static void recursiveResearch(PsiPackage psiPackage, ArrayList<PsiClass> classes){
         //Parte per le classi
-        System.out.println("\nITERAZIONE RICORSIVA su Package: " + psiPackage.getName() + "   ##############################\n");
+        System.out.println("ITERAZIONE RICORSIVA su Package: " + psiPackage.getName() + "   ##############################\n");
         PsiClass[] innerClasses = psiPackage.getClasses();
         if(innerClasses.length == 0){
             // DO NOTHING
         } else {
             for(PsiClass psiClass : innerClasses){
-                System.out.println(" Classe: " + psiClass.getName() + "");
+                System.out.println(" Classe: " + psiClass.getName() + "\n");
             }
             classes.addAll(Arrays.asList(innerClasses));
         }

@@ -8,10 +8,12 @@ import com.intellij.psi.*;
 import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.psi.ConverterUtils;
+import main.utility.ConverterUtilities;
 import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
+import main.utility.TestSmellUtilities;
+import org.apache.xerces.util.SynchronizedSymbolTable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -52,7 +54,22 @@ public class TextualDetectionAction extends AnAction {
         //Mi prendo la folder del progetto attivo
         String pFolderPath = anActionEvent.getProject().getBasePath();
         IDetector detector = new TextualDetector(pFolderPath);
-
+        ArrayList<PsiClass> classes = usePSI(anActionEvent.getProject());
+        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE CLASSI DI TEST:");
+        ArrayList<PsiClass> testClasses = TestSmellUtilities.getAllTestClasses(classes);
+        if(testClasses.size() > 0){
+            for(PsiClass psiClass : testClasses){
+                System.out.println("\n" + psiClass.getName());
+            }
+        }
+        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE PRODUCTION CLASSES:");
+        ArrayList<PsiClass> productionClasses = TestSmellUtilities.getAllProductionClasses(classes, testClasses);
+        if(productionClasses.size() > 0){
+            for(PsiClass psiClass : productionClasses){
+                System.out.println("\n" + psiClass.getName());
+            }
+        }
+        /*
         //Eseguo l'analisi
         if(pFolderPath != null){
             ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture();
@@ -68,10 +85,13 @@ public class TextualDetectionAction extends AnAction {
         } else {
             System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
         }
+
+         */
     }
 
-    public void usePSI(Project myProject){
-        ArrayList<PsiClass> classes = ConverterUtils.getClassesFromPackages(myProject);
+    public ArrayList<PsiClass> usePSI(Project myProject){
+        ArrayList<PsiClass> classes = ConverterUtilities.getClassesFromPackages(myProject);
+        return classes;
     }
 
 }
