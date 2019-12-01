@@ -16,31 +16,7 @@ import java.util.ArrayList;
  * Questa classe descrive la action per eseguire una analisi Strutturale sul progetto attualmente attivo
  */
 public class StructuralDetectionAction extends AnAction {
-    /*
-    @Override
-    public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        //Mi prendo la folder del progetto attivo
-        String pFolderPath = anActionEvent.getProject().getBasePath();
-        IDetector detector = new TestSmellStructuralDetector(pFolderPath);
 
-        //Eseguo l'analisi
-        if(pFolderPath != null){
-            ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture();
-            ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest();
-            ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion();
-
-            //Creo la ToolWindow
-            if(listGFI.isEmpty() && listETI.isEmpty()){
-                System.out.println("\nNon si è trovato alcuno Smell");
-            } else {
-                new TestSmellToolWindowFactory().registerToolWindow(false, true, anActionEvent.getProject(), listGFI, listETI, listLOCI);
-            }
-        } else {
-            System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
-        }
-    }
-
-     */
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         //Mi prendo la folder del progetto attivo

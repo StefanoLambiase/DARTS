@@ -5,6 +5,10 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.project.Project;
 import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.detector.TestSmellTextualDetector;
+import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
+import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.testSmellDetection.textualRules.EagerTestTextual;
 import main.testSmellDetection.textualRules.GeneralFixtureTextual;
 import main.testSmellDetection.textualRules.LackOfCohesionOfTestSmellTextual;
@@ -21,58 +25,25 @@ import java.util.*;
  */
 public class TextualDetectionAction extends AnAction {
 
-    /* TOOL WINDOW
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         //Mi prendo la folder del progetto attivo
         String pFolderPath = anActionEvent.getProject().getBasePath();
-        IDetector detector = new TextualDetector(pFolderPath);
 
-        //Eseguo l'analisi
-        if(pFolderPath != null){
-            ArrayList<GeneralFixtureInfo> listGFI = detector.executeDetectionForGeneralFixture();
-            ArrayList<EagerTestInfo> listETI = detector.executeDetectionForEagerTest();
-            ArrayList<LackOfCohesionInfo> listLOCI = detector.executeDetectionForLackOfCohesion();
+        TestSmellTextualDetector detector = new TestSmellTextualDetector(anActionEvent.getProject());
+        ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
+        ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
+        ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
-            //Creo la ToolWindow
-            if(listGFI.isEmpty() && listETI.isEmpty()){
-                System.out.println("\nNon si è trovato alcuno Smell");
-            } else {
-                new TestSmellToolWindowFactory().registerToolWindow(true, false, anActionEvent.getProject(), listGFI, listETI, listLOCI);
-            }
-        } else {
-            System.out.println("\nVi è stato un errore con l'ottenumento della folder del progetto attivo");
+        System.out.println("\nDETECTOR TESTUALE: risultato dell'analisi.");
+        for(GeneralFixtureInfo info : generalFixtureInfos){
+            System.out.println("\n   GENERAL FIXTURE: " + info.toString());
         }
-    }
-     */
-
-
-    @Override
-    public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        //Mi prendo la folder del progetto attivo
-        String pFolderPath = anActionEvent.getProject().getBasePath();
-        IDetector detector = new TextualDetector(pFolderPath);
-
-        /* ANALISI NUOVA. COMMENTARE PRIMA DI USARE L'ALTRA. */
-        ArrayList<PsiClassBean> classes = usePSI(anActionEvent.getProject());
-        ArrayList<PsiClassBean> testClasses = TestSmellUtilities.getAllTestClasses(classes);
-
-        for(PsiClassBean classBean : testClasses){
-            PsiClassBean productionClass = TestSmellUtilities.findProductionClass(classBean, classes);
-            System.out.println("\nANALISI CLASSE: " + classBean.getPsiClass().getName());
-            System.out.println("\n   Production Class: " + productionClass.getPsiClass().getName());
-            // General Fixture
-            if(GeneralFixtureTextual.isGeneralFixture(classBean)){
-                System.out.println("\n   La classe è affetta da General Fixture: " + classBean.getPsiClass().getName());
-            }
-            // Eager Test
-            if(EagerTestTextual.isEagerTest(classBean, productionClass)){
-                System.out.println("\n   La classe è affetta da Eager Test: " + classBean.getPsiClass().getName());
-            }
-            // Lack of Cohesion
-            if(LackOfCohesionOfTestSmellTextual.isLackOfCohesionTestMethods(classBean)){
-                System.out.println("\n   La classe è affetta da Lack of Cohesion: " + classBean.getPsiClass().getName());
-            }
+        for(EagerTestInfo info : eagerTestInfos){
+            System.out.println("\n   EAGER TEST: " + info.toString());
+        }
+        for(LackOfCohesionInfo info : lackOfCohesionInfos){
+            System.out.println("\n   LACK OF COHESION: " + info.toString());
         }
 
         /* ANALISI VECCHIA, DECOMMENTARE SE SI VUOLE USARE. */
@@ -94,27 +65,6 @@ public class TextualDetectionAction extends AnAction {
         }
 
          */
-    }
-
-
-    public ArrayList<PsiClassBean> usePSI(Project myProject){
-        ArrayList<PsiClassBean> classes = ConverterUtilities.getClassesFromPackages(myProject);
-
-        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE CLASSI DI TEST:");
-        ArrayList<PsiClassBean> testClasses = TestSmellUtilities.getAllTestClasses(classes);
-        if(testClasses.size() > 0){
-            for(PsiClassBean psiClassBean : testClasses){
-                System.out.println("\n" + psiClassBean.getPsiClass().getName());
-            }
-        }
-        System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE PRODUCTION CLASSES:");
-        ArrayList<PsiClassBean> productionClasses = TestSmellUtilities.getAllProductionClasses(classes, testClasses);
-        if(productionClasses.size() > 0){
-            for(PsiClassBean psiClassBean : productionClasses){
-                System.out.println("\n" + psiClassBean.getPsiClass().getName());
-            }
-        }
-        return classes;
     }
 
 }

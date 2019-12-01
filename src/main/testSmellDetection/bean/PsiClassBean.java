@@ -8,9 +8,18 @@ public class PsiClassBean {
     private PsiClass psiClass;
     private ArrayList<PsiMethodBean> psiMethodBeans;
 
+    private PsiClassBean productionClass;
+
     public PsiClassBean(PsiClass psiClass, ArrayList<PsiMethodBean> psiMethodBeans) {
         this.psiClass = psiClass;
         this.psiMethodBeans = psiMethodBeans;
+        productionClass = null;
+    }
+
+    public PsiClassBean(PsiClass psiClass, ArrayList<PsiMethodBean> psiMethodBeans, PsiClassBean productionClass) {
+        this.psiClass = psiClass;
+        this.psiMethodBeans = psiMethodBeans;
+        this.productionClass = productionClass;
     }
 
     @Override
@@ -36,5 +45,13 @@ public class PsiClassBean {
 
     public void setPsiMethodBeans(ArrayList<PsiMethodBean> psiMethodBeans) {
         this.psiMethodBeans = psiMethodBeans;
+    }
+
+    public PsiClassBean getProductionClass() {
+        return productionClass;
+    }
+
+    public void setProductionClass(PsiClassBean productionClass) {
+        this.productionClass = productionClass;
     }
 }

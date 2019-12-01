@@ -37,6 +37,27 @@ public abstract class LackOfCohesionOfTestSmellTextual {
         return false;
     }
 
+    public static ArrayList<PsiMethodBean> checkMethodsThatCauseLackOfCohesion(PsiClassBean testClass) {
+        ArrayList<PsiMethodBean> methodsThatCauseLackOfCohesion = new ArrayList<>();
+        for(PsiMethodBean testMethod : testClass.getPsiMethodBeans()) {
+            String methodText = null;
+            //Aggiungo la stringa di controllo al testo del metodo
+            methodText = alterTestCase(testMethod);
+            double smelliness = 0.0;
+
+            try {
+                smelliness = computeSmelliness(methodText);
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+
+            if(smelliness >= 0.4) {
+                methodsThatCauseLackOfCohesion.add(testMethod);
+            }
+        }
+        return methodsThatCauseLackOfCohesion;
+    }
+
     /* METODI DI SUPPORTO */
     private static double computeSmelliness(String methodString) throws IOException {
         CosineSimilarity cosineSimilarity = new CosineSimilarity();
@@ -81,22 +102,24 @@ public abstract class LackOfCohesionOfTestSmellTextual {
     private static String alterTestCase(PsiMethodBean testMethod) {
         String mutatedTestCase = "";
         //System.out.println("public void " + methodBean.getName() + "{");
-        String[] methodLines = testMethod.getPsiMethod().getBody().getText().split("\n");
-        mutatedTestCase += methodLines[0] + "\n";
+        if(testMethod.getPsiMethod().getBody() != null){
+            String[] methodLines = testMethod.getPsiMethod().getBody().getText().split("\n");
+            mutatedTestCase += methodLines[0] + "\n";
 
-        ArrayList<PsiMethodCallExpression> methodCallExpressions = testMethod.getMethodCalls();
-        ArrayList <PsiMethod> calledMethods = PsiTestSmellUtilities.getPsiMethodFromReferences(methodCallExpressions);
-        for(PsiMethod calledMethod : calledMethods) {
-            // <method> can be null since the method can call an external method.
-            if(calledMethod != null) {
-                String[] calledMethodLines = calledMethod.getBody().getText().split("\n");
-                for(int i = 1; i < calledMethodLines.length - 1; i++) {
-                    mutatedTestCase += calledMethodLines[i] + "\n";
+            ArrayList<PsiMethodCallExpression> methodCallExpressions = testMethod.getMethodCalls();
+            ArrayList <PsiMethod> calledMethods = PsiTestSmellUtilities.getPsiMethodFromReferences(methodCallExpressions);
+            for(PsiMethod calledMethod : calledMethods) {
+                // <method> can be null since the method can call an external method.
+                if(calledMethod != null && calledMethod.getBody() != null) {
+                    String[] calledMethodLines = calledMethod.getBody().getText().split("\n");
+                    for(int i = 1; i < calledMethodLines.length - 1; i++) {
+                        mutatedTestCase += calledMethodLines[i] + "\n";
+                    }
+                    mutatedTestCase += "_____\n";
                 }
-                mutatedTestCase += "_____\n";
             }
+            mutatedTestCase += "}";
         }
-        mutatedTestCase += "}";
         return mutatedTestCase;
     }
 

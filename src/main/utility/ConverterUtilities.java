@@ -114,7 +114,7 @@ public abstract class ConverterUtilities {
      * @param psiClass la classe in esame.
      * @return la lista di metodi se ce ne sono, null altrimenti.
      */
-    public static ArrayList<PsiMethodBean> getMethodFromClass(PsiClass psiClass){
+    private static ArrayList<PsiMethodBean> getMethodFromClass(PsiClass psiClass){
         ArrayList<PsiMethodBean> methodBeans = new ArrayList<>();
         ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
 
@@ -133,7 +133,7 @@ public abstract class ConverterUtilities {
 
 
     /* ######################################################## METODI DI SUPPORTO ########################################################## */
-    private static ArrayList<PsiPackage> getPackages(Project myProject) {
+    public static ArrayList<PsiPackage> getPackages(Project myProject) {
         ProjectViewSettings viewSettings = new ProjectViewSettings() {
             @Override
             public boolean isShowExcludedFiles() {

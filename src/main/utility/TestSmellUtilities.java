@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class TestSmellUtilities {
 
     /**
-     * Metodo utilizzato per ottenere tutte le classi di test da un insieme di classi.
+     * Metodo utilizzato per ottenere tutte le classi di test da un insieme di classi. Aggiunge anche la production class.
      * @param allClasses tutte le classi del progetto sotto forma di PsiClass.
      * @return la lista di tutte le classi di test.
      */
@@ -16,6 +16,7 @@ public class TestSmellUtilities {
         ArrayList<PsiClassBean> allTestClasses = new ArrayList<>();
         for(PsiClassBean psiClassBean : allClasses){
             if(TestSmellUtilities.isTestClass(psiClassBean)){
+                psiClassBean.setProductionClass(findProductionClass(psiClassBean, allClasses));
                 allTestClasses.add(psiClassBean);
             }
         }
@@ -33,6 +34,7 @@ public class TestSmellUtilities {
         for(PsiClassBean psiClassBean : allTestClasses){
             PsiClassBean productionClass = TestSmellUtilities.findProductionClass(psiClassBean, allClasses);
             if(productionClass != null){
+                psiClassBean.setProductionClass(productionClass);
                 allProductionClasses.add(productionClass);
             }
         }
