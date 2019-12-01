@@ -41,7 +41,7 @@ public abstract class LackOfCohesionOfTestSmellTextual {
     private static double computeSmelliness(String methodString) throws IOException {
         CosineSimilarity cosineSimilarity = new CosineSimilarity();
         String[] blocks = methodString.split("_____");
-        ArrayList<String> filteredBlocks = new ArrayList<String>();
+        ArrayList<String> filteredBlocks = new ArrayList<>();
         Double smellyness=0.0;
 
         for(int k=0; k<blocks.length;k++) {
@@ -49,11 +49,9 @@ public abstract class LackOfCohesionOfTestSmellTextual {
                 filteredBlocks.add(blocks[k]);
             }
         }
-
         if(filteredBlocks.size() == 1) {
             return 0.0;
         }
-
         int comparison = 0;
         for(int k=0; k<filteredBlocks.size(); k++) {
             for(int i=1; i<filteredBlocks.size(); i++) {
@@ -71,7 +69,6 @@ public abstract class LackOfCohesionOfTestSmellTextual {
                 comparison++;
             }
         }
-
         smellyness = 1 - (smellyness/comparison);
 
         if (smellyness.isNaN()) {
@@ -79,7 +76,6 @@ public abstract class LackOfCohesionOfTestSmellTextual {
         } else if(smellyness.isInfinite()) {
             return 0.0;
         } else return smellyness;
-
     }
 
     private static String alterTestCase(PsiMethodBean testMethod) {
