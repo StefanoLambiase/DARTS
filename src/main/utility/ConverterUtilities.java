@@ -43,7 +43,19 @@ public abstract class ConverterUtilities {
             PsiClassBean classBean = new PsiClassBean(psiClass, psiMethodBeans);
             classBeans.add(classBean);
             for(PsiMethodBean m : psiMethodBeans){
-                System.out.println(m.toString());
+                System.out.println("\n" + m.toString());
+                ArrayList<PsiMethodCallExpression> methodCallExpressions = PsiTestSmellUtilities.getAllCalledMethods(m.getPsiMethod());
+                if(methodCallExpressions.size() > 0){
+                    for(PsiMethodCallExpression call : methodCallExpressions) {
+                        PsiReference reference = call.getMethodExpression().getReference();
+                        if(reference != null){
+                            PsiElement element = reference.resolve();
+                            System.out.println("   reference: " + reference.getElement().toString());
+                            System.out.println("   Object: " + element.toString() + "\n");
+                            //System.out.println("\n Metodo chiamato: ");
+                        }
+                    }
+                }
             }
             /*
             psiClass.accept(new JavaRecursiveElementVisitor() {
@@ -110,13 +122,15 @@ public abstract class ConverterUtilities {
             if(psiMethod.getBody() != null) {
                 ArrayList<PsiVariable> varInits = PsiTestSmellUtilities.getAllInstanceVariableInit(psiMethod, instanceVariables);
                 ArrayList<PsiVariable> varUses = PsiTestSmellUtilities.getAllInstanceVariableUses(psiMethod, instanceVariables);
+                ArrayList<PsiMethodCallExpression> methodCalls = PsiTestSmellUtilities.getAllCalledMethods(psiMethod);
 
-                PsiMethodBean mb = new PsiMethodBean(psiMethod, psiClass, varInits, varUses);
+                PsiMethodBean mb = new PsiMethodBean(psiMethod, psiClass, varInits, varUses, methodCalls);
                 methodBeans.add(mb);
             }
         }
         return methodBeans;
     }
+
 
     /* ######################################################## METODI DI SUPPORTO ########################################################## */
     private static ArrayList<PsiPackage> getPackages(Project myProject) {
@@ -206,7 +220,6 @@ public abstract class ConverterUtilities {
         }
         return new ArrayList<PsiPackage>(topLevelPackages);
     }
-
 
     private static void recursiveResearch(PsiPackage psiPackage, ArrayList<PsiClass> classes){
         //Parte per le classi

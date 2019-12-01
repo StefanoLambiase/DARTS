@@ -77,6 +77,29 @@ public abstract class PsiTestSmellUtilities {
     }
 
     /**
+     * Metodo usato per ottenere tutte le chiamate a metodi presenti in un metodo.
+     * @param psiMethod il metodo in esame.
+     * @return la lista della chiamate sotto forma di PsiMethodCallExpression.
+     */
+    public static ArrayList<PsiMethodCallExpression> getAllCalledMethods(PsiMethod psiMethod){
+        final PsiElement[] callsElement = PsiTreeUtil.collectElements(psiMethod, new PsiElementFilter() {
+            public boolean isAccepted(PsiElement e) {
+                if (e instanceof PsiMethodCallExpression) {
+                    return true;
+                }
+                return false;
+            }
+        });
+        ArrayList<PsiMethodCallExpression> psiMethodCallExpressions = new ArrayList<>();
+        for(PsiElement element : callsElement){
+
+            PsiMethodCallExpression methodCallExpression = (PsiMethodCallExpression) element;
+            psiMethodCallExpressions.add(methodCallExpression);
+        }
+        return psiMethodCallExpressions;
+    }
+
+    /**
      * Metodo usato per ottenere tutte le variabili locali in un metodo.
      * @param psiMethod il metodo in esame.
      * @return una lista delle variabili.

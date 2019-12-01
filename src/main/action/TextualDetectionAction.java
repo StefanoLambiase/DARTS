@@ -9,6 +9,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.textualRules.EagerTestTextual;
 import main.testSmellDetection.textualRules.GeneralFixtureTextual;
 import main.utility.ConverterUtilities;
 import main.testSmellDetection.IDetector;
@@ -59,9 +60,19 @@ public class TextualDetectionAction extends AnAction {
 
         /* ANALISI NUOVA. COMMENTARE PRIMA DI USARE L'ALTRA. */
         ArrayList<PsiClassBean> classes = usePSI(anActionEvent.getProject());
-        for(PsiClassBean classBean : classes){
+        ArrayList<PsiClassBean> testClasses = TestSmellUtilities.getAllTestClasses(classes);
+
+        for(PsiClassBean classBean : testClasses){
+            PsiClassBean productionClass = TestSmellUtilities.findProductionClass(classBean, classes);
+            System.out.println("\nANALISI CLASSE: " + classBean.getPsiClass().getName());
+            System.out.println("\n   Production Class: " + productionClass.getPsiClass().getName());
+            // General Fixture
             if(GeneralFixtureTextual.isGeneralFixture(classBean)){
-                System.out.println("La classe è affetta da General Fixture: " + classBean.getPsiClass().getName());
+                System.out.println("\n   La classe è affetta da General Fixture: " + classBean.getPsiClass().getName());
+            }
+            // Eager Test
+            if(EagerTestTextual.isEagerTest(classBean, productionClass)){
+                System.out.println("\n   La classe è affetta da Eager Test: " + classBean.getPsiClass().getName());
             }
         }
 

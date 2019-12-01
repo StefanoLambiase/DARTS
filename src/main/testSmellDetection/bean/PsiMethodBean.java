@@ -2,6 +2,7 @@ package main.testSmellDetection.bean;
 
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
+import com.intellij.psi.PsiMethodCallExpression;
 import com.intellij.psi.PsiVariable;
 
 import java.util.ArrayList;
@@ -11,12 +12,14 @@ public class PsiMethodBean {
     private PsiClass psiClass;
     private ArrayList<PsiVariable> initInstanceVariables;
     private ArrayList<PsiVariable> usedInstanceVariables;
+    private ArrayList<PsiMethodCallExpression> methodCalls;
 
-    public PsiMethodBean(PsiMethod psiMethod, PsiClass psiClass, ArrayList<PsiVariable> initInstanceVariables, ArrayList<PsiVariable> usedInstanceVariables) {
+    public PsiMethodBean(PsiMethod psiMethod, PsiClass psiClass, ArrayList<PsiVariable> initInstanceVariables, ArrayList<PsiVariable> usedInstanceVariables, ArrayList<PsiMethodCallExpression> methodCalls) {
         this.psiMethod = psiMethod;
         this.psiClass = psiClass;
         this.initInstanceVariables = initInstanceVariables;
         this.usedInstanceVariables = usedInstanceVariables;
+        this.methodCalls = methodCalls;
     }
 
     @Override
@@ -60,4 +63,13 @@ public class PsiMethodBean {
     public void setUsedInstanceVariables(ArrayList<PsiVariable> usedInstanceVariables) {
         this.usedInstanceVariables = usedInstanceVariables;
     }
+
+    public ArrayList<PsiMethodCallExpression> getMethodCalls() {
+        return methodCalls;
+    }
+
+    public void setMethodCalls(ArrayList<PsiMethodCallExpression> methodCalls) {
+        this.methodCalls = methodCalls;
+    }
+
 }

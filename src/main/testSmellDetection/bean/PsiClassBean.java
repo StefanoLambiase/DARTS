@@ -13,6 +13,14 @@ public class PsiClassBean {
         this.psiMethodBeans = psiMethodBeans;
     }
 
+    @Override
+    public String toString() {
+        return "PsiClassBean{" +
+                "psiClass=" + psiClass +
+                ", psiMethodBeans=" + psiMethodBeans +
+                '}';
+    }
+
     /* GETTERS & SETTERS */
     public PsiClass getPsiClass() {
         return psiClass;
