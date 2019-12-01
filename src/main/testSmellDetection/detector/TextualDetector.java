@@ -10,7 +10,6 @@ import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureIn
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import it.unisa.testSmellDiffusion.utility.ProjectStructureBuilder;
-import main.testSmellDetection.IDetector;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
