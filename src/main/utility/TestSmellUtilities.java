@@ -1,6 +1,7 @@
 package main.utility;
 
 import com.intellij.psi.PsiClass;
+import main.testSmellDetection.bean.PsiClassBean;
 
 import java.util.ArrayList;
 
@@ -11,11 +12,11 @@ public class TestSmellUtilities {
      * @param allClasses tutte le classi del progetto sotto forma di PsiClass.
      * @return la lista di tutte le classi di test.
      */
-    public static ArrayList<PsiClass> getAllTestClasses(ArrayList<PsiClass> allClasses){
-        ArrayList<PsiClass> allTestClasses = new ArrayList<>();
-        for(PsiClass psiClass : allClasses){
-            if(TestSmellUtilities.isTestClass(psiClass)){
-                allTestClasses.add(psiClass);
+    public static ArrayList<PsiClassBean> getAllTestClasses(ArrayList<PsiClassBean> allClasses){
+        ArrayList<PsiClassBean> allTestClasses = new ArrayList<>();
+        for(PsiClassBean psiClassBean : allClasses){
+            if(TestSmellUtilities.isTestClass(psiClassBean)){
+                allTestClasses.add(psiClassBean);
             }
         }
         return allTestClasses;
@@ -27,10 +28,10 @@ public class TestSmellUtilities {
      * @param allTestClasses tutte le classi di test del progetto.
      * @return la lista di tutte le production classes.
      */
-    public static ArrayList<PsiClass> getAllProductionClasses(ArrayList<PsiClass> allClasses, ArrayList<PsiClass> allTestClasses){
-        ArrayList<PsiClass> allProductionClasses = new ArrayList<>();
-        for(PsiClass psiClass : allTestClasses){
-            PsiClass productionClass = TestSmellUtilities.findProductionClass(psiClass, allClasses);
+    public static ArrayList<PsiClassBean> getAllProductionClasses(ArrayList<PsiClassBean> allClasses, ArrayList<PsiClassBean> allTestClasses){
+        ArrayList<PsiClassBean> allProductionClasses = new ArrayList<>();
+        for(PsiClassBean psiClassBean : allTestClasses){
+            PsiClassBean productionClass = TestSmellUtilities.findProductionClass(psiClassBean, allClasses);
             if(productionClass != null){
                 allProductionClasses.add(productionClass);
             }
@@ -40,10 +41,11 @@ public class TestSmellUtilities {
 
     /**
      * Metodo utilizzato per verificare se una classe è una classe di test.
-     * @param psiClass la classe in esame.
+     * @param psiClassBean la classe in esame.
      * @return true se la classe è una classe di test, false altrimenti.
      */
-    public static boolean isTestClass(PsiClass psiClass){
+    public static boolean isTestClass(PsiClassBean psiClassBean){
+        PsiClass psiClass = psiClassBean.getPsiClass();
         if(psiClass.getName().contains("Test") || psiClass.getName().contains("test") || psiClass.getText().contains(" extends TestCase")){
             return true;
         } else {
@@ -53,12 +55,14 @@ public class TestSmellUtilities {
 
     /**
      * Metodo utilizzato per trovare la production class di una data classe di test.
-     * @param psiTestClass la classe di test.
+     * @param psiTestClassBean la classe di test.
      * @param allClasses tutte le classi presenti nel progetto.
      * @return la production class.
      */
-    public static PsiClass findProductionClass(PsiClass psiTestClass, ArrayList<PsiClass> allClasses){
-        for(PsiClass psiClass : allClasses){
+    public static PsiClassBean findProductionClass(PsiClassBean psiTestClassBean, ArrayList<PsiClassBean> allClasses){
+        for(PsiClassBean psiClassBean : allClasses){
+            PsiClass psiClass = psiClassBean.getPsiClass();
+            PsiClass psiTestClass = psiTestClassBean.getPsiClass();
             // Creo stringhe contenenti tutti i possibili nomi che potrebbe avere la classe di test della classe in esame.
             String candidateTestName = psiClass.getName()+"Test";
             String candidateTestName2 = "Test"+psiClass.getName();
@@ -72,28 +76,29 @@ public class TestSmellUtilities {
             String candidateTestName10 = "TestCase"+psiClass.getName();
             // Eseguo la verifica
             if(candidateTestName.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName2.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName3.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName4.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName5.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName6.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName7.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName8.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName9.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             } else if(candidateTestName10.toLowerCase().equals(psiTestClass.getName().toLowerCase())) {
-                return psiClass;
+                return psiClassBean;
             }
         }
         return null;
     }
+
 
 }

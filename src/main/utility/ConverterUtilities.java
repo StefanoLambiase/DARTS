@@ -9,6 +9,8 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
+import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.bean.PsiMethodBean;
 
 import java.util.*;
 
@@ -19,31 +21,104 @@ public abstract class ConverterUtilities {
      * @param myProject il progetto in esame.
      * @return un array contenente tutte le classi del progetto in esame.
      */
-    public static ArrayList<PsiClass> getClassesFromPackages(Project myProject){
+    public static ArrayList<PsiClassBean> getClassesFromPackages(Project myProject){
         System.out.println("############ Sono ConverterUtilities. Inizio la conversione del progetto. ################");
         ArrayList<PsiClass> classes = new ArrayList<>();
+        ArrayList<PsiClassBean> classBeans = new ArrayList<>();
 
         ArrayList<PsiPackage> packages = getPackages(myProject);
         for(PsiPackage psiPackage : packages){
             recursiveResearch(psiPackage, classes);
         }
-
         System.out.println("############ Sono ConverterUtilities. Ecco le classi trovate. ################\n");
         for(PsiClass psiClass : classes){
-            System.out.println("CLASSE TROVATA: " + psiClass.getName() + "\n");
-            System.out.println(" METODI:\n");
-            for(PsiMethod psiMethod : psiClass.getAllMethods()){
-                System.out.println(psiMethod.getName());
-                if(psiMethod.getBody() != null)
-                    System.out.println(psiMethod.getBody().getText() + "\n");
+            System.out.println("\nCLASSE TROVATA: " + psiClass.getName() + " ################################");
+            System.out.println("\n   VARIABILI BLOBALI");
+            ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
+            for(PsiVariable var : instanceVariables){
+                System.out.println("\n" + var.toString());
             }
-        }
+            System.out.println("\n   METODI");
+            ArrayList<PsiMethodBean> psiMethodBeans = getMethodFromClass(psiClass);
+            PsiClassBean classBean = new PsiClassBean(psiClass, psiMethodBeans);
+            classBeans.add(classBean);
+            for(PsiMethodBean m : psiMethodBeans){
+                System.out.println(m.toString());
+            }
+            /*
+            psiClass.accept(new JavaRecursiveElementVisitor() {
+                @Override
+                public void visitReferenceExpression(PsiReferenceExpression expression) {
+                    super.visitReferenceExpression(expression);
+                    System.out.println("Found a reference at offset " + expression.getTextRange().getStartOffset() + "Name: " + expression.getText());
+                }
 
-        return classes;
+                @Override
+                public void visitLocalVariable(PsiLocalVariable variable) {
+                    super.visitLocalVariable(variable);
+                    System.out.println("Found a variable at offset " + variable.getTextRange().getStartOffset() + ", Name: " + variable.getName());
+                }
+            });
+
+            System.out.println("\n   METODI:\n");
+            for(PsiMethod psiMethod : psiClass.getAllMethods()){
+                String s = psiMethod.getName();
+                if(!s.equals("Object") &&
+                        !s.equals("registerNatives") &&
+                        !s.equals("getClass") &&
+                        !s.equals("hashCode") &&
+                        !s.equals("equals") &&
+                        !s.equals("clone") &&
+                        !s.equals("toString") &&
+                        !s.equals("notify") &&
+                        !s.equals("notifyAll") &&
+                        !s.equals("wait") &&
+                        !s.equals("finalize")){
+                    System.out.println(psiMethod.getName());
+                    if(psiMethod.getBody() != null) {
+                        System.out.println(psiMethod.getBody().getText() + "\n");
+
+                        System.out.println("\n   VARIABILI DI INSTANZA INIZIALIZZATE\n");
+                        ArrayList<PsiVariable> varInits = PsiTestSmellUtilities.getAllInstanceVariableInit(psiMethod, instanceVariables);
+                        for(PsiVariable psiVariable : varInits){
+                            System.out.println(psiVariable.toString() + "\n");
+                        }
+                        System.out.println("\n   VARIABILI DI INSTANZA USATE\n");
+                        ArrayList<PsiVariable> varUses = PsiTestSmellUtilities.getAllInstanceVariableUses(psiMethod, instanceVariables);
+                        for(PsiVariable psiVariable : varUses){
+                            System.out.println(psiVariable.toString() + "\n");
+                        }
+                    }
+                }
+            }
+
+             */
+        }
+        return classBeans;
     }
 
+    /**
+     * Metodo usato per ottenere la lista dei metodi di una classe con alcune informazioni aggiuntive.
+     * @param psiClass la classe in esame.
+     * @return la lista di metodi se ce ne sono, null altrimenti.
+     */
+    public static ArrayList<PsiMethodBean> getMethodFromClass(PsiClass psiClass){
+        ArrayList<PsiMethodBean> methodBeans = new ArrayList<>();
+        ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
 
-    /* METODI DI SUPPORTO */
+        for(PsiMethod psiMethod : psiClass.getAllMethods()){
+            if(psiMethod.getBody() != null) {
+                ArrayList<PsiVariable> varInits = PsiTestSmellUtilities.getAllInstanceVariableInit(psiMethod, instanceVariables);
+                ArrayList<PsiVariable> varUses = PsiTestSmellUtilities.getAllInstanceVariableUses(psiMethod, instanceVariables);
+
+                PsiMethodBean mb = new PsiMethodBean(psiMethod, psiClass, varInits, varUses);
+                methodBeans.add(mb);
+            }
+        }
+        return methodBeans;
+    }
+
+    /* ######################################################## METODI DI SUPPORTO ########################################################## */
     private static ArrayList<PsiPackage> getPackages(Project myProject) {
         ProjectViewSettings viewSettings = new ProjectViewSettings() {
             @Override

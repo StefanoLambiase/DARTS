@@ -8,6 +8,8 @@ import com.intellij.psi.*;
 import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.textualRules.GeneralFixtureTextual;
 import main.utility.ConverterUtilities;
 import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TextualDetector;
@@ -56,7 +58,12 @@ public class TextualDetectionAction extends AnAction {
         IDetector detector = new TextualDetector(pFolderPath);
 
         /* ANALISI NUOVA. COMMENTARE PRIMA DI USARE L'ALTRA. */
-        ArrayList<PsiClass> classes = usePSI(anActionEvent.getProject());
+        ArrayList<PsiClassBean> classes = usePSI(anActionEvent.getProject());
+        for(PsiClassBean classBean : classes){
+            if(GeneralFixtureTextual.isGeneralFixture(classBean)){
+                System.out.println("La classe è affetta da General Fixture: " + classBean.getPsiClass().getName());
+            }
+        }
 
         /* ANALISI VECCHIA, DECOMMENTARE SE SI VUOLE USARE. */
         /*
@@ -79,24 +86,24 @@ public class TextualDetectionAction extends AnAction {
          */
     }
 
-    public ArrayList<PsiClass> usePSI(Project myProject){
-        ArrayList<PsiClass> classes = ConverterUtilities.getClassesFromPackages(myProject);
+
+    public ArrayList<PsiClassBean> usePSI(Project myProject){
+        ArrayList<PsiClassBean> classes = ConverterUtilities.getClassesFromPackages(myProject);
 
         System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE CLASSI DI TEST:");
-        ArrayList<PsiClass> testClasses = TestSmellUtilities.getAllTestClasses(classes);
+        ArrayList<PsiClassBean> testClasses = TestSmellUtilities.getAllTestClasses(classes);
         if(testClasses.size() > 0){
-            for(PsiClass psiClass : testClasses){
-                System.out.println("\n" + psiClass.getName());
+            for(PsiClassBean psiClassBean : testClasses){
+                System.out.println("\n" + psiClassBean.getPsiClass().getName());
             }
         }
         System.out.println("\nSONO IL DETECTOR TESTUALE: ECCO LA LISTA DELLE PRODUCTION CLASSES:");
-        ArrayList<PsiClass> productionClasses = TestSmellUtilities.getAllProductionClasses(classes, testClasses);
+        ArrayList<PsiClassBean> productionClasses = TestSmellUtilities.getAllProductionClasses(classes, testClasses);
         if(productionClasses.size() > 0){
-            for(PsiClass psiClass : productionClasses){
-                System.out.println("\n" + psiClass.getName());
+            for(PsiClassBean psiClassBean : productionClasses){
+                System.out.println("\n" + psiClassBean.getPsiClass().getName());
             }
         }
-
         return classes;
     }
 
