@@ -36,16 +36,13 @@ public abstract class PsiTestSmellUtilities {
             Collection<PsiReference> referenceList = ReferencesSearch.search(psiVariable).findAll();
             for(PsiReference reference : referenceList){
                 PsiMethod parentMethod = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiMethod.class);
-                if(parentMethod != null && parentMethod.getName().equals(psiMethod.getName())){
+                if(parentMethod != null && parentMethod.getName().equals(psiMethod.getName()))
                     if(reference instanceof PsiReferenceExpression){
                         PsiAssignmentExpression psiAssignmentExpression = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiAssignmentExpression.class);
-                        if(psiAssignmentExpression != null){
-                            if (psiAssignmentExpression.getLExpression().equals(reference)){
+                        if(psiAssignmentExpression != null)
+                            if (psiAssignmentExpression.getLExpression().equals(reference))
                                 initInstanceVariables.add(psiVariable);
-                            }
-                        }
                     }
-                }
             }
         }
         initInstanceVariables = (ArrayList<PsiVariable>) initInstanceVariables.stream().distinct().collect(Collectors.toList());
@@ -58,18 +55,15 @@ public abstract class PsiTestSmellUtilities {
             Collection<PsiReference> referenceList = ReferencesSearch.search(psiVariable).findAll();
             for(PsiReference reference : referenceList){
                 PsiMethod parentMethod = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiMethod.class);
-                if(parentMethod != null && parentMethod.getName().equals(psiMethod.getName())){
-                    if(reference instanceof PsiReferenceExpression){
+                if(parentMethod != null && parentMethod.getName().equals(psiMethod.getName()))
+                    if (reference instanceof PsiReferenceExpression) {
                         PsiAssignmentExpression psiAssignmentExpression = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiAssignmentExpression.class);
-                        if(psiAssignmentExpression != null){
-                            if (!psiAssignmentExpression.getLExpression().equals(reference)){
+                        if (psiAssignmentExpression != null)
+                            if (!psiAssignmentExpression.getLExpression().equals(reference))
                                 usesInstanceVariables.add(psiVariable);
-                            }
-                        } else {
-                            usesInstanceVariables.add(psiVariable);
-                        }
+                            else
+                                usesInstanceVariables.add(psiVariable);
                     }
-                }
             }
         }
         usesInstanceVariables = (ArrayList<PsiVariable>) usesInstanceVariables.stream().distinct().collect(Collectors.toList());
@@ -97,6 +91,24 @@ public abstract class PsiTestSmellUtilities {
             psiMethodCallExpressions.add(methodCallExpression);
         }
         return psiMethodCallExpressions;
+    }
+
+    /**
+     * Metodo usato per ottenere i metodi a cui un insieme di chiamate fa riferimento.
+     * @param methodCalls l'insieme di chiamate a metodi.
+     * @return la lista dei metodi chiamati sotto forma di PsiMethod.
+     */
+    public static ArrayList<PsiMethod> getPsiMethodFromReferences(ArrayList<PsiMethodCallExpression> methodCalls) {
+        ArrayList<PsiReference> methodReferences = new ArrayList<>();
+        for(PsiMethodCallExpression methodCallExpression : methodCalls)
+            methodReferences.add(methodCallExpression.getMethodExpression().getReference());
+        ArrayList<PsiMethod> methods = new ArrayList<>();
+        for (PsiReference reference : methodReferences) {
+            PsiElement element = reference.resolve();
+            if(element instanceof PsiMethod)
+                methods.add((PsiMethod) element);
+        }
+        return methods;
     }
 
     /**

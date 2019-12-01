@@ -11,6 +11,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionIn
 import main.testSmellDetection.bean.PsiClassBean;
 import main.testSmellDetection.textualRules.EagerTestTextual;
 import main.testSmellDetection.textualRules.GeneralFixtureTextual;
+import main.testSmellDetection.textualRules.LackOfCohesionOfTestSmellTextual;
 import main.utility.ConverterUtilities;
 import main.testSmellDetection.IDetector;
 import main.testSmellDetection.detector.TextualDetector;
@@ -73,6 +74,10 @@ public class TextualDetectionAction extends AnAction {
             // Eager Test
             if(EagerTestTextual.isEagerTest(classBean, productionClass)){
                 System.out.println("\n   La classe è affetta da Eager Test: " + classBean.getPsiClass().getName());
+            }
+            // Lack of Cohesion
+            if(LackOfCohesionOfTestSmellTextual.isLackOfCohesionTestMethods(classBean)){
+                System.out.println("\n   La classe è affetta da Lack of Cohesion: " + classBean.getPsiClass().getName());
             }
         }
 
