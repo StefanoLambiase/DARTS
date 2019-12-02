@@ -36,7 +36,7 @@ public abstract class ConverterUtilities {
             System.out.println("\n   VARIABILI BLOBALI");
             ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
             for(PsiVariable var : instanceVariables){
-                System.out.println("\n" + var.toString());
+                System.out.println("\n" + var.getTypeElement().getText());
             }
             System.out.println("\n   METODI");
             ArrayList<PsiMethodBean> psiMethodBeans = getMethodFromClass(psiClass);

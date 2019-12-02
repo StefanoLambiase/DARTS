@@ -93,6 +93,11 @@ public abstract class PsiTestSmellUtilities {
         return psiMethodCallExpressions;
     }
 
+    public static ArrayList<PsiMethod> getPsiMethodCalledFromMethod(PsiMethod psiMethod){
+        ArrayList<PsiMethodCallExpression> methodCallExpressions = getAllCalledMethods(psiMethod);
+        return getPsiMethodFromReferences(methodCallExpressions);
+    }
+
     /**
      * Metodo usato per ottenere i metodi a cui un insieme di chiamate fa riferimento.
      * @param methodCalls l'insieme di chiamate a metodi.

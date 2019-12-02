@@ -10,7 +10,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureIn
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 import main.testSmellDetection.detector.IDetector;
-import main.testSmellDetection.detector.TestSmellStructuralDetector;
+import main.testSmellDetection.detector.TestSmellStructuralDetectorOLD;
 import main.testSmellDetection.detector.TextualDetector;
 import main.toolWindowConstruction.TestSmellWindowFactory;
 import org.jetbrains.annotations.NotNull;
@@ -56,7 +56,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 }
 
                 //Eseguo l'analisi Strutturale
-                detector = new TestSmellStructuralDetector(myPanel.getProject().getBasePath());
+                detector = new TestSmellStructuralDetectorOLD(myPanel.getProject().getBasePath());
 
                 listGFI = detector.executeDetectionForGeneralFixture();
                 listETI = detector.executeDetectionForEagerTest();

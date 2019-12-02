@@ -6,7 +6,7 @@ import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.testSmellDetection.detector.IDetector;
-import main.testSmellDetection.detector.TestSmellStructuralDetector;
+import main.testSmellDetection.detector.TestSmellStructuralDetectorOLD;
 import main.toolWindowConstruction.TestSmellWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +21,7 @@ public class StructuralDetectionAction extends AnAction {
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
         //Mi prendo la folder del progetto attivo
         String pFolderPath = anActionEvent.getProject().getBasePath();
-        IDetector detector = new TestSmellStructuralDetector(pFolderPath);
+        IDetector detector = new TestSmellStructuralDetectorOLD(pFolderPath);
 
         //Eseguo l'analisi
         if(pFolderPath != null){
