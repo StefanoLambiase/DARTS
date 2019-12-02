@@ -1,8 +1,8 @@
 package main.testSmellDetection.detector;
 
-import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
-import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
-import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
+import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 
 import java.util.ArrayList;
 

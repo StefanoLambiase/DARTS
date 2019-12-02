@@ -1,6 +1,5 @@
 package main.testSmellDetection.testSmellInfo.eagerTest;
 
-import com.intellij.psi.PsiMethod;
 import main.testSmellDetection.bean.PsiMethodBean;
 
 import java.util.ArrayList;

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-public class FileUtility {
+public abstract class FileUtility {
 
     public static String readFile(String nomeFile) throws IOException {
         InputStream is = null;

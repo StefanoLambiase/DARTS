@@ -17,8 +17,7 @@ import main.utility.TestSmellUtilities;
 
 import java.util.ArrayList;
 
-public class TestSmellTextualDetector {
-    private ArrayList<PsiPackage> packages;
+public class TestSmellTextualDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
     private ArrayList<PsiClassBean> productionClasses;

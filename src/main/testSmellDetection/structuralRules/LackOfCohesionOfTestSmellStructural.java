@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public abstract class LackOfCohesionOfTestSmellStructural {
 
-    public boolean isLackOfCohesion(PsiClassBean testClass) {
+    public static boolean isLackOfCohesion(PsiClassBean testClass) {
         int i = getLCOM(testClass);
         if(i > 1) {
             return true;

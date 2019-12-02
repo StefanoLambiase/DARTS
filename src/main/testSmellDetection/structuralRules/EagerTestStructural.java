@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public abstract class EagerTestStructural {
 
-    public boolean isEagerTest(PsiClassBean testClass,
+    public static boolean isEagerTest(PsiClassBean testClass,
                                ArrayList<PsiClassBean> testClasses,
                                ArrayList<PsiClassBean> productionClasses){
         for(PsiMethodBean methodBean : testClass.getPsiMethodBeans()){
@@ -26,9 +26,9 @@ public abstract class EagerTestStructural {
         return false;
     }
 
-    private int getNumberOfProductionTypeUses(PsiMethodBean testMethod,
-                                             ArrayList<PsiClassBean> testClasses,
-                                             ArrayList<PsiClassBean> productionClasses){
+    private static int getNumberOfProductionTypeUses(PsiMethodBean testMethod,
+                                                     ArrayList<PsiClassBean> testClasses,
+                                                     ArrayList<PsiClassBean> productionClasses){
         ArrayList<PsiMethod> listOfProductionMethodFind = new ArrayList<>();
         // Mi prendo la lista di tutti i metodi per cercare test helpers.
         ArrayList<PsiMethod> testMethods = new ArrayList<>();

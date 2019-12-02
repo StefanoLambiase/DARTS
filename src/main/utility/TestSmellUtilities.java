@@ -5,7 +5,7 @@ import main.testSmellDetection.bean.PsiClassBean;
 
 import java.util.ArrayList;
 
-public class TestSmellUtilities {
+public abstract class TestSmellUtilities {
 
     /**
      * Metodo utilizzato per ottenere tutte le classi di test da un insieme di classi. Aggiunge anche la production class.
