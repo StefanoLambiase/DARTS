@@ -1,11 +1,13 @@
 package main.testSmellDetection.bean;
 
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiPackage;
 
 import java.util.ArrayList;
 
 public class PsiClassBean {
     private PsiClass psiClass;
+    private PsiPackage psiPackage;
     private ArrayList<PsiMethodBean> psiMethodBeans;
 
     private PsiClassBean productionClass;
@@ -20,6 +22,11 @@ public class PsiClassBean {
         this.psiClass = psiClass;
         this.psiMethodBeans = psiMethodBeans;
         this.productionClass = productionClass;
+    }
+
+    public PsiClassBean(PsiClass psiClass, PsiPackage psiPackage) {
+        this.psiClass = psiClass;
+        this.psiPackage = psiPackage;
     }
 
     @Override
@@ -53,5 +60,13 @@ public class PsiClassBean {
 
     public void setProductionClass(PsiClassBean productionClass) {
         this.productionClass = productionClass;
+    }
+
+    public PsiPackage getPsiPackage() {
+        return psiPackage;
+    }
+
+    public void setPsiPackage(PsiPackage psiPackage) {
+        this.psiPackage = psiPackage;
     }
 }

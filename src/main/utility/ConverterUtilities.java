@@ -23,25 +23,26 @@ public abstract class ConverterUtilities {
      */
     public static ArrayList<PsiClassBean> getClassesFromPackages(Project myProject){
         System.out.println("############ Sono ConverterUtilities. Inizio la conversione del progetto. ################");
-        ArrayList<PsiClass> classes = new ArrayList<>();
         ArrayList<PsiClassBean> classBeans = new ArrayList<>();
 
         ArrayList<PsiPackage> packages = getPackages(myProject);
         for(PsiPackage psiPackage : packages){
-            recursiveResearch(psiPackage, classes);
+            recursiveResearch(psiPackage, classBeans);
         }
         System.out.println("############ Sono ConverterUtilities. Ecco le classi trovate. ################\n");
-        for(PsiClass psiClass : classes){
-            System.out.println("\nCLASSE TROVATA: " + psiClass.getName() + " ################################");
+        for(PsiClassBean psiClassBean : classBeans){
+            System.out.println("\nCLASSE TROVATA: " + psiClassBean.getPsiClass().getName() + " ################################");
+            System.out.println("   PACKAGE: " + psiClassBean.getPsiPackage());
             System.out.println("\n   VARIABILI BLOBALI");
-            ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
+            ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClassBean.getPsiClass());
             for(PsiVariable var : instanceVariables){
                 System.out.println("\n" + var.getTypeElement().getText());
             }
             System.out.println("\n   METODI");
-            ArrayList<PsiMethodBean> psiMethodBeans = getMethodFromClass(psiClass);
-            PsiClassBean classBean = new PsiClassBean(psiClass, psiMethodBeans);
-            classBeans.add(classBean);
+            ArrayList<PsiMethodBean> psiMethodBeans = getMethodFromClass(psiClassBean.getPsiClass());
+
+            psiClassBean.setPsiMethodBeans(psiMethodBeans);
+
             for(PsiMethodBean m : psiMethodBeans){
                 System.out.println("\n" + m.toString());
                 ArrayList<PsiMethodCallExpression> methodCallExpressions = PsiTestSmellUtilities.getAllCalledMethods(m.getPsiMethod());
@@ -221,7 +222,7 @@ public abstract class ConverterUtilities {
         return new ArrayList<PsiPackage>(topLevelPackages);
     }
 
-    private static void recursiveResearch(PsiPackage psiPackage, ArrayList<PsiClass> classes){
+    private static void recursiveResearch(PsiPackage psiPackage, ArrayList<PsiClassBean> classes){
         //Parte per le classi
         System.out.println("ITERAZIONE RICORSIVA su Package: " + psiPackage.getName() + "   ##############################\n");
         PsiClass[] innerClasses = psiPackage.getClasses();
@@ -230,8 +231,9 @@ public abstract class ConverterUtilities {
         } else {
             for(PsiClass psiClass : innerClasses){
                 System.out.println(" Classe: " + psiClass.getName() + "\n");
+                PsiClassBean psiClassBean = new PsiClassBean(psiClass, psiPackage);
+                classes.add(psiClassBean);
             }
-            classes.addAll(Arrays.asList(innerClasses));
         }
         //Parte per i package interni
         PsiPackage[] innerPackages = psiPackage.getSubPackages();

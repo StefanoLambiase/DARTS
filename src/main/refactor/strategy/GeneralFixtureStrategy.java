@@ -35,7 +35,7 @@ public class GeneralFixtureStrategy implements IRefactor {
         PsiClassBean originalClassBean = generalFixtureInfo.getClassWithGeneralFixture();
         PsiClass psiOriginalClass = originalClassBean.getPsiClass();
         //PsiClass psiOriginalClass = PsiUtil.getPsi(originalClass, project);
-        String packageName = originalClass.getBelongingPackage();
+        String packageName = originalClassBean.getPsiPackage().getName();
 
         List<PsiMethod> methodsToMove = new ArrayList<>();
         List<PsiField> fieldsToMove = new ArrayList<>();
