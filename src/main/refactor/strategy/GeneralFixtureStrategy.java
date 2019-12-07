@@ -9,13 +9,11 @@ import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
 import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import com.intellij.refactoring.extractclass.ExtractClassProcessor;
-import it.unisa.testSmellDiffusion.beans.ClassBean;
-import it.unisa.testSmellDiffusion.beans.InstanceVariableBean;
-import it.unisa.testSmellDiffusion.beans.MethodBean;
-import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.GeneralFixtureInfo;
-import it.unisa.testSmellDiffusion.testSmellInfo.generalFixture.MethodWithGeneralFixture;
-import it.unisa.testSmellDiffusion.utility.TestSmellUtilities;
 import main.refactor.IRefactor;
+import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.bean.PsiMethodBean;
+import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 
 import java.util.*;
 
@@ -34,19 +32,22 @@ public class GeneralFixtureStrategy implements IRefactor {
 
     @Override
     public void doRefactor() throws PrepareFailedException {
-        ClassBean originalClass = generalFixtureInfo.getTestClass();
-        PsiClass psiOriginalClass = PsiUtil.getPsi(originalClass, project);
+        PsiClassBean originalClassBean = generalFixtureInfo.getClassWithGeneralFixture();
+        PsiClass psiOriginalClass = originalClassBean.getPsiClass();
+        //PsiClass psiOriginalClass = PsiUtil.getPsi(originalClass, project);
         String packageName = originalClass.getBelongingPackage();
 
         List<PsiMethod> methodsToMove = new ArrayList<>();
         List<PsiField> fieldsToMove = new ArrayList<>();
         List<PsiClass> innerClasses = new ArrayList<>();
 
-        MethodBean method = methodWithGeneralFixture.getMethod();
-        PsiMethod infectedMethod = PsiUtil.getPsi(method, project, psiOriginalClass);
+        PsiMethodBean method = methodWithGeneralFixture.getMethodWithGeneralFixture();
+        PsiMethod infectedMethod = method.getPsiMethod();
+        //PsiMethod infectedMethod = PsiUtil.getPsi(method, project, psiOriginalClass);
         methodsToMove.add(infectedMethod);
 
-        Vector<InstanceVariableBean> instances = (Vector<InstanceVariableBean>) method.getUsedInstanceVariables();
+        //Vector<InstanceVariableBean> instances = (Vector<InstanceVariableBean>) method.getUsedInstanceVariables();
+        ArrayList<PsiVariable> instances = method.getUsedInstanceVariables();
 
         PsiElement[] elementsToMove = new PsiElement[instances.size()];
 
@@ -61,13 +62,16 @@ public class GeneralFixtureStrategy implements IRefactor {
             innerClasses.add(innerClass);
         }
 
-        Collection<MethodBean> allMethods = generalFixtureInfo.getTestClass().getMethods();
-        MethodBean setup = null;
-        for(MethodBean metodo: allMethods) {
-            PsiMethod metodo2 = PsiUtil.getPsi(metodo, project, psiOriginalClass);
+        //Collection<MethodBean> allMethods = generalFixtureInfo.getClassWithGeneralFixture().getMethods();
+        ArrayList<PsiMethodBean> allMethods = generalFixtureInfo.getClassWithGeneralFixture().getPsiMethodBeans();
+        PsiMethodBean setup = null;
+        for(PsiMethodBean metodo: allMethods) {
+            //PsiMethod metodo2 = PsiUtil.getPsi(metodo, project, psiOriginalClass);
+            PsiMethod metodo2 = metodo.getPsiMethod();
 
             for (int i = 0; i < instances.size(); i++) {
-                if (metodo.getUsedInstanceVariables().contains(instances.get(i)) &&
+                if ((metodo.getUsedInstanceVariables().contains(instances.get(i)) ||
+                        metodo.getInitInstanceVariables().contains(instances.get(i))) &&
                         !methodsToMove.contains(metodo2)) {
 
                     if (!metodo.getName().equals("setUp") && !methodsToMove.contains(metodo2)) {
@@ -80,7 +84,8 @@ public class GeneralFixtureStrategy implements IRefactor {
         }
 
         if(setup != null) {
-            PsiMethod psiSetup = PsiUtil.getPsi(setup, project, psiOriginalClass);
+            //PsiMethod psiSetup = PsiUtil.getPsi(setup, project, psiOriginalClass);
+            PsiMethod psiSetup = setup.getPsiMethod();
             int k = 0;
             for (int j = 0; j < psiSetup.getBody().getStatements().length; j++) {
                 PsiElement statement = psiSetup.getBody().getStatements()[j].getFirstChild();
@@ -127,7 +132,7 @@ public class GeneralFixtureStrategy implements IRefactor {
                 }
             });
         }
-        String classShortName = originalClass.getName() + "s";
+        String classShortName = psiOriginalClass.getName() + "s";
 
         processor = new ExtractClassProcessor(
                 psiOriginalClass,

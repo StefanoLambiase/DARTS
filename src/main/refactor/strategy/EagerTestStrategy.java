@@ -6,11 +6,12 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.refactoring.extractMethod.*;
-import it.unisa.testSmellDiffusion.beans.ClassBean;
-import it.unisa.testSmellDiffusion.beans.MethodBean;
-import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.EagerTestInfo;
-import it.unisa.testSmellDiffusion.testSmellInfo.eagerTest.MethodWithEagerTest;
 import main.refactor.IRefactor;
+import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.bean.PsiMethodBean;
+import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
+import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
+
 import java.util.ArrayList;
 
 /* Classe utile per eseguire le tecniche di Refactoring atte all'eliminazione di Eager Test
@@ -38,13 +39,15 @@ public class EagerTestStrategy implements IRefactor {
     @Override
     public void doRefactor() throws PrepareFailedException {
 
-        ClassBean badClass = eagerTestInfo.getTestClass(); //test class contenente lo smell
-        PsiClass classPsi = PsiUtil.getPsi(badClass, project); //Psi relativo alla test class
-        String initialMethodName = methodWithEagerTest.getMethod().getName(); //nome del metodo infetto
+        PsiClassBean classBeanPsi = eagerTestInfo.getClassWithEagerTest(); //test class contenente lo smell
+        PsiClass classPsi = classBeanPsi.getPsiClass();
+        //PsiClass classPsi = PsiUtil.getPsi(badClass, project); //Psi relativo alla test class
+        String initialMethodName = methodWithEagerTest.getMethodWithEagerTest().toString(); //nome del metodo infetto
         boolean isEmpty = true; //usato per verifiche sull'array
 
-        MethodBean badMethod = methodWithEagerTest.getMethod();
-        PsiMethod psiMethod = PsiUtil.getPsi(badMethod, project, classPsi); //Psi relativo al metodo infetto
+        PsiMethodBean psiMethodBean = methodWithEagerTest.getMethodWithEagerTest();
+        PsiMethod psiMethod = psiMethodBean.getPsiMethod();
+        //PsiMethod psiMethod = PsiUtil.getPsi(badMethod, project, classPsi); //Psi relativo al metodo infetto
         PsiType type = psiMethod.getReturnType(); //tipo di ritorno del metodo
 
         ArrayList<PsiElement> elementsToMoveTemp = new ArrayList<>(); //elementi da spostare tramite extract method

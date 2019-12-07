@@ -72,4 +72,8 @@ public class PsiMethodBean {
         this.methodCalls = methodCalls;
     }
 
+    public String getName(){
+        return psiMethod.getName();
+    }
+
 }
