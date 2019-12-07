@@ -5,8 +5,6 @@ import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiMethod;
 import com.intellij.psi.search.GlobalSearchScope;
-import it.unisa.testSmellDiffusion.beans.ClassBean;
-import it.unisa.testSmellDiffusion.beans.MethodBean;
 
 public class PsiUtil {
 
@@ -16,14 +14,14 @@ public class PsiUtil {
      * @param methodBean da convertire
      * @return psi del metodo del bean
      */
-    public static PsiMethod getPsi(MethodBean methodBean, Project project, PsiClass psiClass) {
+    /*public static PsiMethod getPsi(MethodBean methodBean, Project project, PsiClass psiClass) {
         final PsiMethod[] foundPsiMethod = new PsiMethod[1];
 
         String methodName = methodBean.getName().substring(methodBean.getName().lastIndexOf('.') + 1);
         foundPsiMethod[0] = psiClass.findMethodsByName(methodName, true)[0];
 
         return foundPsiMethod[0];
-    }
+    }*/
 
     /**
      * Converte un ClassBean in PsiClass
@@ -31,7 +29,7 @@ public class PsiUtil {
      * @param classBean da convertire
      * @return psi della classe del bean
      */
-    public static PsiClass getPsi(ClassBean classBean, Project project) {
+   /* public static PsiClass getPsi(ClassBean classBean, Project project) {
 
         System.out.println("inside getPsi" + project.toString());
         String aPackage = classBean.getBelongingPackage();
@@ -42,5 +40,5 @@ public class PsiUtil {
 
         return actualClass;
     }
-
+*/
 }

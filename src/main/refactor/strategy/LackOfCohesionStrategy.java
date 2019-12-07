@@ -1,25 +1,14 @@
 package main.refactor.strategy;
 
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
-import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
-import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
-import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import com.intellij.refactoring.extractclass.ExtractClassProcessor;
-import it.unisa.testSmellDiffusion.beans.ClassBean;
-import it.unisa.testSmellDiffusion.beans.InstanceVariableBean;
-import it.unisa.testSmellDiffusion.beans.MethodBean;
-import it.unisa.testSmellDiffusion.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.refactor.IRefactor;
-import org.eclipse.jdt.core.dom.Type;
-
+import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.bean.PsiMethodBean;
+import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 public class LackOfCohesionStrategy implements IRefactor {
     private Project project;
@@ -38,29 +27,33 @@ public class LackOfCohesionStrategy implements IRefactor {
         List<PsiField> fieldsToMove = new ArrayList<>();
         List<PsiClass> innerClasses = new ArrayList<>();
 
-        ClassBean originalClass = informations.getTestClass();
-        PsiClass psiOriginalClass = PsiUtil.getPsi(originalClass, project);
-        String packageName = originalClass.getBelongingPackage();
+        PsiClassBean originalClassBean = informations.getClassWithLackOfCohesion();
+        PsiClass psiOriginalClass = originalClassBean.getPsiClass();
+        //PsiClass psiOriginalClass = PsiUtil.getPsi(originalClass, project);
+        String packageName = originalClassBean.getPsiPackage().getName();
 
-        ArrayList<MethodBean> infectedMethodList = informations.getMethodsThatCauseLackOfCohesion();
-        Collection<MethodBean> allMethods = informations.getTestClass().getMethods();
+        ArrayList<PsiMethodBean> infectedMethodList = informations.getMethodsThatCauseLackOfCohesion();
+        ArrayList<PsiMethodBean> allMethods = originalClassBean.getPsiMethodBeans();
 
-        MethodBean setup = null;
-        for (MethodBean metodo : allMethods) {
+        PsiMethodBean setup = null;
+        for (PsiMethodBean metodo : allMethods) {
             if (metodo.getName().equals("setUp")) {
                 setup = metodo;
             }
         }
         if (setup != null) {
-            PsiMethod psiSetup = PsiUtil.getPsi(setup, project, psiOriginalClass);
+            //PsiMethod psiSetup = PsiUtil.getPsi(setup, project, psiOriginalClass);
+            PsiMethod psiSetup = setup.getPsiMethod();
 
             for (int j = 0; j < psiSetup.getBody().getStatements().length; j++) {
                 PsiElement statement = psiSetup.getBody().getStatements()[j].getFirstChild();
                 PsiElement element = ((PsiAssignmentExpression) statement).getLExpression();
 
-                for (MethodBean metodo : infectedMethodList) {
-                    PsiMethod psiMethod = PsiUtil.getPsi(metodo, project, psiOriginalClass);
-                    Vector<InstanceVariableBean> instances = (Vector<InstanceVariableBean>) metodo.getUsedInstanceVariables();
+                for (PsiMethodBean metodo : infectedMethodList) {
+                    //PsiMethod psiMethod = PsiUtil.getPsi(metodo, project, psiOriginalClass);
+                    PsiMethod psiMethod = metodo.getPsiMethod();
+
+                    ArrayList<PsiVariable> instances = metodo.getUsedInstanceVariables();
 
                     for (int i = 0; i < instances.size(); i++) {
 
@@ -80,7 +73,7 @@ public class LackOfCohesionStrategy implements IRefactor {
                 innerClasses.add(innerClass);
             }
 
-            String classShortName = "Refactored" + originalClass.getName();
+            String classShortName = "Refactored" + originalClassBean.getName();
 
             processor = new ExtractClassProcessor(
                     psiOriginalClass,

@@ -69,4 +69,8 @@ public class PsiClassBean {
     public void setPsiPackage(PsiPackage psiPackage) {
         this.psiPackage = psiPackage;
     }
+
+    public String getName(){
+        return psiClass.getName();
+    }
 }
