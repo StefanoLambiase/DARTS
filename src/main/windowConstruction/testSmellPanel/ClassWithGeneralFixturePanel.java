@@ -3,6 +3,9 @@ package main.windowConstruction.testSmellPanel;
 import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.refactoring.extractMethod.PrepareFailedException;
+import main.refactor.IRefactor;
+import main.refactor.strategy.GeneralFixtureStrategy;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 
@@ -89,7 +92,7 @@ public class ClassWithGeneralFixturePanel extends JPanel {
             });
 
             //parte relativa all'azione del bottone per il refactoring automatico
-            /*
+
             refactoringButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -97,15 +100,11 @@ public class ClassWithGeneralFixturePanel extends JPanel {
                     IRefactor refactor = new GeneralFixtureStrategy(mb, project, gfi);
                     try {
                         refactor.doRefactor();
-                        ToolWindow toolWindow = ToolWindowManager.getActiveToolWindow();
-                        toolWindow.hide(null);
                     } catch (PrepareFailedException e1) {
                         e1.printStackTrace();
                     }
                 }
             });
-
-             */
 
             methodPanel.add(methodName);
             methodPanel.add(methodButton);

@@ -4,6 +4,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackageStatement;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.refactoring.extractMethod.PrepareFailedException;
+import main.refactor.IRefactor;
+import main.refactor.strategy.EagerTestStrategy;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
@@ -91,7 +94,7 @@ public class ClassWithEagerTestPanel extends JPanel {
             });
 
             //parte relativa all'azione del bottone per il refactoring automatico
-            /*
+
             refactoringButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -99,15 +102,13 @@ public class ClassWithEagerTestPanel extends JPanel {
                     IRefactor refactor = new EagerTestStrategy(mb, project, eti);
                     try {
                         refactor.doRefactor();
-                        ToolWindow toolWindow = ToolWindowManager.getActiveToolWindow();
-                        toolWindow.hide(null);
                     } catch (PrepareFailedException e1) {
                         e1.printStackTrace();
                     }
                 }
             });
 
-             */
+
             methodPanel.add(methodName);
             methodPanel.add(methodButton);
             methodPanel.add(refactoringButton);

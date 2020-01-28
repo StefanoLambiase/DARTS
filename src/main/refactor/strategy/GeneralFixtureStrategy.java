@@ -105,7 +105,7 @@ public class GeneralFixtureStrategy implements IRefactor {
             ExtractMethodProcessor methodProcessor = new ExtractMethodProcessor(project, editor, elementsToMove, null, "setUpRefactored", "setUp", null);
 
             if (methodProcessor.prepare()) {
-                methodProcessor.setMethodVisibility(PsiModifier.PUBLIC);
+                //methodProcessor.setMethodVisibility(PsiModifier.PUBLIC);
                 methodProcessor.testPrepare();
                 methodProcessor.testNullability();
                 ExtractMethodHandler.extractMethod(project, methodProcessor);

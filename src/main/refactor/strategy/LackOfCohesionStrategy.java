@@ -35,18 +35,21 @@ public class LackOfCohesionStrategy implements IRefactor {
         ArrayList<PsiMethodBean> infectedMethodList = informations.getMethodsThatCauseLackOfCohesion();
         ArrayList<PsiMethodBean> allMethods = originalClassBean.getPsiMethodBeans();
 
-        PsiMethodBean setup = null;
-        for (PsiMethodBean metodo : allMethods) {
+        for(PsiMethod method: psiOriginalClass.getMethods()){
+            method.getName();
+        }
+        PsiMethod setup = null;
+        for (PsiMethod metodo : psiOriginalClass.getAllMethods()) {
             if (metodo.getName().equals("setUp")) {
                 setup = metodo;
             }
         }
         if (setup != null) {
             //PsiMethod psiSetup = PsiUtil.getPsi(setup, project, psiOriginalClass);
-            PsiMethod psiSetup = setup.getPsiMethod();
+            //PsiMethod psiSetup = setup.getPsiMethod();
 
-            for (int j = 0; j < psiSetup.getBody().getStatements().length; j++) {
-                PsiElement statement = psiSetup.getBody().getStatements()[j].getFirstChild();
+            for (int j = 0; j < setup.getBody().getStatements().length; j++) {
+                PsiElement statement = setup.getBody().getStatements()[j].getFirstChild();
                 PsiElement element = ((PsiAssignmentExpression) statement).getLExpression();
 
                 for (PsiMethodBean metodo : infectedMethodList) {
@@ -66,7 +69,7 @@ public class LackOfCohesionStrategy implements IRefactor {
             }
 
             if (!methodsToMove.isEmpty()) {
-                methodsToMove.add(psiSetup);
+                methodsToMove.add(setup);
             }
 
             for (PsiClass innerClass : psiOriginalClass.getInnerClasses()) {

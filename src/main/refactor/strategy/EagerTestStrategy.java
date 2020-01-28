@@ -42,7 +42,7 @@ public class EagerTestStrategy implements IRefactor {
         PsiClassBean classBeanPsi = eagerTestInfo.getClassWithEagerTest(); //test class contenente lo smell
         PsiClass classPsi = classBeanPsi.getPsiClass();
         //PsiClass classPsi = PsiUtil.getPsi(badClass, project); //Psi relativo alla test class
-        String initialMethodName = methodWithEagerTest.getMethodWithEagerTest().toString(); //nome del metodo infetto
+        String initialMethodName = methodWithEagerTest.getMethodWithEagerTest().getName(); //nome del metodo infetto
         boolean isEmpty = true; //usato per verifiche sull'array
 
         PsiMethodBean psiMethodBean = methodWithEagerTest.getMethodWithEagerTest();

@@ -4,6 +4,9 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackageStatement;
 import com.intellij.psi.util.PsiTreeUtil;
+import com.intellij.refactoring.extractMethod.PrepareFailedException;
+import main.refactor.IRefactor;
+import main.refactor.strategy.LackOfCohesionStrategy;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 
 import javax.swing.*;
@@ -60,20 +63,17 @@ public class ClassWithLackOfCohesionPanel extends JPanel {
         });
 
         //parte relativa all'azione del bottone per il refactoring automatico
-        /*
+
         refactoringButton.addActionListener(e -> {
 
             IRefactor refactor = new LackOfCohesionStrategy(loci, project);
             try {
                 refactor.doRefactor();
-                ToolWindow toolWindow = ToolWindowManager.getActiveToolWindow();
-                toolWindow.hide(null);
             } catch (PrepareFailedException e1) {
                 e1.printStackTrace();
             }
         });
 
-         */
         this.setLayout(new GridLayout(1,3));
         this.add(classNameLabel);
         this.add(pClassNameLabel);
