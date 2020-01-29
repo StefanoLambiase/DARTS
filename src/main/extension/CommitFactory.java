@@ -1,5 +1,6 @@
 package main.extension;
 
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.checkin.CheckinHandler;
@@ -12,15 +13,24 @@ import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.windowCommitConstruction.CommitWindowFactory;
+import main.windowCommitConstruction.WarningWindow;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 
 public class CommitFactory  extends CheckinHandlerFactory{
-
     //Oggetto usato per ottenere i file salvati durante la fase di commit
     private CheckinProjectPanel myPanel;
+
+    private ArrayList<GeneralFixtureInfo> generalFixtureInfos;
+    private ArrayList<EagerTestInfo> eagerTestInfos;
+    private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos;
+
+    private ArrayList<GeneralFixtureInfo> generalFixtureInfos2;
+    private ArrayList<EagerTestInfo> eagerTestInfos2;
+    private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos2;
 
     @NotNull
     @Override
@@ -28,8 +38,13 @@ public class CommitFactory  extends CheckinHandlerFactory{
         myPanel = panel;
 
         final CheckinHandler checkinHandler = new CheckinHandler() {
+
             @Override
             public ReturnResult beforeCheckin() {
+                generalFixtureInfos2 = new ArrayList<>();
+                eagerTestInfos2 = new ArrayList<>();
+                lackOfCohesionInfos2 = new ArrayList<>();
+
                 //Stampa di inizio
                 System.out.println("\n\n############# COMMIT FACTORY ##################\n\n");
                 System.out.println("\n Inizio la fase di detection come Commit Factory");
@@ -39,14 +54,11 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 /* ANALISI TESTUALE */
                 IDetector detector = new TestSmellTextualDetector(myPanel.getProject());
 
-                ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
-                ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
-                ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+                generalFixtureInfos = detector.executeDetectionForGeneralFixture();
+                eagerTestInfos = detector.executeDetectionForEagerTest();
+                lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
                 /* PARTE USATA PER FARE L'ANALISI SOLO DELLE CLASSI DI TEST CHE VENGONO COMMITTATE */
-                ArrayList<GeneralFixtureInfo> generalFixtureInfos2 = new ArrayList<>();
-                ArrayList<EagerTestInfo> eagerTestInfos2 = new ArrayList<>();
-                ArrayList<LackOfCohesionInfo> lackOfCohesionInfos2 = new ArrayList<>();
 
                 ArrayList<VirtualFile> listOfFiles = (ArrayList<VirtualFile>) panel.getVirtualFiles();
                 ArrayList<String> filesNames = new ArrayList<>();
@@ -86,13 +98,26 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 }
                 /* FINE PARTE PER ANALISI DELLE CLASSI CHE VENGONO COMMITTATE */
 
+                return super.beforeCheckin();
+            }
+
+            @Override
+            public void checkinSuccessful() {
                 // Creo la window
                 if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
                     /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
                     //CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                    CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    //CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    warningWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    // Mostra la schermata al centro dello schermo
+                    warningWindow.setLocationRelativeTo(null);
+                    warningWindow.pack();
+                    //Imposta la dimensione della finestra in modo che si adatti al suo contenuto
+
+                    warningWindow.setVisible(true);
                 }
 
                 /* ANALISI STRUTTURALE */
@@ -109,10 +134,10 @@ public class CommitFactory  extends CheckinHandlerFactory{
                     TestSmellWindowFactory.createWindow(false, true, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
                 }
                 */
-
-                return super.beforeCheckin();
             }
         };
+
+
         return checkinHandler;
     }
 
