@@ -4,6 +4,7 @@ import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.checkin.CheckinHandler;
 import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
+import com.intellij.openapi.vfs.VirtualFile;
 import main.testSmellDetection.detector.IDetector;
 import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.detector.TestSmellTextualDetector;
@@ -11,7 +12,6 @@ import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.windowCommitConstruction.CommitWindowFactory;
-import main.windowConstruction.TestSmellWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,22 +35,67 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 System.out.println("\n Inizio la fase di detection come Commit Factory");
 
                 //Questa parte riguarda l'analisi degli Smells
-                // Analisi testuale
+
+                /* ANALISI TESTUALE */
                 IDetector detector = new TestSmellTextualDetector(myPanel.getProject());
 
                 ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
                 ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
                 ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
+                /* PARTE USATA PER FARE L'ANALISI SOLO DELLE CLASSI DI TEST CHE VENGONO COMMITTATE */
+                ArrayList<GeneralFixtureInfo> generalFixtureInfos2 = new ArrayList<>();
+                ArrayList<EagerTestInfo> eagerTestInfos2 = new ArrayList<>();
+                ArrayList<LackOfCohesionInfo> lackOfCohesionInfos2 = new ArrayList<>();
+
+                ArrayList<VirtualFile> listOfFiles = (ArrayList<VirtualFile>) panel.getVirtualFiles();
+                ArrayList<String> filesNames = new ArrayList<>();
+                for(VirtualFile virtualFile : listOfFiles){
+                    if(virtualFile.getExtension() != null && virtualFile.getExtension().equals("java") && (virtualFile.getName().contains("Test") || virtualFile.getName().contains("test"))){
+                        filesNames.add(virtualFile.getNameWithoutExtension());
+                    }
+                }
+
+                boolean find = false;
+                for(String s : filesNames){
+                    for(GeneralFixtureInfo gfi : generalFixtureInfos){
+                        if(gfi.getClassWithGeneralFixture().getName().equals(s) && !find){
+                            generalFixtureInfos2.add(gfi);
+                            find = true;
+                        }
+                    }
+                    find = false;
+                }
+                for(String s : filesNames){
+                    for(EagerTestInfo eti : eagerTestInfos){
+                        if(eti.getClassWithEagerTest().getName().equals(s) && !find){
+                            eagerTestInfos2.add(eti);
+                            find = true;
+                        }
+                    }
+                    find = false;
+                }
+                for(String s : filesNames){
+                    for(LackOfCohesionInfo loci : lackOfCohesionInfos){
+                        if(loci.getClassWithLackOfCohesion().getName().equals(s) && !find){
+                            lackOfCohesionInfos2.add(loci);
+                            find = true;
+                        }
+                    }
+                    find = false;
+                }
+                /* FINE PARTE PER ANALISI DELLE CLASSI CHE VENGONO COMMITTATE */
+
                 // Creo la window
                 if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
+                    /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
                     //CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                    CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos, null, null);
+                    CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
                 }
 
-                // Analisi Strutturale
+                /* ANALISI STRUTTURALE */
                 /*
                 detector = new TestSmellStructuralDetector(myPanel.getProject());
                 generalFixtureInfos = detector.executeDetectionForGeneralFixture();

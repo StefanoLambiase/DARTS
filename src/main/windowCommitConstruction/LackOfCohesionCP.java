@@ -3,8 +3,8 @@ package main.windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
-import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
+import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -12,8 +12,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
-    private ArrayList<GeneralFixtureInfo> classesWithGeneralFixture;
+public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
+    private ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion;
     private Project project;
 
     private JSplitPane firstSplitPane;
@@ -23,7 +23,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
 
     ArrayList<String> classesNames;
 
-    public GeneralFixtureCP(ArrayList<GeneralFixtureInfo> classesWithGF, Project project){
+    public LackOfCohesionCP(ArrayList<LackOfCohesionInfo> classesWithLOC, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
 
@@ -32,13 +32,13 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         // Inizio la costruzione del Panel.
-        if(!classesWithGF.isEmpty()){
+        if(!classesWithLOC.isEmpty()){
             //Parte relativa all'inizializzazione del Panel per GeneralFixture.
-            classesWithGeneralFixture = classesWithGF;
+            classesWithLackOfCohesion = classesWithLOC;
 
             // Mi prendo tutti i nomi delle classi affette dallo smell.
-            for (GeneralFixtureInfo gfi : classesWithGeneralFixture){
-                classesNames.add(gfi.getClassWithGeneralFixture().getName());
+            for (LackOfCohesionInfo loci : classesWithLackOfCohesion){
+                classesNames.add(loci.getClassWithLackOfCohesion().getName());
             }
 
             // Setup della lista delle classi.
@@ -49,7 +49,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
             JBScrollPane classScrollPane = new JBScrollPane(classList);
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
-            secondSplitPane = new GFSmellPanel(classesWithGeneralFixture.get(0), project);
+            secondSplitPane = new LOCSmellPanel(classesWithLackOfCohesion.get(0), project);
 
             // Creazione dello split pane con la lista delle classi e la secondSplitPane.
             firstSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, classScrollPane, secondSplitPane);
@@ -73,13 +73,12 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
-        updateSmellPanel(classesWithGeneralFixture.get(list.getSelectedIndex()));
+        updateSmellPanel(classesWithLackOfCohesion.get(list.getSelectedIndex()));
     }
 
-    protected void updateSmellPanel (GeneralFixtureInfo gfi) {
-        secondSplitPane = new GFSmellPanel(gfi, project);
+    protected void updateSmellPanel (LackOfCohesionInfo loci) {
+        secondSplitPane = new LOCSmellPanel(loci, project);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(200, 100));
     }
-
 }

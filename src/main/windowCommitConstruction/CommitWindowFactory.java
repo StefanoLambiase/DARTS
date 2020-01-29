@@ -6,8 +6,6 @@ import com.intellij.ui.components.JBTabbedPane;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowConstruction.EagerTestPanel;
-import main.windowConstruction.LackOfCohesionPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,10 +65,10 @@ public class CommitWindowFactory {
             generalFixturePanel = new GeneralFixtureCP(listGFI, project);
         }
         if (listETI != null) {
-            eagerTestPanel = new EagerTestPanel(listETI, project);
+            eagerTestPanel = new EagerTestCP(listETI, project);
         }
         if (listLOCI != null){
-            lackOfCohesionPanel = new LackOfCohesionPanel(listLOCI, project);
+            lackOfCohesionPanel = new LackOfCohesionCP(listLOCI, project);
         }
 
         //In questa parte costruisco le tab della window.
