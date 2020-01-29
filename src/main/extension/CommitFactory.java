@@ -10,6 +10,8 @@ import main.testSmellDetection.detector.TestSmellTextualDetector;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.windowCommitConstruction.CommitWindowFactory;
+import main.windowConstruction.TestSmellWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -20,7 +22,6 @@ public class CommitFactory  extends CheckinHandlerFactory{
     //Oggetto usato per ottenere i file salvati durante la fase di commit
     private CheckinProjectPanel myPanel;
 
-
     @NotNull
     @Override
     public CheckinHandler createHandler(@NotNull CheckinProjectPanel panel, @NotNull CommitContext commitContext) {
@@ -30,46 +31,44 @@ public class CommitFactory  extends CheckinHandlerFactory{
             @Override
             public ReturnResult beforeCheckin() {
                 //Stampa di inizio
-                System.out.println("\n\nHello! Inizio la fase pre-commit");
+                System.out.println("\n\n############# COMMIT FACTORY ##################\n\n");
+                System.out.println("\n Inizio la fase di detection come Commit Factory");
 
                 //Questa parte riguarda l'analisi degli Smells
-                //Eseguo l'analisi strutturale
-                IDetector detector = new TestSmellStructuralDetector(myPanel.getProject());
+                // Analisi testuale
+                IDetector detector = new TestSmellTextualDetector(myPanel.getProject());
+
                 ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
                 ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
                 ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
-                //Creo la window
-                /*
-                if(listGFI.isEmpty() && listETI.isEmpty()){
+                // Creo la window
+                if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
-                    TestSmellWindowFactory.createWindow(true, false, myPanel.getProject(), listGFI, listETI, listLOCI);
+                    //CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+                    CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos, null, null);
                 }
 
-                 */
-
-                //Eseguo l'analisi Testuale
-                detector = new TestSmellTextualDetector(myPanel.getProject());
+                // Analisi Strutturale
+                /*
+                detector = new TestSmellStructuralDetector(myPanel.getProject());
                 generalFixtureInfos = detector.executeDetectionForGeneralFixture();
                 eagerTestInfos = detector.executeDetectionForEagerTest();
                 lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
-                //Creo la window
-                /*
-                if(listGFI.isEmpty() && listETI.isEmpty()){
+                // Creo la window
+                if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
-                    TestSmellWindowFactory.createWindow(false, true, myPanel.getProject(), listGFI, listETI, listLOCI);
+                    TestSmellWindowFactory.createWindow(false, true, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
                 }
-                //Chiamata finale per completare il commit
+                */
 
-                 */
                 return super.beforeCheckin();
             }
         };
         return checkinHandler;
     }
-
 
 }

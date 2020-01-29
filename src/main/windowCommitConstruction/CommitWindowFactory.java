@@ -1,4 +1,4 @@
-package main.windowConstruction;
+package main.windowCommitConstruction;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
@@ -6,13 +6,14 @@ import com.intellij.ui.components.JBTabbedPane;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.windowConstruction.EagerTestPanel;
+import main.windowConstruction.LackOfCohesionPanel;
 
-
+import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import javax.swing.*;
 
-public class TestSmellWindowFactory {
+public class CommitWindowFactory {
     private static JPanel generalFixturePanel;
     private static JPanel eagerTestPanel;
     private static JPanel lackOfCohesionPanel;
@@ -22,19 +23,19 @@ public class TestSmellWindowFactory {
                                     ArrayList<GeneralFixtureInfo> listGFI,
                                     ArrayList<EagerTestInfo> listETI,
                                     ArrayList<LackOfCohesionInfo> listLOCI) {
-        PrincipalFrame principalFrame = null;
+        CommitPrincipalFrame principalFrame = null;
         //Controllo per vedere se la window esiste già.
         boolean frameExist = false;
         Frame[] frames = JFrame.getFrames();
         for(Frame frame : frames){
-            if(frame.getName().equals("DARTSWindow")){
-                principalFrame = (PrincipalFrame) frame;
+            if(frame.getName().equals("DARTSCommitWindow")){
+                principalFrame = (CommitPrincipalFrame) frame;
                 frameExist = true;
             }
         }
         if(!frameExist){
-            principalFrame = new PrincipalFrame();
-            principalFrame.setName("DARTSWindow");
+            principalFrame = new CommitPrincipalFrame();
+            principalFrame.setName("DARTSCommitWindow");
             principalFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         }
 
@@ -58,12 +59,12 @@ public class TestSmellWindowFactory {
     }
 
     private static JBTabbedPane createPanel(Project project,
-                             ArrayList<GeneralFixtureInfo> listGFI,
-                             ArrayList<EagerTestInfo> listETI,
-                             ArrayList<LackOfCohesionInfo> listLOCI){
+                                            ArrayList<GeneralFixtureInfo> listGFI,
+                                            ArrayList<EagerTestInfo> listETI,
+                                            ArrayList<LackOfCohesionInfo> listLOCI){
         // Controllo se ho trovato degli smells.
         if (listGFI != null) {
-            generalFixturePanel = new GeneralFixturePanel(listGFI, project);
+            generalFixturePanel = new GeneralFixtureCP(listGFI, project);
         }
         if (listETI != null) {
             eagerTestPanel = new EagerTestPanel(listETI, project);
@@ -89,5 +90,4 @@ public class TestSmellWindowFactory {
         }
         return tp;
     }
-
 }

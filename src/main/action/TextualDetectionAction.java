@@ -24,7 +24,7 @@ public class TextualDetectionAction extends AnAction {
         ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
         ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
-        System.out.println("\nDETECTOR TESTUALE: risultato dell'analisi.");
+        System.out.println("\n\n ########################### ACTION - DETECTOR TESTUALE: risultato dell'analisi. ###########################\n\n");
         for(GeneralFixtureInfo info : generalFixtureInfos){
             System.out.println("\n   GENERAL FIXTURE: " + info.toString());
         }
@@ -36,7 +36,7 @@ public class TextualDetectionAction extends AnAction {
         }
 
         if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
-            System.out.println("\nNon si è trovato alcuno Smell");
+            System.out.println("\n Non si è trovato alcuno Smell");
         } else {
             TestSmellWindowFactory.createWindow(true, false, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
         }
