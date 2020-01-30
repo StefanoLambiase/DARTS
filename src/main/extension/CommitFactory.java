@@ -1,19 +1,16 @@
 package main.extension;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vcs.CheckinProjectPanel;
 import com.intellij.openapi.vcs.changes.CommitContext;
 import com.intellij.openapi.vcs.checkin.CheckinHandler;
 import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import main.testSmellDetection.detector.IDetector;
-import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.detector.TestSmellTextualDetector;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowCommitConstruction.CommitWindowFactory;
-import main.windowCommitConstruction.WarningWindow;
+import main.windowCommitConstruction.generalPanel.WarningWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -98,11 +95,13 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 }
                 /* FINE PARTE PER ANALISI DELLE CLASSI CHE VENGONO COMMITTATE */
 
+
                 return super.beforeCheckin();
             }
 
             @Override
             public void checkinSuccessful() {
+
                 // Creo la window
                 if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
                     System.out.println("\nNon si è trovato alcuno Smell");
@@ -119,7 +118,6 @@ public class CommitFactory  extends CheckinHandlerFactory{
 
                     warningWindow.setVisible(true);
                 }
-
                 /* ANALISI STRUTTURALE */
                 /*
                 detector = new TestSmellStructuralDetector(myPanel.getProject());

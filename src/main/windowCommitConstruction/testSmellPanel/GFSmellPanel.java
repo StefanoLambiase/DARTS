@@ -7,6 +7,8 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
+import main.utility.TestSmellUtilities;
+import main.windowCommitConstruction.generalPanel.RefactorWindow;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -18,14 +20,16 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
     private JBList smellList;
     private JBPanel refactorPreviewPanel;
 
-    ArrayList<String> methodsNames;
+    private ArrayList<String> methodsNames = new ArrayList<>();
 
     private GeneralFixtureInfo generalFixtureInfo;
+    private Project project;
 
     public GFSmellPanel(GeneralFixtureInfo generalFixtureInfo, Project project){
+        this.project = project;
+
         this.refactorPreviewPanel = new JBPanel();
         this.generalFixtureInfo = generalFixtureInfo;
-        this.methodsNames = new ArrayList<>();
 
         for(MethodWithGeneralFixture methodWithGeneralFixture : generalFixtureInfo.getMethodsThatCauseGeneralFixture()){
             methodsNames.add(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
@@ -35,34 +39,59 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);
-        JBScrollPane classScrollPane = new JBScrollPane(smellList);
+        JBScrollPane smellScrollPane = new JBScrollPane(smellList);
 
         // Creazione dello split pane con la lista degli smell e la preview del refactoring.
         this.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        this.setLeftComponent(smellList);
-        this.setRightComponent(refactorPreviewPanel);
+        this.setLeftComponent(smellScrollPane);
         this.setOneTouchExpandable(true);
         this.setDividerLocation(150);
 
         // Fornisco le dimensioni minime dei due panel e una dimensione di base per l'intero panel.
         Dimension minimumSize = new Dimension(200, 100);
-        smellList.setMinimumSize(minimumSize);
+        smellScrollPane.setMinimumSize(minimumSize);
         refactorPreviewPanel.setMinimumSize(minimumSize);
         this.setPreferredSize(new Dimension(400, 200));
 
         // Starto il secondo panel per la prima volta.
-        updateRefactorPreviewLabel(methodsNames.get(smellList.getSelectedIndex()));
+        updateRefactorPreviewLabel(smellList.getSelectedIndex());
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
-        updateRefactorPreviewLabel(methodsNames.get(list.getSelectedIndex()));
+        updateRefactorPreviewLabel(list.getSelectedIndex());
     }
 
     //Renders the selected image
-    protected void updateRefactorPreviewLabel (String smellName) {
-        JBLabel label = new JBLabel(smellName);
-        refactorPreviewPanel.add(label);
+    protected void updateRefactorPreviewLabel (int index) {
+        MethodWithGeneralFixture methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(index);
+        RefactorWindow refactorWindow = new RefactorWindow(methodWithGeneralFixture, generalFixtureInfo, project, this);
+        this.setRightComponent(refactorWindow.getRootPanel());
+    }
+
+    public void doAfterRefactor(String methodName){
+        this.rightComponent = null;
+
+        int i = 0;
+
+        for(int index = 0; index < methodsNames.size(); index ++){
+            if(methodsNames.get(index).equals(methodName)){
+                methodsNames.remove(index);
+                i = index;
+            }
+        }
+
+        System.out.println(TestSmellUtilities.ANSI_RED + "Nome metodo: " + generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(i).getMethodWithGeneralFixture().getName());
+        generalFixtureInfo.getMethodsThatCauseGeneralFixture().remove(i);
+
+        smellList = new JBList(methodsNames);
+        smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        smellList.setSelectedIndex(0);
+        smellList.addListSelectionListener(this);
+        JBScrollPane smellScrollPane = new JBScrollPane(smellList);
+        this.setLeftComponent(smellScrollPane);
+        if(!(smellList.getSelectedIndex() == -1))
+            updateRefactorPreviewLabel(smellList.getSelectedIndex());
     }
 }

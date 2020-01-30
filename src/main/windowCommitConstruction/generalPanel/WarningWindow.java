@@ -1,9 +1,10 @@
-package main.windowCommitConstruction;
+package main.windowCommitConstruction.generalPanel;
 
 import com.intellij.openapi.project.Project;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.windowCommitConstruction.CommitWindowFactory;
 
 import javax.swing.*;
 import java.awt.*;
