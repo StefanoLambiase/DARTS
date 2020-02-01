@@ -1,16 +1,16 @@
 package main.windowCommitConstruction.testSmellPanel;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import main.utility.TestSmellUtilities;
-import main.windowCommitConstruction.generalPanel.RefactorWindow;
+import main.windowCommitConstruction.general.RefactorWindow;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -40,6 +40,7 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);
         JBScrollPane smellScrollPane = new JBScrollPane(smellList);
+        smellScrollPane.setBorder(new TitledBorder("METODI"));
 
         // Creazione dello split pane con la lista degli smell e la preview del refactoring.
         this.setOrientation(JSplitPane.HORIZONTAL_SPLIT);

@@ -3,10 +3,13 @@ package main.windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -26,6 +29,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     public GeneralFixtureCP(ArrayList<GeneralFixtureInfo> classesWithGF, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
+        DefaultListModel model = new DefaultListModel ();
 
         classesNames = new ArrayList<>();
 
@@ -38,15 +42,21 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
 
             // Mi prendo tutti i nomi delle classi affette dallo smell.
             for (GeneralFixtureInfo gfi : classesWithGeneralFixture){
-                classesNames.add(gfi.getClassWithGeneralFixture().getName());
+                // classesNames.add(gfi.getClassWithGeneralFixture().getName());
+                model.addElement(gfi);
             }
 
             // Setup della lista delle classi.
-            classList = new JBList(classesNames);
+
+            classList = new JBList(model);
+            classList.setCellRenderer( new CustomListRenderer(classList));
+            classList.setBorder ( BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ) );
+
             classList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             classList.setSelectedIndex(0);
             classList.addListSelectionListener(this);
             JBScrollPane classScrollPane = new JBScrollPane(classList);
+            classScrollPane.setBorder(new TitledBorder("CLASSI"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
             secondSplitPane = new GFSmellPanel(classesWithGeneralFixture.get(0), project);
@@ -73,11 +83,12 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
-        updateSmellPanel(classesWithGeneralFixture.get(list.getSelectedIndex()));
+        TestSmellInfo testSmellInfo = (TestSmellInfo) list.getSelectedValue();
+        updateSmellPanel(testSmellInfo);
     }
 
-    protected void updateSmellPanel (GeneralFixtureInfo gfi) {
-        secondSplitPane = new GFSmellPanel(gfi, project);
+    protected void updateSmellPanel (TestSmellInfo gfi) {
+        secondSplitPane = new GFSmellPanel((GeneralFixtureInfo) gfi, project);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(200, 100));
     }

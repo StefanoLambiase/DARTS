@@ -10,7 +10,7 @@ import main.testSmellDetection.detector.TestSmellTextualDetector;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowCommitConstruction.generalPanel.WarningWindow;
+import main.windowCommitConstruction.general.WarningWindow;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -86,7 +86,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 }
                 for(String s : filesNames){
                     for(LackOfCohesionInfo loci : lackOfCohesionInfos){
-                        if(loci.getClassWithLackOfCohesion().getName().equals(s) && !find){
+                        if(loci.getClassWithSmell().getName().equals(s) && !find){
                             lackOfCohesionInfos2.add(loci);
                             find = true;
                         }
@@ -107,14 +107,15 @@ public class CommitFactory  extends CheckinHandlerFactory{
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
                     /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
-                    //CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                    //CommitWindowFactory.createWindow(true, false, myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
-                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+                    //WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
                     warningWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
                     // Mostra la schermata al centro dello schermo
                     warningWindow.setLocationRelativeTo(null);
-                    warningWindow.pack();
+
                     //Imposta la dimensione della finestra in modo che si adatti al suo contenuto
+                    warningWindow.pack();
 
                     warningWindow.setVisible(true);
                 }

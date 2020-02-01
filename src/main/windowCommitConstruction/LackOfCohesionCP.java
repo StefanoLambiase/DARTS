@@ -38,7 +38,7 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
 
             // Mi prendo tutti i nomi delle classi affette dallo smell.
             for (LackOfCohesionInfo loci : classesWithLackOfCohesion){
-                classesNames.add(loci.getClassWithLackOfCohesion().getName());
+                classesNames.add(loci.getClassWithSmell().getName());
             }
 
             // Setup della lista delle classi.

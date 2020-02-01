@@ -2,16 +2,16 @@ package main.testSmellDetection.testSmellInfo.lackOfCohesion;
 
 import main.testSmellDetection.bean.PsiClassBean;
 import main.testSmellDetection.bean.PsiMethodBean;
+import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 
 import java.util.ArrayList;
 
-public class LackOfCohesionInfo {
-    private PsiClassBean classWithLackOfCohesion;
+public class LackOfCohesionInfo extends TestSmellInfo {
     private PsiClassBean productionClass;
     private ArrayList<PsiMethodBean> methodsThatCauseLackOfCohesion;
 
     public LackOfCohesionInfo(PsiClassBean classWithLackOfCohesion, PsiClassBean productionClass, ArrayList<PsiMethodBean> methodsThatCauseLackOfCohesion) {
-        this.classWithLackOfCohesion = classWithLackOfCohesion;
+        super(classWithLackOfCohesion);
         this.productionClass = productionClass;
         this.methodsThatCauseLackOfCohesion = methodsThatCauseLackOfCohesion;
     }
@@ -19,19 +19,19 @@ public class LackOfCohesionInfo {
     @Override
     public String toString() {
         return "LackOfCohesionInfo{" +
-                "classWithLackOfCohesion=" + classWithLackOfCohesion +
+                "classWithLackOfCohesion=" + classWithSmell +
                 ", productionClass=" + productionClass +
                 ", methodsThatCauseLackOfCohesion=" + methodsThatCauseLackOfCohesion +
                 '}';
     }
 
     /* GETTERS & SETTERS */
-    public PsiClassBean getClassWithLackOfCohesion() {
-        return classWithLackOfCohesion;
+    public PsiClassBean getClassWithSmell() {
+        return classWithSmell;
     }
 
-    public void setClassWithLackOfCohesion(PsiClassBean classWithLackOfCohesion) {
-        this.classWithLackOfCohesion = classWithLackOfCohesion;
+    public void setClassWithSmell(PsiClassBean classWithSmell) {
+        this.classWithSmell = classWithSmell;
     }
 
     public PsiClassBean getProductionClass() {

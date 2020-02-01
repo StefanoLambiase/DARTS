@@ -1,33 +1,33 @@
 package main.testSmellDetection.testSmellInfo.generalFixture;
 
 import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 
 import java.util.ArrayList;
 
-public class GeneralFixtureInfo {
-    private PsiClassBean classWithGeneralFixture;
+public class GeneralFixtureInfo extends TestSmellInfo {
     private ArrayList<MethodWithGeneralFixture> methodsThatCauseGeneralFixture;
 
     public GeneralFixtureInfo(PsiClassBean classWithGeneralFixture, ArrayList<MethodWithGeneralFixture> methodsThatCauseGeneralFixture) {
-        this.classWithGeneralFixture = classWithGeneralFixture;
+        super(classWithGeneralFixture);
         this.methodsThatCauseGeneralFixture = methodsThatCauseGeneralFixture;
     }
 
     @Override
     public String toString() {
         return "GeneralFixtureInfo{" +
-                "classWithGeneralFixture=" + classWithGeneralFixture +
+                "classWithGeneralFixture=" + classWithSmell +
                 ", methodsThatCauseGeneralFixture=" + methodsThatCauseGeneralFixture +
                 '}';
     }
 
     /* GETTERS & SETTERS */
     public PsiClassBean getClassWithGeneralFixture() {
-        return classWithGeneralFixture;
+        return classWithSmell;
     }
 
     public void setClassWithGeneralFixture(PsiClassBean classWithGeneralFixture) {
-        this.classWithGeneralFixture = classWithGeneralFixture;
+        this.classWithSmell = classWithGeneralFixture;
     }
 
     public ArrayList<MethodWithGeneralFixture> getMethodsThatCauseGeneralFixture() {

@@ -1,16 +1,16 @@
 package main.testSmellDetection.testSmellInfo.eagerTest;
 
 import main.testSmellDetection.bean.PsiClassBean;
+import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 
 import java.util.ArrayList;
 
-public class EagerTestInfo {
-    private PsiClassBean classWithEagerTest;
+public class EagerTestInfo extends TestSmellInfo {
     private PsiClassBean productionClass;
     private ArrayList<MethodWithEagerTest> methodsThatCauseEagerTest;
 
     public EagerTestInfo(PsiClassBean classWithEagerTest, PsiClassBean productionClass, ArrayList<MethodWithEagerTest> methodsThatCauseEagerTest) {
-        this.classWithEagerTest = classWithEagerTest;
+        super(classWithEagerTest);
         this.productionClass = productionClass;
         this.methodsThatCauseEagerTest = methodsThatCauseEagerTest;
     }
@@ -18,7 +18,7 @@ public class EagerTestInfo {
     @Override
     public String toString() {
         return "EagerTestInfo{" +
-                "classWithEagerTest=" + classWithEagerTest +
+                "classWithEagerTest=" + classWithSmell +
                 ", productionClass=" + productionClass +
                 ", methodsThatCauseEagerTest=" + methodsThatCauseEagerTest +
                 '}';
@@ -26,11 +26,11 @@ public class EagerTestInfo {
 
     /* GETTERS & SETTERS */
     public PsiClassBean getClassWithEagerTest() {
-        return classWithEagerTest;
+        return classWithSmell;
     }
 
     public void setClassWithEagerTest(PsiClassBean classWithEagerTest) {
-        this.classWithEagerTest = classWithEagerTest;
+        this.classWithSmell = classWithEagerTest;
     }
 
     public PsiClassBean getProductionClass() {

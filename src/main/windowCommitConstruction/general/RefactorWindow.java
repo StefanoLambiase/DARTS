@@ -1,4 +1,4 @@
-package main.windowCommitConstruction.generalPanel;
+package main.windowCommitConstruction.general;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
@@ -15,6 +15,7 @@ import main.utility.TestSmellUtilities;
 import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -80,7 +81,7 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
 
         doRefactorButton.addActionListener(this);
-        this.refactorPanel.add(new JLabel(lackOfCohesionInfo.getClassWithLackOfCohesion().getName()));
+        this.refactorPanel.add(new JLabel(lackOfCohesionInfo.getClassWithSmell().getName()));
     }
 
     @Override

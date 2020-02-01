@@ -24,10 +24,10 @@ public class ClassWithLackOfCohesionPanel extends JPanel {
 
         //Costruisco la struttura del JPanel riguardante una specifica classe affetta da LackOfCohesion
         // Test Class.
-        PsiFile parentFile = (PsiFile) PsiTreeUtil.getParentOfType(loci.getClassWithLackOfCohesion().getPsiClass(), PsiFile.class);
+        PsiFile parentFile = (PsiFile) PsiTreeUtil.getParentOfType(loci.getClassWithSmell().getPsiClass(), PsiFile.class);
         PsiPackageStatement psiPackageStatement = PsiTreeUtil.getChildOfType(parentFile, PsiPackageStatement.class);
         String packageString = psiPackageStatement.getPackageName();
-        JLabel classNameLabel = new JLabel("   " + packageString + "." + loci.getClassWithLackOfCohesion().getPsiClass().getName());
+        JLabel classNameLabel = new JLabel("   " + packageString + "." + loci.getClassWithSmell().getPsiClass().getName());
         // Production class.
         parentFile = (PsiFile) PsiTreeUtil.getParentOfType(loci.getProductionClass().getPsiClass(), PsiFile.class);
         psiPackageStatement = PsiTreeUtil.getChildOfType(parentFile, PsiPackageStatement.class);
@@ -39,7 +39,7 @@ public class ClassWithLackOfCohesionPanel extends JPanel {
         methodButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JFrame detailsFrame = new JFrame(loci.getClassWithLackOfCohesion().getPsiClass().getName());
+                JFrame detailsFrame = new JFrame(loci.getClassWithSmell().getPsiClass().getName());
                 Container cp = detailsFrame.getContentPane();
                 cp.setLayout(new BoxLayout(cp, BoxLayout.Y_AXIS));
 

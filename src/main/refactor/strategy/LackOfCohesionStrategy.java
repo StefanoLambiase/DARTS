@@ -27,7 +27,7 @@ public class LackOfCohesionStrategy implements IRefactor {
         List<PsiField> fieldsToMove = new ArrayList<>();
         List<PsiClass> innerClasses = new ArrayList<>();
 
-        PsiClassBean originalClassBean = informations.getClassWithLackOfCohesion();
+        PsiClassBean originalClassBean = informations.getClassWithSmell();
         PsiClass psiOriginalClass = originalClassBean.getPsiClass();
         //PsiClass psiOriginalClass = PsiUtil.getPsi(originalClass, project);
         String packageName = originalClassBean.getPsiPackage().getName();

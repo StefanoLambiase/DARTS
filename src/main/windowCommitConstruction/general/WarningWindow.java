@@ -1,4 +1,4 @@
-package main.windowCommitConstruction.generalPanel;
+package main.windowCommitConstruction.general;
 
 import com.intellij.openapi.project.Project;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -13,22 +13,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class WarningWindow extends JFrame {
-    private Project project;
-
-    private ArrayList<GeneralFixtureInfo> generalFixtureInfos;
-    private ArrayList<EagerTestInfo> eagerTestInfos;
-    private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos;
 
     private JButton ignoreButton;
     private JButton seeButton;
     private JPanel rootPanel;
 
+    private JFrame thisFrame;
+
     public WarningWindow(Project project, ArrayList<GeneralFixtureInfo> generalFixtureInfos, ArrayList<EagerTestInfo> eagerTestInfos, ArrayList<LackOfCohesionInfo> lackOfCohesionInfos) throws HeadlessException {
         super("Test Smell Notifier");
-        this.project = project;
-        this.generalFixtureInfos = generalFixtureInfos;
-        this.eagerTestInfos = eagerTestInfos;
-        this.lackOfCohesionInfos = lackOfCohesionInfos;
+        thisFrame = this;
 
         ignoreButton.setActionCommand("ignore");
         seeButton.setActionCommand("see");
@@ -38,7 +32,7 @@ public class WarningWindow extends JFrame {
         ignoreButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                thisFrame.dispose();
             }
         });
         seeButton.addActionListener(new ActionListener() {
