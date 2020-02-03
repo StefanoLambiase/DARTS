@@ -20,7 +20,7 @@ public class CustomLabel extends JLabel{
     {
         super ();
         setOpaque ( true );
-        setBorder ( BorderFactory.createEmptyBorder ( 40, 40, 40, 40 ) );
+        setBorder ( BorderFactory.createEmptyBorder ( 20, 20, 20, 20 ) );
     }
 
     public void setSelected ( boolean selected )

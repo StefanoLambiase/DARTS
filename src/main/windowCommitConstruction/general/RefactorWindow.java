@@ -6,13 +6,16 @@ import main.refactor.IRefactor;
 import main.refactor.strategy.EagerTestStrategy;
 import main.refactor.strategy.GeneralFixtureStrategy;
 import main.refactor.strategy.LackOfCohesionStrategy;
+import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.utility.TestSmellUtilities;
+import main.windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
+import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +31,7 @@ public class RefactorWindow extends JPanel implements ActionListener{
 
     private MethodWithGeneralFixture methodWithGeneralFixture;
     private MethodWithEagerTest methodWithEagerTest;
+    private PsiMethodBean methodWithLOC;
 
     private GeneralFixtureInfo generalFixtureInfo = null;
     private EagerTestInfo eagerTestInfo = null;
@@ -36,6 +40,8 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private Project project;
 
     private GFSmellPanel gfSmellPanel;
+    private ETSmellPanel etSmellPanel;
+    private LOCSmellPanel locSmellPanel;
 
     /**
      * Call this for General Fixture Panel.
@@ -51,7 +57,6 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.gfSmellPanel = gfSmellPanel;
 
         doRefactorButton.addActionListener(this);
-        //this.refactorPanel.add(new JLabel(methodWithGeneralFixture.getMethodWithGeneralFixture().getName()));
     }
 
     /**
@@ -60,14 +65,14 @@ public class RefactorWindow extends JPanel implements ActionListener{
      * @param eagerTestInfo
      * @param project
      */
-    public RefactorWindow(MethodWithEagerTest methodWithEagerTest, EagerTestInfo eagerTestInfo, Project project) {
+    public RefactorWindow(MethodWithEagerTest methodWithEagerTest, EagerTestInfo eagerTestInfo, Project project, ETSmellPanel etSmellPanel) {
         super();
         this.methodWithEagerTest = methodWithEagerTest;
         this.eagerTestInfo = eagerTestInfo;
         this.project = project;
+        this.etSmellPanel = etSmellPanel;
 
         doRefactorButton.addActionListener(this);
-        this.refactorPanel.add(new JLabel(methodWithEagerTest.getMethodWithEagerTest().getName()));
     }
 
     /**
@@ -75,13 +80,14 @@ public class RefactorWindow extends JPanel implements ActionListener{
      * @param lackOfCohesionInfo
      * @param project
      */
-    public RefactorWindow(LackOfCohesionInfo lackOfCohesionInfo, Project project) {
+    public RefactorWindow(PsiMethodBean methodWithLOC, LackOfCohesionInfo lackOfCohesionInfo, Project project, LOCSmellPanel locSmellPanel) {
         super();
+        this.methodWithLOC = methodWithLOC;
         this.lackOfCohesionInfo = lackOfCohesionInfo;
         this.project = project;
+        this.locSmellPanel = locSmellPanel;
 
         doRefactorButton.addActionListener(this);
-        this.refactorPanel.add(new JLabel(lackOfCohesionInfo.getClassWithSmell().getName()));
     }
 
     @Override
@@ -89,14 +95,16 @@ public class RefactorWindow extends JPanel implements ActionListener{
         try{
             if(generalFixtureInfo != null){
                 IRefactor refactor = new GeneralFixtureStrategy(methodWithGeneralFixture, project, generalFixtureInfo);
-                //refactor.doRefactor();
+                refactor.doRefactor();
                 gfSmellPanel.doAfterRefactor(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
             } else if(eagerTestInfo != null){
                 IRefactor refactor = new EagerTestStrategy(methodWithEagerTest, project, eagerTestInfo);
                 refactor.doRefactor();
+                etSmellPanel.doAfterRefactor(methodWithEagerTest.getMethodWithEagerTest().getName());
             } else if(lackOfCohesionInfo != null){
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
+                locSmellPanel.doAfterRefactor(methodWithLOC.getName());
             } else {
                 System.out.println("\n\n" + TestSmellUtilities.ANSI_RED + "All Info are NULL\n");
             }

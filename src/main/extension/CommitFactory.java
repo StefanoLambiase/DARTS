@@ -56,7 +56,6 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
 
                 /* PARTE USATA PER FARE L'ANALISI SOLO DELLE CLASSI DI TEST CHE VENGONO COMMITTATE */
-
                 ArrayList<VirtualFile> listOfFiles = (ArrayList<VirtualFile>) panel.getVirtualFiles();
                 ArrayList<String> filesNames = new ArrayList<>();
                 for(VirtualFile virtualFile : listOfFiles){
@@ -95,7 +94,6 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 }
                 /* FINE PARTE PER ANALISI DELLE CLASSI CHE VENGONO COMMITTATE */
 
-
                 return super.beforeCheckin();
             }
 
@@ -107,32 +105,14 @@ public class CommitFactory  extends CheckinHandlerFactory{
                     System.out.println("\nNon si è trovato alcuno Smell");
                 } else {
                     /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
-                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                    //WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    //WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
                     warningWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-                    // Mostra la schermata al centro dello schermo
                     warningWindow.setLocationRelativeTo(null);
-
-                    //Imposta la dimensione della finestra in modo che si adatti al suo contenuto
                     warningWindow.pack();
-
                     warningWindow.setVisible(true);
                 }
-                /* ANALISI STRUTTURALE */
-                /*
-                detector = new TestSmellStructuralDetector(myPanel.getProject());
-                generalFixtureInfos = detector.executeDetectionForGeneralFixture();
-                eagerTestInfos = detector.executeDetectionForEagerTest();
-                lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
-
-                // Creo la window
-                if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
-                    System.out.println("\nNon si è trovato alcuno Smell");
-                } else {
-                    TestSmellWindowFactory.createWindow(false, true, myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                }
-                */
             }
         };
 

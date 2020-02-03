@@ -4,12 +4,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
+import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -29,6 +32,7 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
     public EagerTestCP(ArrayList<EagerTestInfo> classesWithET, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
+        DefaultListModel model = new DefaultListModel ();
 
         classesNames = new ArrayList<>();
 
@@ -41,15 +45,20 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
 
             // Mi prendo tutti i nomi delle classi affette dallo smell.
             for (EagerTestInfo eti : classesWithEagerTest){
-                classesNames.add(eti.getClassWithEagerTest().getName());
+                //classesNames.add(eti.getClassWithEagerTest().getName());
+                model.addElement(eti);
             }
 
             // Setup della lista delle classi.
-            classList = new JBList(classesNames);
+            classList = new JBList(model);
+            classList.setCellRenderer( new CustomListRenderer(classList));
+            classList.setBorder ( BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ) );
+
             classList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             classList.setSelectedIndex(0);
             classList.addListSelectionListener(this);
             JBScrollPane classScrollPane = new JBScrollPane(classList);
+            classScrollPane.setBorder(new TitledBorder("CLASSI"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
             secondSplitPane = new ETSmellPanel(classesWithEagerTest.get(0), project);
@@ -59,7 +68,7 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
             firstSplitPane.setOneTouchExpandable(true);
             firstSplitPane.setDividerLocation(150);
 
-            Dimension minimumSize = new Dimension(200, 100);
+            Dimension minimumSize = new Dimension(150, 100);
             classScrollPane.setMinimumSize(minimumSize);
             secondSplitPane.setMinimumSize(minimumSize);
             firstSplitPane.setPreferredSize(new Dimension(400, 200));
@@ -76,12 +85,13 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
-        updateSmellPanel(classesWithEagerTest.get(list.getSelectedIndex()));
+        TestSmellInfo testSmellInfo = (TestSmellInfo) list.getSelectedValue();
+        updateSmellPanel(testSmellInfo);
     }
 
-    protected void updateSmellPanel (EagerTestInfo eti) {
-        secondSplitPane = new ETSmellPanel(eti, project);
+    protected void updateSmellPanel (TestSmellInfo eti) {
+        secondSplitPane = new ETSmellPanel((EagerTestInfo) eti, project);
         firstSplitPane.setRightComponent(secondSplitPane);
-        secondSplitPane.setMinimumSize(new Dimension(200, 100));
+        secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
 }

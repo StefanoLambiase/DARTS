@@ -3,10 +3,13 @@ package main.windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
+import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -26,6 +29,7 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
     public LackOfCohesionCP(ArrayList<LackOfCohesionInfo> classesWithLOC, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
+        DefaultListModel model = new DefaultListModel ();
 
         classesNames = new ArrayList<>();
 
@@ -38,15 +42,20 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
 
             // Mi prendo tutti i nomi delle classi affette dallo smell.
             for (LackOfCohesionInfo loci : classesWithLackOfCohesion){
-                classesNames.add(loci.getClassWithSmell().getName());
+                //classesNames.add(loci.getClassWithSmell().getName());
+                model.addElement(loci);
             }
 
             // Setup della lista delle classi.
-            classList = new JBList(classesNames);
+            classList = new JBList(model);
+            classList.setCellRenderer( new CustomListRenderer(classList));
+            classList.setBorder ( BorderFactory.createEmptyBorder ( 5, 5, 5, 5 ) );
+
             classList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             classList.setSelectedIndex(0);
             classList.addListSelectionListener(this);
             JBScrollPane classScrollPane = new JBScrollPane(classList);
+            classScrollPane.setBorder(new TitledBorder("CLASSI"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
             secondSplitPane = new LOCSmellPanel(classesWithLackOfCohesion.get(0), project);
@@ -56,7 +65,7 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
             firstSplitPane.setOneTouchExpandable(true);
             firstSplitPane.setDividerLocation(150);
 
-            Dimension minimumSize = new Dimension(200, 100);
+            Dimension minimumSize = new Dimension(150, 100);
             classScrollPane.setMinimumSize(minimumSize);
             secondSplitPane.setMinimumSize(minimumSize);
             firstSplitPane.setPreferredSize(new Dimension(400, 200));
@@ -73,12 +82,13 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
     @Override
     public void valueChanged(ListSelectionEvent e) {
         JList list = (JList)e.getSource();
-        updateSmellPanel(classesWithLackOfCohesion.get(list.getSelectedIndex()));
+        TestSmellInfo testSmellInfo = (TestSmellInfo) list.getSelectedValue();
+        updateSmellPanel(testSmellInfo);
     }
 
-    protected void updateSmellPanel (LackOfCohesionInfo loci) {
-        secondSplitPane = new LOCSmellPanel(loci, project);
+    protected void updateSmellPanel (TestSmellInfo loci) {
+        secondSplitPane = new LOCSmellPanel((LackOfCohesionInfo) loci, project);
         firstSplitPane.setRightComponent(secondSplitPane);
-        secondSplitPane.setMinimumSize(new Dimension(200, 100));
+        secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
 }

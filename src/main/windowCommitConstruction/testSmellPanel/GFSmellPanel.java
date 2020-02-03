@@ -6,7 +6,6 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
-import main.utility.TestSmellUtilities;
 import main.windowCommitConstruction.general.RefactorWindow;
 
 import javax.swing.*;
@@ -49,7 +48,7 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         this.setDividerLocation(150);
 
         // Fornisco le dimensioni minime dei due panel e una dimensione di base per l'intero panel.
-        Dimension minimumSize = new Dimension(200, 100);
+        Dimension minimumSize = new Dimension(150, 100);
         smellScrollPane.setMinimumSize(minimumSize);
         refactorPreviewPanel.setMinimumSize(minimumSize);
         this.setPreferredSize(new Dimension(400, 200));
@@ -83,7 +82,6 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
             }
         }
 
-        System.out.println(TestSmellUtilities.ANSI_RED + "Nome metodo: " + generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(i).getMethodWithGeneralFixture().getName());
         generalFixtureInfo.getMethodsThatCauseGeneralFixture().remove(i);
 
         smellList = new JBList(methodsNames);

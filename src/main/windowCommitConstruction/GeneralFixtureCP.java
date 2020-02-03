@@ -66,7 +66,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
             firstSplitPane.setOneTouchExpandable(true);
             firstSplitPane.setDividerLocation(150);
 
-            Dimension minimumSize = new Dimension(200, 100);
+            Dimension minimumSize = new Dimension(150, 100);
             classScrollPane.setMinimumSize(minimumSize);
             secondSplitPane.setMinimumSize(minimumSize);
             firstSplitPane.setPreferredSize(new Dimension(400, 200));
@@ -90,7 +90,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     protected void updateSmellPanel (TestSmellInfo gfi) {
         secondSplitPane = new GFSmellPanel((GeneralFixtureInfo) gfi, project);
         firstSplitPane.setRightComponent(secondSplitPane);
-        secondSplitPane.setMinimumSize(new Dimension(200, 100));
+        secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
 
 }
