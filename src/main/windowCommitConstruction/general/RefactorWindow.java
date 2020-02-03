@@ -18,7 +18,6 @@ import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

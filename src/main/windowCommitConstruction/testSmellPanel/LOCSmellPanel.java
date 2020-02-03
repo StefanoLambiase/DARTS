@@ -1,14 +1,11 @@
 package main.windowCommitConstruction.testSmellPanel;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.ui.components.JBLabel;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.bean.PsiMethodBean;
-import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.utility.TestSmellUtilities;
 import main.windowCommitConstruction.general.RefactorWindow;
 
 import javax.swing.*;

@@ -2,14 +2,11 @@ package main.windowCommitConstruction;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
-import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.ETSmellPanel;
-import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
