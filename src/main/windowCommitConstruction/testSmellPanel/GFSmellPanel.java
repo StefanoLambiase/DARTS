@@ -46,7 +46,7 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);
         JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-        smellScrollPane.setBorder(new TitledBorder("METODI"));
+        smellScrollPane.setBorder(new TitledBorder("METHODS"));
 
         // Creazione dello split pane con la lista degli smell e la preview del refactoring.
         this.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
@@ -73,6 +73,7 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
         MethodWithGeneralFixture methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(index);
+
         RefactorWindow refactorWindow = new RefactorWindow(methodWithGeneralFixture, generalFixtureInfo, project, this);
         this.setRightComponent(refactorWindow.getRootPanel());
     }
@@ -99,5 +100,7 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         this.setLeftComponent(smellScrollPane);
         if(!(smellList.getSelectedIndex() == -1))
             updateRefactorPreviewLabel(smellList.getSelectedIndex());
+        else
+            this.rightComponent = null;
     }
 }

@@ -56,7 +56,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
             classList.setSelectedIndex(0);
             classList.addListSelectionListener(this);
             JBScrollPane classScrollPane = new JBScrollPane(classList);
-            classScrollPane.setBorder(new TitledBorder("CLASSI"));
+            classScrollPane.setBorder(new TitledBorder("CLASSES"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
             secondSplitPane = new GFSmellPanel(classesWithGeneralFixture.get(0), project);

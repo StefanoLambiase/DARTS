@@ -1,6 +1,8 @@
 package main.windowCommitConstruction.general;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiSubstitutor;
+import com.intellij.psi.PsiVariable;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import main.refactor.IRefactor;
 import main.refactor.strategy.EagerTestStrategy;
@@ -18,6 +20,7 @@ import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,7 +28,11 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private JPanel rootPanel;
     private JButton doRefactorButton;
     private JPanel refactorPanel;
-    private JPanel buttonPanel;
+    private JPanel methodBodyPanel;
+    private JPanel tipsPanel;
+    private JTextArea methodTextArea;
+    private JLabel tipsTextLabel;
+    private JButton refactorPreviewButton;
 
 
     private MethodWithGeneralFixture methodWithGeneralFixture;
@@ -55,7 +62,24 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
         this.gfSmellPanel = gfSmellPanel;
 
-        doRefactorButton.addActionListener(this);
+        String methodName = "<html> Method: " + methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName() + " doesn't use the following variables: <br/>";
+
+        for(PsiVariable instance : methodWithGeneralFixture.getVariablesNotInMethod()){
+            methodName = methodName + "   - " + instance.getText() + "<br/>";
+        }
+
+        methodName = methodName + "<br/>The Smell can be removed using one of this refactoring operations:<br/>";
+        methodName = methodName + "   - Extract method: setup method can be split into two different methods<br/>";
+        methodName = methodName + "   - Extract class: the test class can be split into two separated classes</html>";
+
+        tipsTextLabel.setText(methodName);
+
+        String signature = methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
+
+        refactorPreviewButton.addActionListener(this);
     }
 
     /**
@@ -71,7 +95,23 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
         this.etSmellPanel = etSmellPanel;
 
-        doRefactorButton.addActionListener(this);
+        String methodName = "<html> Method: " + methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getName() + " calls the following methods: <br/>";
+
+        for(PsiMethodBean mbCalled : methodWithEagerTest.getListOfMethodCalled()){
+            methodName = methodName + "   - " + mbCalled.getPsiMethod().getName() + "<br/>";
+        }
+
+        methodName = methodName + "<br/>The Smell can be removed using one of this refactoring operations:<br/>";
+        methodName = methodName + "   - Extract method: affected method can be splitted into smaller methods, each one testing a specific behavior of the tested object.</html>";
+
+        tipsTextLabel.setText(methodName);
+
+        String signature = methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
+
+        refactorPreviewButton.addActionListener(this);
     }
 
     /**
@@ -86,7 +126,20 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
         this.locSmellPanel = locSmellPanel;
 
-        doRefactorButton.addActionListener(this);
+        String methodName = "<html> Method: " + methodWithLOC.getPsiMethod().getName() + " is affected by Lack of Cohesion of Test Methods: <br/>";
+
+        methodName = methodName + "<br/>The Smell can be removed using one of this refactoring operations:<br/>";
+        methodName = methodName + "   - Extract method: setup method can be split into two different methods<br/>";
+        methodName = methodName + "   - Extract class: the test class can be split into two separated classes</html>";
+
+        tipsTextLabel.setText(methodName);
+
+        String signature = methodWithLOC.getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithLOC.getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
+
+        refactorPreviewButton.addActionListener(this);
     }
 
     @Override

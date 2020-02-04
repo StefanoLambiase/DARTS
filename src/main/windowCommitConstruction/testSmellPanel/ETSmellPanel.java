@@ -44,7 +44,7 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);
         JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-        smellScrollPane.setBorder(new TitledBorder("METODI"));
+        smellScrollPane.setBorder(new TitledBorder("METHODS"));
 
         // Creazione dello split pane con la lista degli smell e la preview del refactoring.
         this.setOrientation(JSplitPane.HORIZONTAL_SPLIT);

@@ -3,6 +3,7 @@ package main.windowCommitConstruction;
 import com.intellij.ui.components.JBTabbedPane;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class CommitPrincipalFrame extends JFrame {
     private JBTabbedPane detectionTp;
@@ -14,6 +15,8 @@ public class CommitPrincipalFrame extends JFrame {
         detectionTp = new JBTabbedPane();
         textualTp = null;
         structuralTp = null;
+
+        this.setMinimumSize(new Dimension(800, 500));
     }
 
     public void addTextualPanel(JBTabbedPane textualTp){
