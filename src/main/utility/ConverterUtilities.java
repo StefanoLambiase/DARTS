@@ -52,7 +52,7 @@ public abstract class ConverterUtilities {
                         if(reference != null){
                             PsiElement element = reference.resolve();
                             System.out.println("   reference: " + reference.getElement().toString());
-                            System.out.println("   Object: " + element.toString() + "\n");
+                            //System.out.println("   Object: " + element.toString() + "\n");
                             //System.out.println("\n Metodo chiamato: ");
                         }
                     }

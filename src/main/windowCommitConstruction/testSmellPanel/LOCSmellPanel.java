@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.windowCommitConstruction.general.RefactorWindow;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -27,14 +28,19 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
     public LOCSmellPanel(LackOfCohesionInfo lackOfCohesionInfo, Project project){
         this.project = project;
 
+        DefaultListModel model = new DefaultListModel ();
+
         this.refactorPreviewPanel = new JBPanel();
         this.lackOfCohesionInfo = lackOfCohesionInfo;
 
         for(PsiMethodBean methodWithLackOfCohesion : lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion()){
-            methodsNames.add(methodWithLackOfCohesion.getName());
+            model.addElement(methodWithLackOfCohesion.getName());
+            //methodsNames.add(methodWithLackOfCohesion.getName());
         }
 
-        smellList = new JBList(methodsNames);
+        smellList = new JBList(model);
+        smellList.setCellRenderer( new CustomListRenderer2(smellList));
+
         smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);

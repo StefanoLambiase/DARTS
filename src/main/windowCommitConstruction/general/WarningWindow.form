@@ -50,7 +50,7 @@
             </constraints>
             <properties>
               <font size="16"/>
-              <text value="Lets see what we have"/>
+              <text value="Review"/>
             </properties>
           </component>
           <hspacer id="3c6a8">

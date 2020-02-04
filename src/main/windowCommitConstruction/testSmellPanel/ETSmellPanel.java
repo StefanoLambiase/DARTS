@@ -7,6 +7,7 @@ import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import main.windowCommitConstruction.general.RefactorWindow;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -27,14 +28,18 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
     public ETSmellPanel(EagerTestInfo eagerTestInfo, Project project){
         this.project = project;
 
+        DefaultListModel model = new DefaultListModel ();
+
         this.refactorPreviewPanel = new JBPanel();
         this.eagerTestInfo = eagerTestInfo;
 
         for(MethodWithEagerTest methodWithEagerTest : eagerTestInfo.getMethodsThatCauseEagerTest()){
-            methodsNames.add(methodWithEagerTest.getMethodWithEagerTest().getName());
+            model.addElement(methodWithEagerTest.getMethodWithEagerTest().getName());
         }
 
-        smellList = new JBList(methodsNames);
+        smellList = new JBList(model);
+        smellList.setCellRenderer( new CustomListRenderer2(smellList));
+
         smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);

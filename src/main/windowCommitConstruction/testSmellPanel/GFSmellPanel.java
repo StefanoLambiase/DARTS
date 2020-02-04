@@ -7,6 +7,8 @@ import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import main.windowCommitConstruction.general.RefactorWindow;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
+import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -27,14 +29,19 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
     public GFSmellPanel(GeneralFixtureInfo generalFixtureInfo, Project project){
         this.project = project;
 
+        DefaultListModel model = new DefaultListModel ();
+
         this.refactorPreviewPanel = new JBPanel();
         this.generalFixtureInfo = generalFixtureInfo;
 
         for(MethodWithGeneralFixture methodWithGeneralFixture : generalFixtureInfo.getMethodsThatCauseGeneralFixture()){
-            methodsNames.add(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
+            model.addElement(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
+            //methodsNames.add(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
         }
 
-        smellList = new JBList(methodsNames);
+        smellList = new JBList(model);
+        smellList.setCellRenderer( new CustomListRenderer2(smellList));
+
         smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         smellList.setSelectedIndex(0);
         smellList.addListSelectionListener(this);
