@@ -26,6 +26,7 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
     private LackOfCohesionInfo lackOfCohesionInfo;
     private Project project;
     private LackOfCohesionCP lackOfCohesionCP;
+    DefaultListModel model;
 
     Dimension minimumSize = new Dimension(150, 100);
 
@@ -33,7 +34,7 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
         this.project = project;
         this.lackOfCohesionCP = lackOfCohesionCP;
 
-        DefaultListModel model = new DefaultListModel ();
+        model = new DefaultListModel ();
 
         this.refactorPreviewPanel = new JBPanel();
         this.lackOfCohesionInfo = lackOfCohesionInfo;
@@ -75,35 +76,31 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
 
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
-        PsiMethodBean methodWithLOC = lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().get(index);
+        PsiMethodBean methodWithLOC;
+        if(index == -1){
+            methodWithLOC = lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().get(0);
+        } else {
+            methodWithLOC = lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().get(index);
+        }
         RefactorWindow refactorWindow = new RefactorWindow(methodWithLOC, lackOfCohesionInfo, project, this);
         this.setRightComponent(refactorWindow.getRootPanel());
     }
 
-    public void doAfterRefactor(String methodName){
-        int i = 0;
+    public void doAfterRefactor(){
+        int index = smellList.getSelectedIndex();
 
-        for(int index = 0; index < methodsNames.size(); index ++){
-            if(methodsNames.get(index).equals(methodName)){
-                methodsNames.remove(index);
-                i = index;
-            }
-        }
+        methodsNames.remove(index);
+        lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().remove(index);
+        model.remove(index);
 
-        lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().remove(i);
-
-        if(methodsNames.size() == 0){
+        if(model.getSize() == 0){
             lackOfCohesionCP.doAfterRefactor(lackOfCohesionInfo);
         } else {
-            smellList = new JBList(methodsNames);
-            smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            smellList.setSelectedIndex(0);
-            smellList.addListSelectionListener(this);
-            JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-            smellScrollPane.setBorder(new TitledBorder("METHODS"));
-            smellScrollPane.setMinimumSize(minimumSize);
-
-            this.setLeftComponent(smellScrollPane);
+            if(index == model.getSize()){
+                index --;
+            }
+            smellList.setSelectedIndex(index);
+            smellList.ensureIndexIsVisible(index);
             updateRefactorPreviewLabel(smellList.getSelectedIndex());
         }
     }

@@ -8,7 +8,6 @@ import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import main.windowCommitConstruction.GeneralFixtureCP;
 import main.windowCommitConstruction.general.RefactorWindow;
-import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
 
 import javax.swing.*;
@@ -86,11 +85,8 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         this.setRightComponent(refactorWindow.getRootPanel());
     }
 
-    public void doAfterRefactor(String methodName){
+    public void doAfterRefactor(){
         int index = smellList.getSelectedIndex();
-
-        System.out.println(index);
-
 
         methodsNames.remove(index);
         generalFixtureInfo.getMethodsThatCauseGeneralFixture().remove(index);

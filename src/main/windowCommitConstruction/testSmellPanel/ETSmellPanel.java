@@ -26,14 +26,16 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
     private EagerTestInfo eagerTestInfo;
     private Project project;
     private EagerTestCP eagerTestCP;
+    DefaultListModel model;
 
     Dimension minimumSize = new Dimension(150, 100);
 
     public ETSmellPanel(EagerTestInfo eagerTestInfo, Project project, EagerTestCP eagerTestCP){
         this.project = project;
         this.eagerTestCP = eagerTestCP;
+        this.eagerTestCP = eagerTestCP;
 
-        DefaultListModel model = new DefaultListModel ();
+        model = new DefaultListModel ();
 
         this.refactorPreviewPanel = new JBPanel();
         this.eagerTestInfo = eagerTestInfo;
@@ -75,37 +77,31 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
 
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
-        MethodWithEagerTest methodWithEagerTest = eagerTestInfo.getMethodsThatCauseEagerTest().get(index);
+        MethodWithEagerTest methodWithEagerTest;
+        if(index == -1){
+            methodWithEagerTest = eagerTestInfo.getMethodsThatCauseEagerTest().get(0);
+        } else {
+            methodWithEagerTest = eagerTestInfo.getMethodsThatCauseEagerTest().get(index);
+        }
         RefactorWindow refactorWindow = new RefactorWindow(methodWithEagerTest, eagerTestInfo, project, this);
         this.setRightComponent(refactorWindow.getRootPanel());
     }
 
-    public void doAfterRefactor(String methodName) {
-        int i = 0;
+    public void doAfterRefactor() {
+        int index = smellList.getSelectedIndex();
 
-        for (int index = 0; index < methodsNames.size(); index++) {
-            if (methodsNames.get(index).equals(methodName)) {
-                methodsNames.remove(index);
-                i = index;
-            }
-        }
+        methodsNames.remove(index);
+        eagerTestInfo.getMethodsThatCauseEagerTest().remove(index);
+        model.remove(index);
 
-        eagerTestInfo.getMethodsThatCauseEagerTest().remove(i);
-
-        if (methodsNames.size() == 0) {
-            System.out.println("Abbiamo un problema");
+        if(model.getSize() == 0){
             eagerTestCP.doAfterRefactor(eagerTestInfo);
         } else {
-            System.out.println("Uno bello grosso");
-            smellList = new JBList(methodsNames);
-            smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            smellList.setSelectedIndex(0);
-            smellList.addListSelectionListener(this);
-            JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-            smellScrollPane.setBorder(new TitledBorder("METHODS"));
-            smellScrollPane.setMinimumSize(minimumSize);
-
-            this.setLeftComponent(smellScrollPane);
+            if(index == model.getSize()){
+                index --;
+            }
+            smellList.setSelectedIndex(index);
+            smellList.ensureIndexIsVisible(index);
             updateRefactorPreviewLabel(smellList.getSelectedIndex());
         }
     }

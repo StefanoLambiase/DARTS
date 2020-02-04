@@ -148,15 +148,15 @@ public class RefactorWindow extends JPanel implements ActionListener{
             if(generalFixtureInfo != null){
                 IRefactor refactor = new GeneralFixtureStrategy(methodWithGeneralFixture, project, generalFixtureInfo);
                 refactor.doRefactor();
-                gfSmellPanel.doAfterRefactor(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
+                gfSmellPanel.doAfterRefactor();
             } else if(eagerTestInfo != null){
                 IRefactor refactor = new EagerTestStrategy(methodWithEagerTest, project, eagerTestInfo);
                 refactor.doRefactor();
-                etSmellPanel.doAfterRefactor(methodWithEagerTest.getMethodWithEagerTest().getName());
+                etSmellPanel.doAfterRefactor();
             } else if(lackOfCohesionInfo != null){
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
-                locSmellPanel.doAfterRefactor(methodWithLOC.getName());
+                locSmellPanel.doAfterRefactor();
             } else {
                 System.out.println("\n\n" + TestSmellUtilities.ANSI_RED + "All Info are NULL\n");
             }
