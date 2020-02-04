@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
     private ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion;
     private Project project;
+    DefaultListModel model;
 
     private JSplitPane firstSplitPane;
     private JSplitPane secondSplitPane;
@@ -29,7 +30,7 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
     public LackOfCohesionCP(ArrayList<LackOfCohesionInfo> classesWithLOC, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
-        DefaultListModel model = new DefaultListModel ();
+        model = new DefaultListModel ();
 
         classesNames = new ArrayList<>();
 
@@ -58,7 +59,7 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
             classScrollPane.setBorder(new TitledBorder("CLASSES"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
-            secondSplitPane = new LOCSmellPanel(classesWithLackOfCohesion.get(0), project);
+            secondSplitPane = new LOCSmellPanel(classesWithLackOfCohesion.get(0), project, this);
 
             // Creazione dello split pane con la lista delle classi e la secondSplitPane.
             firstSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, classScrollPane, secondSplitPane);
@@ -87,8 +88,18 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
     }
 
     protected void updateSmellPanel (TestSmellInfo loci) {
-        secondSplitPane = new LOCSmellPanel((LackOfCohesionInfo) loci, project);
+        secondSplitPane = new LOCSmellPanel((LackOfCohesionInfo) loci, project, this);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
+
+    public void doAfterRefactor(LackOfCohesionInfo loci){
+        int index = classesWithLackOfCohesion.indexOf(loci);
+        classesWithLackOfCohesion.remove(index);
+
+        model.remove(index);
+
+        classList.setSelectedIndex(model.getSize() / 2);
+    }
+
 }

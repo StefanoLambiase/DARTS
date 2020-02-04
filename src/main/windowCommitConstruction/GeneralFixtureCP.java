@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     private ArrayList<GeneralFixtureInfo> classesWithGeneralFixture;
     private Project project;
+    DefaultListModel model;
 
     private JSplitPane firstSplitPane;
     private JSplitPane secondSplitPane;
@@ -29,7 +30,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     public GeneralFixtureCP(ArrayList<GeneralFixtureInfo> classesWithGF, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
-        DefaultListModel model = new DefaultListModel ();
+        model = new DefaultListModel ();
 
         classesNames = new ArrayList<>();
 
@@ -59,7 +60,7 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
             classScrollPane.setBorder(new TitledBorder("CLASSES"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
-            secondSplitPane = new GFSmellPanel(classesWithGeneralFixture.get(0), project);
+            secondSplitPane = new GFSmellPanel(classesWithGeneralFixture.get(0), project, this);
 
             // Creazione dello split pane con la lista delle classi e la secondSplitPane.
             firstSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, classScrollPane, secondSplitPane);
@@ -88,9 +89,18 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
     }
 
     protected void updateSmellPanel (TestSmellInfo gfi) {
-        secondSplitPane = new GFSmellPanel((GeneralFixtureInfo) gfi, project);
+        secondSplitPane = new GFSmellPanel((GeneralFixtureInfo) gfi, project, this);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(150, 100));
+    }
+
+    public void doAfterRefactor(GeneralFixtureInfo gfi){
+        int index = classesWithGeneralFixture.indexOf(gfi);
+        classesWithGeneralFixture.remove(index);
+
+        model.remove(index);
+
+        classList.setSelectedIndex(model.getSize() / 2);
     }
 
 }

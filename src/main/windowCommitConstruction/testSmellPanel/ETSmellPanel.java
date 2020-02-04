@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
+import main.windowCommitConstruction.EagerTestCP;
 import main.windowCommitConstruction.general.RefactorWindow;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
 
@@ -24,9 +25,13 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
 
     private EagerTestInfo eagerTestInfo;
     private Project project;
+    private EagerTestCP eagerTestCP;
 
-    public ETSmellPanel(EagerTestInfo eagerTestInfo, Project project){
+    Dimension minimumSize = new Dimension(150, 100);
+
+    public ETSmellPanel(EagerTestInfo eagerTestInfo, Project project, EagerTestCP eagerTestCP){
         this.project = project;
+        this.eagerTestCP = eagerTestCP;
 
         DefaultListModel model = new DefaultListModel ();
 
@@ -35,6 +40,7 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
 
         for(MethodWithEagerTest methodWithEagerTest : eagerTestInfo.getMethodsThatCauseEagerTest()){
             model.addElement(methodWithEagerTest.getMethodWithEagerTest().getName());
+            methodsNames.add(methodWithEagerTest.getMethodWithEagerTest().getName());
         }
 
         smellList = new JBList(model);
@@ -53,7 +59,6 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
         this.setDividerLocation(150);
 
         // Fornisco le dimensioni minime dei due panel e una dimensione di base per l'intero panel.
-        Dimension minimumSize = new Dimension(150, 100);
         smellScrollPane.setMinimumSize(minimumSize);
         refactorPreviewPanel.setMinimumSize(minimumSize);
         this.setPreferredSize(new Dimension(400, 200));
@@ -75,13 +80,11 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
         this.setRightComponent(refactorWindow.getRootPanel());
     }
 
-    public void doAfterRefactor(String methodName){
-        this.rightComponent = null;
-
+    public void doAfterRefactor(String methodName) {
         int i = 0;
 
-        for(int index = 0; index < methodsNames.size(); index ++){
-            if(methodsNames.get(index).equals(methodName)){
+        for (int index = 0; index < methodsNames.size(); index++) {
+            if (methodsNames.get(index).equals(methodName)) {
                 methodsNames.remove(index);
                 i = index;
             }
@@ -89,13 +92,22 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
 
         eagerTestInfo.getMethodsThatCauseEagerTest().remove(i);
 
-        smellList = new JBList(methodsNames);
-        smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        smellList.setSelectedIndex(0);
-        smellList.addListSelectionListener(this);
-        JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-        this.setLeftComponent(smellScrollPane);
-        if(!(smellList.getSelectedIndex() == -1))
+        if (methodsNames.size() == 0) {
+            System.out.println("Abbiamo un problema");
+            eagerTestCP.doAfterRefactor(eagerTestInfo);
+        } else {
+            System.out.println("Uno bello grosso");
+            smellList = new JBList(methodsNames);
+            smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            smellList.setSelectedIndex(0);
+            smellList.addListSelectionListener(this);
+            JBScrollPane smellScrollPane = new JBScrollPane(smellList);
+            smellScrollPane.setBorder(new TitledBorder("METHODS"));
+            smellScrollPane.setMinimumSize(minimumSize);
+
+            this.setLeftComponent(smellScrollPane);
             updateRefactorPreviewLabel(smellList.getSelectedIndex());
+        }
     }
+
 }

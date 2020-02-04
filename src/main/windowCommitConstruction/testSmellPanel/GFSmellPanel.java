@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
+import main.windowCommitConstruction.GeneralFixtureCP;
 import main.windowCommitConstruction.general.RefactorWindow;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
@@ -20,23 +21,28 @@ import java.util.ArrayList;
 public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
     private JBList smellList;
     private JBPanel refactorPreviewPanel;
+    DefaultListModel model;
 
     private ArrayList<String> methodsNames = new ArrayList<>();
 
     private GeneralFixtureInfo generalFixtureInfo;
     private Project project;
+    private GeneralFixtureCP generalFixtureCP;
 
-    public GFSmellPanel(GeneralFixtureInfo generalFixtureInfo, Project project){
+    Dimension minimumSize = new Dimension(150, 100);
+
+    public GFSmellPanel(GeneralFixtureInfo generalFixtureInfo, Project project, GeneralFixtureCP generalFixtureCP){
         this.project = project;
+        this.generalFixtureCP = generalFixtureCP;
 
-        DefaultListModel model = new DefaultListModel ();
+        model = new DefaultListModel ();
 
         this.refactorPreviewPanel = new JBPanel();
         this.generalFixtureInfo = generalFixtureInfo;
 
         for(MethodWithGeneralFixture methodWithGeneralFixture : generalFixtureInfo.getMethodsThatCauseGeneralFixture()){
             model.addElement(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
-            //methodsNames.add(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
+            methodsNames.add(methodWithGeneralFixture.getMethodWithGeneralFixture().getName());
         }
 
         smellList = new JBList(model);
@@ -55,7 +61,6 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         this.setDividerLocation(150);
 
         // Fornisco le dimensioni minime dei due panel e una dimensione di base per l'intero panel.
-        Dimension minimumSize = new Dimension(150, 100);
         smellScrollPane.setMinimumSize(minimumSize);
         refactorPreviewPanel.setMinimumSize(minimumSize);
         this.setPreferredSize(new Dimension(400, 200));
@@ -66,41 +71,41 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        JList list = (JList)e.getSource();
-        updateRefactorPreviewLabel(list.getSelectedIndex());
+        updateRefactorPreviewLabel(smellList.getSelectedIndex());
     }
 
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
-        MethodWithGeneralFixture methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(index);
-
+        MethodWithGeneralFixture methodWithGeneralFixture;
+        if(index == -1){
+            methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(0);
+        } else {
+            methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(index);
+        }
         RefactorWindow refactorWindow = new RefactorWindow(methodWithGeneralFixture, generalFixtureInfo, project, this);
         this.setRightComponent(refactorWindow.getRootPanel());
     }
 
     public void doAfterRefactor(String methodName){
-        this.rightComponent = null;
+        int index = smellList.getSelectedIndex();
 
-        int i = 0;
+        System.out.println(index);
 
-        for(int index = 0; index < methodsNames.size(); index ++){
-            if(methodsNames.get(index).equals(methodName)){
-                methodsNames.remove(index);
-                i = index;
+
+        methodsNames.remove(index);
+        generalFixtureInfo.getMethodsThatCauseGeneralFixture().remove(index);
+        model.remove(index);
+
+        if(model.getSize() == 0){
+            generalFixtureCP.doAfterRefactor(generalFixtureInfo);
+        } else {
+            if(index == model.getSize()){
+                index --;
             }
-        }
-
-        generalFixtureInfo.getMethodsThatCauseGeneralFixture().remove(i);
-
-        smellList = new JBList(methodsNames);
-        smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        smellList.setSelectedIndex(0);
-        smellList.addListSelectionListener(this);
-        JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-        this.setLeftComponent(smellScrollPane);
-        if(!(smellList.getSelectedIndex() == -1))
+            smellList.setSelectedIndex(index);
+            smellList.ensureIndexIsVisible(index);
             updateRefactorPreviewLabel(smellList.getSelectedIndex());
-        else
-            this.rightComponent = null;
+        }
     }
+
 }

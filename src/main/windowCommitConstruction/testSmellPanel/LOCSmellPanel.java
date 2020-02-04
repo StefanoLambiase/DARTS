@@ -6,6 +6,7 @@ import com.intellij.ui.components.JBPanel;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import main.windowCommitConstruction.LackOfCohesionCP;
 import main.windowCommitConstruction.general.RefactorWindow;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer2;
 
@@ -24,9 +25,13 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
 
     private LackOfCohesionInfo lackOfCohesionInfo;
     private Project project;
+    private LackOfCohesionCP lackOfCohesionCP;
 
-    public LOCSmellPanel(LackOfCohesionInfo lackOfCohesionInfo, Project project){
+    Dimension minimumSize = new Dimension(150, 100);
+
+    public LOCSmellPanel(LackOfCohesionInfo lackOfCohesionInfo, Project project, LackOfCohesionCP lackOfCohesionCP){
         this.project = project;
+        this.lackOfCohesionCP = lackOfCohesionCP;
 
         DefaultListModel model = new DefaultListModel ();
 
@@ -35,7 +40,7 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
 
         for(PsiMethodBean methodWithLackOfCohesion : lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion()){
             model.addElement(methodWithLackOfCohesion.getName());
-            //methodsNames.add(methodWithLackOfCohesion.getName());
+            methodsNames.add(methodWithLackOfCohesion.getName());
         }
 
         smellList = new JBList(model);
@@ -54,7 +59,6 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
         this.setDividerLocation(150);
 
         // Fornisco le dimensioni minime dei due panel e una dimensione di base per l'intero panel.
-        Dimension minimumSize = new Dimension(150, 100);
         smellScrollPane.setMinimumSize(minimumSize);
         refactorPreviewPanel.setMinimumSize(minimumSize);
         this.setPreferredSize(new Dimension(400, 200));
@@ -77,8 +81,6 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
     }
 
     public void doAfterRefactor(String methodName){
-        this.rightComponent = null;
-
         int i = 0;
 
         for(int index = 0; index < methodsNames.size(); index ++){
@@ -90,13 +92,19 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
 
         lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().remove(i);
 
-        smellList = new JBList(methodsNames);
-        smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        smellList.setSelectedIndex(0);
-        smellList.addListSelectionListener(this);
-        JBScrollPane smellScrollPane = new JBScrollPane(smellList);
-        this.setLeftComponent(smellScrollPane);
-        if(!(smellList.getSelectedIndex() == -1))
+        if(methodsNames.size() == 0){
+            lackOfCohesionCP.doAfterRefactor(lackOfCohesionInfo);
+        } else {
+            smellList = new JBList(methodsNames);
+            smellList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            smellList.setSelectedIndex(0);
+            smellList.addListSelectionListener(this);
+            JBScrollPane smellScrollPane = new JBScrollPane(smellList);
+            smellScrollPane.setBorder(new TitledBorder("METHODS"));
+            smellScrollPane.setMinimumSize(minimumSize);
+
+            this.setLeftComponent(smellScrollPane);
             updateRefactorPreviewLabel(smellList.getSelectedIndex());
+        }
     }
 }

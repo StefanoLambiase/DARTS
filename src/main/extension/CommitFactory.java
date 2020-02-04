@@ -105,8 +105,8 @@ public class CommitFactory  extends CheckinHandlerFactory{
             public void checkinSuccessful() {
 
                 // Creo la window
-                if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
-                    System.out.println("\nNon si è trovato alcuno Smell");
+                if(generalFixtureInfos2.isEmpty() && eagerTestInfos2.isEmpty() && lackOfCohesionInfos2.isEmpty()){
+                    System.out.println("\n   Non si è trovato alcuno Smell");
                 } else {
                     /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
                     WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);

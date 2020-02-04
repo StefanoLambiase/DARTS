@@ -5,6 +5,7 @@ import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
+import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.ETSmellPanel;
 
@@ -24,12 +25,14 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
 
     private JBList classList;
 
+    DefaultListModel model;
+
     ArrayList<String> classesNames;
 
     public EagerTestCP(ArrayList<EagerTestInfo> classesWithET, Project project){
         // Inizializzazione delle variabili.
         this.project = project;
-        DefaultListModel model = new DefaultListModel ();
+        model = new DefaultListModel ();
 
         classesNames = new ArrayList<>();
 
@@ -58,7 +61,7 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
             classScrollPane.setBorder(new TitledBorder("CLASSES"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
-            secondSplitPane = new ETSmellPanel(classesWithEagerTest.get(0), project);
+            secondSplitPane = new ETSmellPanel(classesWithEagerTest.get(0), project, this);
 
             // Creazione dello split pane con la lista delle classi e la secondSplitPane.
             firstSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, classScrollPane, secondSplitPane);
@@ -87,8 +90,17 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
     }
 
     protected void updateSmellPanel (TestSmellInfo eti) {
-        secondSplitPane = new ETSmellPanel((EagerTestInfo) eti, project);
+        secondSplitPane = new ETSmellPanel((EagerTestInfo) eti, project, this);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(150, 100));
+    }
+
+    public void doAfterRefactor(EagerTestInfo eti){
+        int index = classesWithEagerTest.indexOf(eti);
+        classesWithEagerTest.remove(index);
+
+        model.remove(index);
+
+        classList.setSelectedIndex(model.getSize() / 2);
     }
 }
