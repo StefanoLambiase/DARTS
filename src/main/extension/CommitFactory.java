@@ -6,6 +6,7 @@ import com.intellij.openapi.vcs.checkin.CheckinHandler;
 import com.intellij.openapi.vcs.checkin.CheckinHandlerFactory;
 import com.intellij.openapi.vfs.VirtualFile;
 import main.testSmellDetection.detector.IDetector;
+import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.detector.TestSmellTextualDetector;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
@@ -51,9 +52,12 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 /* ANALISI TESTUALE */
                 IDetector detector = new TestSmellTextualDetector(myPanel.getProject());
 
+                IDetector detector2 = new TestSmellStructuralDetector(myPanel.getProject());
+
                 generalFixtureInfos = detector.executeDetectionForGeneralFixture();
                 eagerTestInfos = detector.executeDetectionForEagerTest();
-                lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+                //lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+                lackOfCohesionInfos = detector2.executeDetectionForLackOfCohesion();
 
                 /* PARTE USATA PER FARE L'ANALISI SOLO DELLE CLASSI DI TEST CHE VENGONO COMMITTATE */
                 ArrayList<VirtualFile> listOfFiles = (ArrayList<VirtualFile>) panel.getVirtualFiles();
