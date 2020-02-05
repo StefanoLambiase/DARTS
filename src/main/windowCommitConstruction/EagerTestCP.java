@@ -3,9 +3,7 @@ package main.windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
-import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.ETSmellPanel;
 
@@ -84,23 +82,42 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        JList list = (JList)e.getSource();
-        TestSmellInfo testSmellInfo = (TestSmellInfo) list.getSelectedValue();
-        updateSmellPanel(testSmellInfo);
+        updateSmellPanel(classList.getSelectedIndex());
     }
 
-    protected void updateSmellPanel (TestSmellInfo eti) {
-        secondSplitPane = new ETSmellPanel((EagerTestInfo) eti, project, this);
+    protected void updateSmellPanel (int index) {
+        EagerTestInfo eti;
+        if(index == -1 && model.getSize() == 0){
+            return;
+        } else if(index == -1 && model.getSize() != 0){
+            eti = (EagerTestInfo) classList.getModel().getElementAt(0);
+        } else {
+            eti = (EagerTestInfo) classList.getModel().getElementAt(index);
+        }
+        secondSplitPane = new ETSmellPanel(eti, project, this);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
 
-    public void doAfterRefactor(EagerTestInfo eti){
-        int index = classesWithEagerTest.indexOf(eti);
-        classesWithEagerTest.remove(index);
+    public void doAfterRefactor(){
+        int index = classList.getSelectedIndex();
 
+        classesWithEagerTest.remove(index);
         model.remove(index);
 
-        classList.setSelectedIndex(model.getSize() / 2);
+        if(model.getSize() == 0){
+            JLabel label = new JLabel("All smells resolved");
+            this.removeAll();
+            this.validate();
+            this.repaint();
+            this.add(label);
+        } else {
+            if(index == model.getSize()){
+                index --;
+            }
+            classList.setSelectedIndex(index);
+            classList.ensureIndexIsVisible(index);
+            updateSmellPanel(classList.getSelectedIndex());
+        }
     }
 }

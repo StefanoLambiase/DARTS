@@ -3,7 +3,6 @@ package main.windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
@@ -82,24 +81,43 @@ public class LackOfCohesionCP extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        JList list = (JList)e.getSource();
-        TestSmellInfo testSmellInfo = (TestSmellInfo) list.getSelectedValue();
-        updateSmellPanel(testSmellInfo);
+        updateSmellPanel(classList.getSelectedIndex());
     }
 
-    protected void updateSmellPanel (TestSmellInfo loci) {
+    protected void updateSmellPanel (int index) {
+        LackOfCohesionInfo loci;
+        if(index == -1 && model.getSize() == 0){
+            return;
+        } else if(index == -1 && model.getSize() != 0){
+            loci = (LackOfCohesionInfo) classList.getModel().getElementAt(0);
+        } else {
+            loci = (LackOfCohesionInfo) classList.getModel().getElementAt(index);
+        }
         secondSplitPane = new LOCSmellPanel((LackOfCohesionInfo) loci, project, this);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
 
-    public void doAfterRefactor(LackOfCohesionInfo loci){
-        int index = classesWithLackOfCohesion.indexOf(loci);
-        classesWithLackOfCohesion.remove(index);
+    public void doAfterRefactor(){
+        int index = classList.getSelectedIndex();
 
+        classesWithLackOfCohesion.remove(index);
         model.remove(index);
 
-        classList.setSelectedIndex(model.getSize() / 2);
+        if(model.getSize() == 0){
+            JLabel label = new JLabel("All smells resolved");
+            this.removeAll();
+            this.validate();
+            this.repaint();
+            this.add(label);
+        } else {
+            if(index == model.getSize()){
+                index --;
+            }
+            classList.setSelectedIndex(index);
+            classList.ensureIndexIsVisible(index);
+            updateSmellPanel(classList.getSelectedIndex());
+        }
     }
 
 }

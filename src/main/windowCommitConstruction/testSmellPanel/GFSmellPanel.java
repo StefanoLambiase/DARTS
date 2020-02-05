@@ -76,7 +76,9 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
         MethodWithGeneralFixture methodWithGeneralFixture;
-        if(index == -1){
+        if(index == -1 && model.getSize() == 0){
+            return;
+        } else if(index == -1){
             methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(0);
         } else {
             methodWithGeneralFixture = generalFixtureInfo.getMethodsThatCauseGeneralFixture().get(index);
@@ -93,7 +95,8 @@ public class GFSmellPanel extends JSplitPane implements ListSelectionListener {
         model.remove(index);
 
         if(model.getSize() == 0){
-            generalFixtureCP.doAfterRefactor(generalFixtureInfo);
+            System.out.println("PASSO1");
+            generalFixtureCP.doAfterRefactor();
         } else {
             if(index == model.getSize()){
                 index --;

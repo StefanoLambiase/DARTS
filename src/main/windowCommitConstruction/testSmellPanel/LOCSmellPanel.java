@@ -77,7 +77,9 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
         PsiMethodBean methodWithLOC;
-        if(index == -1){
+        if(index == -1 && model.getSize() == 0){
+            return;
+        } else if(index == -1){
             methodWithLOC = lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().get(0);
         } else {
             methodWithLOC = lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().get(index);
@@ -94,7 +96,7 @@ public class LOCSmellPanel extends JSplitPane implements ListSelectionListener {
         model.remove(index);
 
         if(model.getSize() == 0){
-            lackOfCohesionCP.doAfterRefactor(lackOfCohesionInfo);
+            lackOfCohesionCP.doAfterRefactor();
         } else {
             if(index == model.getSize()){
                 index --;

@@ -3,7 +3,6 @@ package main.windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBList;
 import com.intellij.ui.components.JBScrollPane;
-import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.windowCommitConstruction.general.listRenderer.CustomListRenderer;
 import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
@@ -83,24 +82,44 @@ public class GeneralFixtureCP extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        JList list = (JList)e.getSource();
-        TestSmellInfo testSmellInfo = (TestSmellInfo) list.getSelectedValue();
-        updateSmellPanel(testSmellInfo);
+        updateSmellPanel(classList.getSelectedIndex());
     }
 
-    protected void updateSmellPanel (TestSmellInfo gfi) {
-        secondSplitPane = new GFSmellPanel((GeneralFixtureInfo) gfi, project, this);
+    protected void updateSmellPanel (int index) {
+        GeneralFixtureInfo gfi;
+        if(index == -1 && model.getSize() == 0){
+            return;
+        } else if(index == -1 && model.getSize() != 0){
+            gfi = (GeneralFixtureInfo) classList.getModel().getElementAt(0);
+        } else {
+            gfi = (GeneralFixtureInfo) classList.getModel().getElementAt(index);
+        }
+        secondSplitPane = new GFSmellPanel(gfi, project, this);
         firstSplitPane.setRightComponent(secondSplitPane);
         secondSplitPane.setMinimumSize(new Dimension(150, 100));
     }
 
-    public void doAfterRefactor(GeneralFixtureInfo gfi){
-        int index = classesWithGeneralFixture.indexOf(gfi);
-        classesWithGeneralFixture.remove(index);
+    public void doAfterRefactor(){
+        int index = classList.getSelectedIndex();
 
+        classesWithGeneralFixture.remove(index);
         model.remove(index);
 
-        classList.setSelectedIndex(model.getSize() / 2);
+        if(model.getSize() == 0){
+            JLabel label = new JLabel("All smells resolved");
+            this.removeAll();
+            this.validate();
+            this.repaint();
+            this.add(label);
+        } else {
+            System.out.println("PASSO2");
+            if(index == model.getSize()){
+                index --;
+            }
+            classList.setSelectedIndex(index);
+            classList.ensureIndexIsVisible(index);
+            updateSmellPanel(classList.getSelectedIndex());
+        }
     }
 
 }

@@ -78,7 +78,9 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
     //Renders the selected image
     protected void updateRefactorPreviewLabel (int index) {
         MethodWithEagerTest methodWithEagerTest;
-        if(index == -1){
+        if(index == -1 && model.getSize() == 0){
+            return;
+        } else if(index == -1){
             methodWithEagerTest = eagerTestInfo.getMethodsThatCauseEagerTest().get(0);
         } else {
             methodWithEagerTest = eagerTestInfo.getMethodsThatCauseEagerTest().get(index);
@@ -95,7 +97,7 @@ public class ETSmellPanel  extends JSplitPane implements ListSelectionListener {
         model.remove(index);
 
         if(model.getSize() == 0){
-            eagerTestCP.doAfterRefactor(eagerTestInfo);
+            eagerTestCP.doAfterRefactor();
         } else {
             if(index == model.getSize()){
                 index --;
