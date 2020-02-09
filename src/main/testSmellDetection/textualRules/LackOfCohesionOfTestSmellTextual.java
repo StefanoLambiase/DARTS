@@ -55,7 +55,12 @@ public abstract class LackOfCohesionOfTestSmellTextual {
                 methodsThatCauseLackOfCohesion.add(testMethod);
             }
         }
-        return methodsThatCauseLackOfCohesion;
+
+        if (methodsThatCauseLackOfCohesion.isEmpty()){
+           return null;
+        } else {
+            return methodsThatCauseLackOfCohesion;
+        }
     }
 
     /* METODI DI SUPPORTO */

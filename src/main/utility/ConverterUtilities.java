@@ -58,54 +58,6 @@ public abstract class ConverterUtilities {
                     }
                 }
             }
-            /*
-            psiClass.accept(new JavaRecursiveElementVisitor() {
-                @Override
-                public void visitReferenceExpression(PsiReferenceExpression expression) {
-                    super.visitReferenceExpression(expression);
-                    System.out.println("Found a reference at offset " + expression.getTextRange().getStartOffset() + "Name: " + expression.getText());
-                }
-
-                @Override
-                public void visitLocalVariable(PsiLocalVariable variable) {
-                    super.visitLocalVariable(variable);
-                    System.out.println("Found a variable at offset " + variable.getTextRange().getStartOffset() + ", Name: " + variable.getName());
-                }
-            });
-
-            System.out.println("\n   METODI:\n");
-            for(PsiMethod psiMethod : psiClass.getAllMethods()){
-                String s = psiMethod.getName();
-                if(!s.equals("Object") &&
-                        !s.equals("registerNatives") &&
-                        !s.equals("getClass") &&
-                        !s.equals("hashCode") &&
-                        !s.equals("equals") &&
-                        !s.equals("clone") &&
-                        !s.equals("toString") &&
-                        !s.equals("notify") &&
-                        !s.equals("notifyAll") &&
-                        !s.equals("wait") &&
-                        !s.equals("finalize")){
-                    System.out.println(psiMethod.getName());
-                    if(psiMethod.getBody() != null) {
-                        System.out.println(psiMethod.getBody().getText() + "\n");
-
-                        System.out.println("\n   VARIABILI DI INSTANZA INIZIALIZZATE\n");
-                        ArrayList<PsiVariable> varInits = PsiTestSmellUtilities.getAllInstanceVariableInit(psiMethod, instanceVariables);
-                        for(PsiVariable psiVariable : varInits){
-                            System.out.println(psiVariable.toString() + "\n");
-                        }
-                        System.out.println("\n   VARIABILI DI INSTANZA USATE\n");
-                        ArrayList<PsiVariable> varUses = PsiTestSmellUtilities.getAllInstanceVariableUses(psiMethod, instanceVariables);
-                        for(PsiVariable psiVariable : varUses){
-                            System.out.println(psiVariable.toString() + "\n");
-                        }
-                    }
-                }
-            }
-
-             */
         }
         return classBeans;
     }

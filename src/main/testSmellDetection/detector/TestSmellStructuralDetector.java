@@ -1,7 +1,6 @@
 package main.testSmellDetection.detector;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiPackage;
 import main.testSmellDetection.bean.PsiClassBean;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.structuralRules.EagerTestStructural;

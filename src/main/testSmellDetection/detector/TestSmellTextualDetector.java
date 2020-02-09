@@ -1,7 +1,6 @@
 package main.testSmellDetection.detector;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiPackage;
 import main.testSmellDetection.bean.PsiClassBean;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -31,10 +30,17 @@ public class TestSmellTextualDetector implements IDetector{
     public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture() {
         ArrayList<GeneralFixtureInfo> classesWithGeneralFixture = new ArrayList<>();
         for(PsiClassBean testClass : testClasses){
+            ArrayList<MethodWithGeneralFixture> methodWithGeneralFixtures = GeneralFixtureTextual.checkMethodsThatCauseGeneralFixture(testClass);
+            if(methodWithGeneralFixtures != null){
+                classesWithGeneralFixture.add(new GeneralFixtureInfo(testClass, methodWithGeneralFixtures));
+            }
+            /* OLD IMPLEMENTATION */
+            /*
             if(GeneralFixtureTextual.isGeneralFixture(testClass)){
                 ArrayList<MethodWithGeneralFixture> methodWithGeneralFixtures = GeneralFixtureTextual.checkMethodsThatCauseGeneralFixture(testClass);
                 classesWithGeneralFixture.add(new GeneralFixtureInfo(testClass, methodWithGeneralFixtures));
             }
+            */
         }
         return classesWithGeneralFixture;
     }
@@ -43,8 +49,8 @@ public class TestSmellTextualDetector implements IDetector{
     public ArrayList<EagerTestInfo> executeDetectionForEagerTest() {
         ArrayList<EagerTestInfo> classesWithEagerTest = new ArrayList<>();
         for(PsiClassBean testClass : testClasses){
-            if(EagerTestTextual.isEagerTest(testClass, testClass.getProductionClass())){
-                ArrayList<MethodWithEagerTest> methodWithEagerTests = EagerTestTextual.checkMethodsThatCauseEagerTest(testClass, testClass.getProductionClass());
+            ArrayList<MethodWithEagerTest> methodWithEagerTests = EagerTestTextual.checkMethodsThatCauseEagerTest(testClass, testClass.getProductionClass());
+            if(methodWithEagerTests != null){
                 classesWithEagerTest.add(new EagerTestInfo(testClass, testClass.getProductionClass(), methodWithEagerTests));
             }
         }
@@ -55,8 +61,8 @@ public class TestSmellTextualDetector implements IDetector{
     public ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion() {
         ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion = new ArrayList<>();
         for(PsiClassBean testClass : testClasses){
-            if(LackOfCohesionOfTestSmellTextual.isLackOfCohesionTestMethods(testClass)){
-                ArrayList<PsiMethodBean> methodsWithLackOfCohesion = LackOfCohesionOfTestSmellTextual.checkMethodsThatCauseLackOfCohesion(testClass);
+            ArrayList<PsiMethodBean> methodsWithLackOfCohesion = LackOfCohesionOfTestSmellTextual.checkMethodsThatCauseLackOfCohesion(testClass);
+            if(methodsWithLackOfCohesion != null){
                 classesWithLackOfCohesion.add(new LackOfCohesionInfo(testClass, testClass.getProductionClass(), methodsWithLackOfCohesion));
             }
         }

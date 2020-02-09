@@ -64,7 +64,11 @@ public abstract class GeneralFixtureTextual {
                 }
             }
         }
-        return methodWithGeneralFixtures;
+        if(methodWithGeneralFixtures.isEmpty()){
+            return null;
+        } else {
+            return methodWithGeneralFixtures;
+        }
     }
 
 }

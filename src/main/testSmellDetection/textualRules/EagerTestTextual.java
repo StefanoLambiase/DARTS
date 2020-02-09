@@ -74,7 +74,11 @@ public abstract class EagerTestTextual {
                 }
             }
         }
-        return methodWithEagerTests;
+        if(methodWithEagerTests.isEmpty()){
+            return null;
+        } else {
+            return methodWithEagerTests;
+        }
     }
 
 }
