@@ -22,7 +22,7 @@
             </constraints>
             <properties>
               <font size="14"/>
-              <text value="WARNING: there are some test smell in your committed test classes!"/>
+              <text value="WARNING: there are some test smells in your committed test classes!"/>
             </properties>
           </component>
         </children>
