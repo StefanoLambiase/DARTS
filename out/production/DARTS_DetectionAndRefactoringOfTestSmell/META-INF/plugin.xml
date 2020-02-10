@@ -11,7 +11,6 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <checkinHandlerFactory implementation="main.extension.CommitFactory"/>
-    <refactoring.elementListenerProvider implementation="main.extension.RefactorFactory"/>
   </extensions>
 
   <actions>
