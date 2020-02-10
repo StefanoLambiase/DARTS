@@ -55,7 +55,7 @@
                         </constraints>
                         <properties>
                           <font style="1"/>
-                          <text value="Refactor preview"/>
+                          <text value="Refactoring preview"/>
                         </properties>
                       </component>
                       <hspacer id="f0821">
