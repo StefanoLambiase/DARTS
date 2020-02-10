@@ -62,13 +62,13 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
         this.gfSmellPanel = gfSmellPanel;
 
-        String methodName = "<html> Method: " + methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName() + " doesn't use the following variables: <br/>";
+        String methodName = "<html> Method " + methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName() + " is affected by General Fixture because it doesn't use the following variables: <br/>";
 
         for(PsiVariable instance : methodWithGeneralFixture.getVariablesNotInMethod()){
             methodName = methodName + "   - " + instance.getText() + "<br/>";
         }
 
-        methodName = methodName + "<br/>The Smell can be removed using one of this refactoring operations:<br/>";
+        methodName = methodName + "<br/>The Smell should be removed using these refactoring operations:<br/>";
         methodName = methodName + "   - Extract method: setup method can be split into two different methods<br/>";
         methodName = methodName + "   - Extract class: the test class can be split into two separated classes</html>";
 
@@ -95,13 +95,13 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
         this.etSmellPanel = etSmellPanel;
 
-        String methodName = "<html> Method: " + methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getName() + " calls the following methods: <br/>";
+        String methodName = "<html> Method " + methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getName() + " is affected by Eager Test because it calls the following methods: <br/>";
 
         for(PsiMethodBean mbCalled : methodWithEagerTest.getListOfMethodCalled()){
             methodName = methodName + "   - " + mbCalled.getPsiMethod().getName() + "<br/>";
         }
 
-        methodName = methodName + "<br/>The Smell can be removed using one of this refactoring operations:<br/>";
+        methodName = methodName + "<br/>The Smell should be removed  using the following refactor operation:<br/>";
         methodName = methodName + "   - Extract method: affected method can be splitted into smaller methods, each one testing a specific behavior of the tested object.</html>";
 
         tipsTextLabel.setText(methodName);
@@ -126,9 +126,9 @@ public class RefactorWindow extends JPanel implements ActionListener{
         this.project = project;
         this.locSmellPanel = locSmellPanel;
 
-        String methodName = "<html> Method: " + methodWithLOC.getPsiMethod().getName() + " is affected by Lack of Cohesion of Test Methods: <br/>";
+        String methodName = "<html> Method " + methodWithLOC.getPsiMethod().getName() + " is affected by Lack of Cohesion of Test Methods: <br/>";
 
-        methodName = methodName + "<br/>The Smell can be removed using one of this refactoring operations:<br/>";
+        methodName = methodName + "<br/>The Smell should be removed using one of this refactoring operations:<br/>";
         methodName = methodName + "   - Extract method: setup method can be split into two different methods<br/>";
         methodName = methodName + "   - Extract class: the test class can be split into two separated classes</html>";
 
