@@ -52,6 +52,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 /* ANALISI TESTUALE */
                 IDetector detector = new TestSmellTextualDetector(myPanel.getProject());
 
+
                 IDetector detector2 = new TestSmellStructuralDetector(myPanel.getProject());
 
                 generalFixtureInfos = detector.executeDetectionForGeneralFixture();
