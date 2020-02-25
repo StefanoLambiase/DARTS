@@ -7,3 +7,13 @@
 4. On the **Plugins** page, click the *wheel-shaped* button and then click **Install Plugin from Disk**.
 5. Select the **DARTS_DetectionAndRefactoringOfTestSmell.jar** and click **OK**.
 6. Click **OK** to apply the changes and restart the IDE.
+
+# To contribute
+1. Clone this project.
+2. Open the project in IntelliJ.
+3. Go in the **File/Project Structure/Project** dialog.
+4. In the **Project SDK** section, click the **New...** button.
+5. Select **IntelliJ Platform Plugin SDK** from the menu.
+6. Select your IntelliJ IDEA directory and click the **OK** button.
+7. Select the SDK version (1.8 or higher) and click **OK** button.
+8. Click **Apply** button.
