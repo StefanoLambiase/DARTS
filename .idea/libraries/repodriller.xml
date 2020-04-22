@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="repodriller">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../repodriller.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
