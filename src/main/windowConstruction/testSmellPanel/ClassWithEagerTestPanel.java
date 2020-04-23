@@ -5,11 +5,14 @@ import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackageStatement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
+import javafx.scene.control.RadioButton;
+import main.contextualAnalysis.DataMiner;
 import main.refactor.IRefactor;
 import main.refactor.strategy.EagerTestStrategy;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
+import org.repodriller.RepoDriller;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -49,6 +52,7 @@ public class ClassWithEagerTestPanel extends JPanel {
             JLabel methodName = new JLabel("   " + mb.getMethodWithEagerTest().getPsiMethod().getName());
             JButton methodButton = new JButton("details");
             JButton refactoringButton = new JButton("Do Refactor");
+            JButton contextualAnalysisButton = new JButton("Execute contextual analysis");
 
             methodButton.addActionListener(new ActionListener() {
                 @Override
@@ -108,10 +112,18 @@ public class ClassWithEagerTestPanel extends JPanel {
                 }
             });
 
+            contextualAnalysisButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+
+                    new RepoDriller().start(new DataMiner(eti));
+                }
+            });
 
             methodPanel.add(methodName);
             methodPanel.add(methodButton);
             methodPanel.add(refactoringButton);
+            methodPanel.add(contextualAnalysisButton);
 
             listOfMethodsPanel.add(methodPanel);
         }
