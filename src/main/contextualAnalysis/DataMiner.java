@@ -13,19 +13,21 @@ public class DataMiner implements Study{
 
     private TestSmellInfo smell;
     private String productionClass;
+    private String projectPath;
 
-    public DataMiner(TestSmellInfo info){
+    public DataMiner(TestSmellInfo info, String projectPath){
         smell = info;
         productionClass = info.getClassWithSmell().getProductionClass().getName();
+        this.projectPath = projectPath;
     }
 
     @Override
     public void execute() {
         //implemnts extraction's logic
         new RepositoryMining()
-                .in(GitRepository.singleProject("/users/andreacupito/Documents/Progetto-master"))
+                .in(GitRepository.singleProject(projectPath))
                 .through(Commits.all())
-                .process(new DevelopersVisitor(), new CSVFile("/users/andreacupito/Desktop/devs.csv"))
+                .process(new DevelopersVisitor(), new CSVFile("C:\\Users\\gsuli\\Desktop\\devs.csv"))
                 .mine();
     }
 }

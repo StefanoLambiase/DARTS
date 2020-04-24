@@ -116,7 +116,7 @@ public class ClassWithEagerTestPanel extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
-                    new RepoDriller().start(new DataMiner(eti));
+                    new RepoDriller().start(new DataMiner(eti, project.getBasePath()));
                 }
             });
 
