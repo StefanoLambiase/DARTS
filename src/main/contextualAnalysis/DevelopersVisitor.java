@@ -1,7 +1,5 @@
 package main.contextualAnalysis;
 
-import com.intellij.ide.plugins.PluginManager;
-import org.apache.log4j.Logger;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
 import org.repodriller.persistence.PersistenceMechanism;
