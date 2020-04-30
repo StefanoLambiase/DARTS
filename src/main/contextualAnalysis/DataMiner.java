@@ -29,7 +29,7 @@ public class DataMiner implements Study{
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.all())
-                .process(new DevelopersVisitor(productionClass), new CSVFile("C:\\Users\\gsuli\\Desktop\\devs.csv"))
+                .process(new DevelopersVisitor(productionClass), new CSVFile("/users/andreacupito/Desktop/devs.csv"))
                 .mine();
     }
 }

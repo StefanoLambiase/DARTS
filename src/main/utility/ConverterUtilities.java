@@ -34,10 +34,12 @@ public abstract class ConverterUtilities {
             System.out.println("\nCLASSE TROVATA: " + psiClassBean.getPsiClass().getName() + " ################################");
             System.out.println("   PACKAGE: " + psiClassBean.getPsiPackage());
             System.out.println("\n   VARIABILI BLOBALI");
-            ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClassBean.getPsiClass());
+            /*ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClassBean.getPsiClass());
             for(PsiVariable var : instanceVariables){
-                System.out.println("\n" + var.getTypeElement().getText());
-            }
+                if(var != null) {
+                    System.out.println("\n" + var.getTypeElement().getText());
+                }
+            }*/
             System.out.println("\n   METODI");
             ArrayList<PsiMethodBean> psiMethodBeans = getMethodFromClass(psiClassBean.getPsiClass());
 
