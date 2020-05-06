@@ -4,8 +4,11 @@ import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import org.repodriller.RepoDriller;
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
+import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
+import org.repodriller.filter.diff.OnlyDiffsWithFileTypes;
 import org.repodriller.filter.range.Commits;
 import org.repodriller.persistence.csv.CSVFile;
+import org.repodriller.scm.CollectConfiguration;
 import org.repodriller.scm.GitRepository;
 
 import java.util.Arrays;
@@ -25,10 +28,13 @@ public class DataMiner implements Study{
 
     @Override
     public void execute() {
-        //implements extraction's logic
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.all())
+                .filters(
+                        new OnlyModificationsWithFileTypes(Arrays.asList(".java"))
+                )
+                .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
                 .process(new DevelopersVisitor(productionClass), new CSVFile("/users/andreacupito/Desktop/devs.csv"))
                 .mine();
     }

@@ -19,13 +19,22 @@ public class DevelopersVisitor implements CommitVisitor {
         for (Modification modification : commit.getModifications()) {
             String[] fileEditedPath = modification.getFileName().split("/");
             String fileEditedName = fileEditedPath[fileEditedPath.length - 1];
-            boolean isProductionClass = (fileEditedName.equals(javaClass + ".java")) ? true : false;
+
+            //check if the modify belongs to the production class
+            boolean isProductionClass = fileEditedName.equals(javaClass + ".java");
             System.out.println(isProductionClass + ", " + fileEditedName + ", " + javaClass);
-            if (isProductionClass) {
-                persistenceMechanism.write(
-                        commit.getHash(),
-                        commit.getCommitter().getName()
-                );
+
+            String type = modification.getType().toString();
+
+            if(type.equals("MODIFY")) {
+                if (isProductionClass) {
+                    persistenceMechanism.write(
+                            commit.getHash(),
+                            commit.getCommitter().getName(),
+                            commit.getModifications(),
+                            modification.getFileName()
+                    );
+                }
             }
         }
 
