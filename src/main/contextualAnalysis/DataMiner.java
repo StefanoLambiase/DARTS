@@ -11,6 +11,7 @@ import org.repodriller.persistence.csv.CSVFile;
 import org.repodriller.scm.CollectConfiguration;
 import org.repodriller.scm.GitRepository;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 
@@ -31,6 +32,7 @@ public class DataMiner implements Study{
 
     @Override
     public void execute() {
+        String userDesktop = System.getProperty("user.home") + File.separator + "Desktop";
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.since(commitSinceDate))
@@ -38,7 +40,7 @@ public class DataMiner implements Study{
                         new OnlyModificationsWithFileTypes(Arrays.asList(".java"))
                 )
                 .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
-                .process(new DevelopersVisitor(productionClass), new CSVFile("C:\\Users\\gsuli\\Desktop\\devs.csv"))
+                .process(new DevelopersVisitor(productionClass), new CSVFile(userDesktop + File.separator + "devs.csv"))
                 .mine();
     }
 }
