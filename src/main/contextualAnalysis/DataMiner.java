@@ -12,6 +12,7 @@ import org.repodriller.scm.CollectConfiguration;
 import org.repodriller.scm.GitRepository;
 
 import java.util.Arrays;
+import java.util.GregorianCalendar;
 
 //class able to manage the data extraction
 public class DataMiner implements Study{
@@ -19,23 +20,25 @@ public class DataMiner implements Study{
     private TestSmellInfo smell;
     private String productionClass;
     private String projectPath;
+    private GregorianCalendar commitSinceDate;
 
-    public DataMiner(TestSmellInfo info, String projectPath){
+    public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate){
         smell = info;
         productionClass = info.getClassWithSmell().getProductionClass().getName();
         this.projectPath = projectPath;
+        this.commitSinceDate = commitSinceDate;
     }
 
     @Override
     public void execute() {
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
-                .through(Commits.all())
+                .through(Commits.since(commitSinceDate))
                 .filters(
                         new OnlyModificationsWithFileTypes(Arrays.asList(".java"))
                 )
                 .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
-                .process(new DevelopersVisitor(productionClass), new CSVFile("/users/andreacupito/Desktop/devs.csv"))
+                .process(new DevelopersVisitor(productionClass), new CSVFile("C:\\Users\\gsuli\\Desktop\\devs.csv"))
                 .mine();
     }
 }

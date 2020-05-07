@@ -12,6 +12,7 @@ import main.refactor.strategy.EagerTestStrategy;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
+import main.windowConstruction.ContextualAnalysisFrame;
 import org.repodriller.RepoDriller;
 
 import javax.swing.*;
@@ -115,8 +116,8 @@ public class ClassWithEagerTestPanel extends JPanel {
             contextualAnalysisButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-
-                    new RepoDriller().start(new DataMiner(eti, project.getBasePath()));
+                    new ContextualAnalysisFrame(project.getBasePath(), eti);
+                    //new RepoDriller().start(new DataMiner(eti, project.getBasePath()));
                 }
             });
 
