@@ -58,8 +58,7 @@ public class ContextualAnalysisFrame extends JFrame {
             public void stateChanged(ChangeEvent e) {
                 // day/month number modified, updating the date and the timestamp in the frame
                 subtractDate();
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                sinceDate.setText(sdf.format(sinceCommitDate.getTime()));
+                sinceDate.setText(printDateLabel());
             }
         });
         layoutConstraints.gridx = 1;
