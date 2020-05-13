@@ -1,5 +1,6 @@
 package main.contextualAnalysis;
 
+import main.contextualAnalysis.messageChecker.StringChecker;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
 import org.repodriller.persistence.PersistenceMechanism;
@@ -24,19 +25,16 @@ public class DevelopersVisitor implements CommitVisitor {
             boolean isProductionClass = fileEditedName.equals(javaClass + ".java");
             System.out.println(isProductionClass + ", " + fileEditedName + ", " + javaClass);
 
-            String type = modification.getType().toString();
-
-            if(type.equals("MODIFY")) {
+            if(StringChecker.isBugFixingMessage(commit.getMsg())) {
                 if (isProductionClass) {
                     persistenceMechanism.write(
                             commit.getHash(),
                             commit.getCommitter().getName(),
-                            commit.getModifications(),
+                            commit.getMsg(),
                             modification.getFileName()
                     );
                 }
             }
         }
-
     }
 }

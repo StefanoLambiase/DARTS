@@ -5,6 +5,7 @@ import org.repodriller.RepoDriller;
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
 import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
+import org.repodriller.filter.commit.OnlyNoMerge;
 import org.repodriller.filter.diff.OnlyDiffsWithFileTypes;
 import org.repodriller.filter.range.Commits;
 import org.repodriller.persistence.csv.CSVFile;
@@ -37,9 +38,10 @@ public class DataMiner implements Study{
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.since(commitSinceDate))
                 .filters(
-                        new OnlyModificationsWithFileTypes(Arrays.asList(".java"))
+                        new OnlyNoMerge()
                 )
                 .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
+                .collect( new CollectConfiguration().commitMessages())
                 .process(new DevelopersVisitor(productionClass), new CSVFile(userDesktop + File.separator + "devs.csv"))
                 .mine();
     }

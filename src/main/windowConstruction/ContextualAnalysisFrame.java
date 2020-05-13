@@ -50,7 +50,7 @@ public class ContextualAnalysisFrame extends JFrame {
         layoutConstraints.anchor = GridBagConstraints.LINE_END;
         pane.add(timePeriod, layoutConstraints);
         // TimeNumber Spinner COL1,ROW1 1[-x-]
-        SpinnerModel timeNumberModel = new SpinnerNumberModel(1,1,31,1);
+        SpinnerModel timeNumberModel = new SpinnerNumberModel(1,1,200,1);
         timeNumber = new JSpinner(timeNumberModel);
         timeNumber.setEnabled(true);
         timeNumber.addChangeListener(new ChangeListener() {
