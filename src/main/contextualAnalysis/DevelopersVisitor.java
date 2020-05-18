@@ -33,7 +33,8 @@ public class DevelopersVisitor implements CommitVisitor {
             System.out.println(isProductionClass + ", " + fileEditedName + ", " + javaClass);
 
             if(StringChecker.isBugFixingMessage(commit.getMsg())) {
-                updateActivities(fileEditedName);
+                String className = fileEditedName.replace(".java", "");
+                updateActivities(className);
                 if (isProductionClass) {
                     persistenceMechanism.write(
                             commit.getHash(),
@@ -50,7 +51,6 @@ public class DevelopersVisitor implements CommitVisitor {
         if (fixingActivities.containsKey(className)) {
             int activities = fixingActivities.get(className);
             activities++;
-            System.out.println("Update activities: " + fixingActivities.get(className)); // testing purposes
             fixingActivities.put(className, activities);
         }
     }
