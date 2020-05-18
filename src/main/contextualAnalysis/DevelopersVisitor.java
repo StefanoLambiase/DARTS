@@ -28,6 +28,7 @@ public class DevelopersVisitor implements CommitVisitor {
             //check if the modify belongs to the production class
             boolean isProductionClass = fileEditedName.equals(javaClass + ".java");
             System.out.println(isProductionClass + ", " + fileEditedName + ", " + javaClass);
+
             if(StringChecker.isBugFixingMessage(commit.getMsg())) {
                 updateActivities(fileEditedName);
                 if (isProductionClass) {

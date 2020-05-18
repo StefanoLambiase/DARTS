@@ -1,5 +1,6 @@
 package main.contextualAnalysis;
 
+import main.contextualAnalysis.hashUtilies.ProductionClassHandler;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import org.repodriller.RepoDriller;
 import org.repodriller.RepositoryMining;
@@ -26,7 +27,7 @@ public class DataMiner implements Study{
     private GregorianCalendar commitSinceDate;
     private HashMap<String, Integer> fixingActivities;
 
-    public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate){
+    public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate, ProductionClassHandler productionClasses){
         smell = info;
         productionClass = info.getClassWithSmell().getProductionClass().getName();
         this.projectPath = projectPath;
@@ -44,7 +45,9 @@ public class DataMiner implements Study{
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.since(commitSinceDate))
-                .filters(new OnlyNoMerge())
+                .filters(
+                        new OnlyNoMerge(),
+                        new OnlyModificationsWithFileTypes(Arrays.asList(".java")))
                 .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
                 .collect( new CollectConfiguration().commitMessages())
                 .process(devVisitor, new CSVFile(userDesktop + File.separator + "devs.csv"))

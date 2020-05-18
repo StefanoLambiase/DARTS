@@ -116,7 +116,7 @@ public class ClassWithEagerTestPanel extends JPanel {
             contextualAnalysisButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    new ContextualAnalysisFrame(project.getBasePath(), eti);
+                    new ContextualAnalysisFrame(project, eti);
                     //new RepoDriller().start(new DataMiner(eti, project.getBasePath()));
                 }
             });
