@@ -21,7 +21,6 @@ public class TestSmellTextualDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
     private ArrayList<PsiClassBean> productionClasses;
-    public ProductionClassHandler productionClassHandler;
 
     public TestSmellTextualDetector(Project project){
         classBeans = ConverterUtilities.getClassesFromPackages(project);
