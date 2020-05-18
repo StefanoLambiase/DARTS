@@ -7,11 +7,15 @@ import org.repodriller.persistence.PersistenceMechanism;
 import org.repodriller.scm.CommitVisitor;
 import org.repodriller.scm.SCMRepository;
 
+import java.util.HashMap;
+
 public class DevelopersVisitor implements CommitVisitor {
     private String javaClass;
+    private HashMap<String, Integer> fixingActivities;
 
-    public DevelopersVisitor(String productionClass) {
+    public DevelopersVisitor(String productionClass, HashMap<String, Integer> fixingActivities) {
         javaClass = productionClass;
+        this.fixingActivities = fixingActivities;
     }
 
     @Override
@@ -24,8 +28,8 @@ public class DevelopersVisitor implements CommitVisitor {
             //check if the modify belongs to the production class
             boolean isProductionClass = fileEditedName.equals(javaClass + ".java");
             System.out.println(isProductionClass + ", " + fileEditedName + ", " + javaClass);
-
             if(StringChecker.isBugFixingMessage(commit.getMsg())) {
+                updateActivities(fileEditedName);
                 if (isProductionClass) {
                     persistenceMechanism.write(
                             commit.getHash(),
@@ -36,5 +40,18 @@ public class DevelopersVisitor implements CommitVisitor {
                 }
             }
         }
+    }
+
+    private void updateActivities (String className) {
+        if (fixingActivities.containsKey(className)) {
+            int activities = fixingActivities.get(className);
+            activities++;
+            System.out.println("Update activities: " + fixingActivities.get(className)); // testing purposes
+            fixingActivities.put(className, activities);
+        }
+    }
+
+    public HashMap<String, Integer> getFixingActivities() {
+        return fixingActivities;
     }
 }

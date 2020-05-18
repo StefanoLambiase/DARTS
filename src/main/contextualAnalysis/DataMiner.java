@@ -15,6 +15,7 @@ import org.repodriller.scm.GitRepository;
 import java.io.File;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 
 //class able to manage the data extraction
 public class DataMiner implements Study{
@@ -23,26 +24,33 @@ public class DataMiner implements Study{
     private String productionClass;
     private String projectPath;
     private GregorianCalendar commitSinceDate;
+    private HashMap<String, Integer> fixingActivities;
 
     public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate){
         smell = info;
         productionClass = info.getClassWithSmell().getProductionClass().getName();
         this.projectPath = projectPath;
         this.commitSinceDate = commitSinceDate;
+        fixingActivities = new HashMap<>();
     }
 
     @Override
     public void execute() {
         String userDesktop = System.getProperty("user.home") + File.separator + "Desktop";
+        // Testing purposes
+        fixingActivities.put(productionClass + ".java", 0);
+        // end test snippet
+        DevelopersVisitor devVisitor = new DevelopersVisitor(productionClass, fixingActivities);
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.since(commitSinceDate))
-                .filters(
-                        new OnlyNoMerge()
-                )
+                .filters(new OnlyNoMerge())
                 .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
                 .collect( new CollectConfiguration().commitMessages())
-                .process(new DevelopersVisitor(productionClass), new CSVFile(userDesktop + File.separator + "devs.csv"))
+                .process(devVisitor, new CSVFile(userDesktop + File.separator + "devs.csv"))
                 .mine();
+
+        // Tracks the number of bug fixing activities done in every production class detected
+        fixingActivities = devVisitor.getFixingActivities();
     }
 }
