@@ -1,6 +1,8 @@
 package main.contextualAnalysis;
 
+import main.contextualAnalysis.hashUtilies.ProductionClassesSingleton;
 import main.contextualAnalysis.messageChecker.StringChecker;
+import main.testSmellDetection.bean.PsiClassBean;
 import org.repodriller.domain.Commit;
 import org.repodriller.domain.Modification;
 import org.repodriller.persistence.PersistenceMechanism;
@@ -13,9 +15,10 @@ public class DevelopersVisitor implements CommitVisitor {
     private String javaClass;
     private HashMap<String, Integer> fixingActivities;
 
-    public DevelopersVisitor(String productionClass, HashMap<String, Integer> fixingActivities) {
+    public DevelopersVisitor(String productionClass) {
         javaClass = productionClass;
-        this.fixingActivities = fixingActivities;
+        this.fixingActivities = new HashMap<>();
+        initializeHashMap();
     }
 
     @Override
@@ -49,6 +52,16 @@ public class DevelopersVisitor implements CommitVisitor {
             activities++;
             System.out.println("Update activities: " + fixingActivities.get(className)); // testing purposes
             fixingActivities.put(className, activities);
+        }
+    }
+
+    private void initializeHashMap () {
+        ProductionClassesSingleton productionClassesSingleton = ProductionClassesSingleton.getIstance();
+        for (PsiClassBean productionClass : productionClassesSingleton.getProductionClasses()) {
+            String productionClassName = productionClass.getName();
+            if (!fixingActivities.containsKey(productionClassName)) {
+                fixingActivities.put(productionClassName, 0);
+            }
         }
     }
 

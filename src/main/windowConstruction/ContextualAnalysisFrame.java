@@ -2,11 +2,7 @@ package main.windowConstruction;
 
 import com.intellij.openapi.project.Project;
 import main.contextualAnalysis.DataMiner;
-import main.contextualAnalysis.hashUtilies.ProductionClassHandler;
-import main.testSmellDetection.bean.PsiClassBean;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
-import main.utility.ConverterUtilities;
-import main.utility.TestSmellUtilities;
 import org.repodriller.RepoDriller;
 
 import javax.swing.*;
@@ -16,7 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -29,10 +24,6 @@ public class ContextualAnalysisFrame extends JFrame {
     private static JButton startAnalysis;
     private static GregorianCalendar sinceCommitDate;
     private static TestSmellInfo smellInfo;
-    private static ArrayList<PsiClassBean> classBeans;
-    private static ArrayList<PsiClassBean> testClasses;
-    private static ArrayList<PsiClassBean> productionClasses;
-    private static ProductionClassHandler productionClassHandler;
 
     private static void addComponents (Container pane) {
         pane.setLayout(new GridBagLayout());
@@ -111,7 +102,7 @@ public class ContextualAnalysisFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.setVisible(false);
-                new RepoDriller().start(new DataMiner(smellInfo, projectPath, sinceCommitDate, productionClassHandler));
+                new RepoDriller().start(new DataMiner(smellInfo, projectPath, sinceCommitDate));
             }
         });
         layoutConstraints.insets = new Insets(0, 0, 20, 20);
@@ -124,10 +115,6 @@ public class ContextualAnalysisFrame extends JFrame {
     public ContextualAnalysisFrame(Project project, TestSmellInfo smellInfo) {
         mainFrame = new JFrame("Contextual Analysis");
         this.projectPath = project.getBasePath();
-        classBeans = ConverterUtilities.getClassesFromPackages(project);
-        testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
-        productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
-        productionClassHandler = new ProductionClassHandler(productionClasses);
         this.smellInfo = smellInfo;
         this.productionClass = smellInfo.getClassWithSmell().getProductionClass().getName();
         sinceCommitDate = new GregorianCalendar();

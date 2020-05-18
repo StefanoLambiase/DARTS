@@ -1,8 +1,6 @@
 package main.contextualAnalysis;
 
-import main.contextualAnalysis.hashUtilies.ProductionClassHandler;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
-import org.repodriller.RepoDriller;
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
 import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
@@ -27,7 +25,7 @@ public class DataMiner implements Study{
     private GregorianCalendar commitSinceDate;
     private HashMap<String, Integer> fixingActivities;
 
-    public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate, ProductionClassHandler productionClasses){
+    public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate){
         smell = info;
         productionClass = info.getClassWithSmell().getProductionClass().getName();
         this.projectPath = projectPath;
@@ -38,10 +36,7 @@ public class DataMiner implements Study{
     @Override
     public void execute() {
         String userDesktop = System.getProperty("user.home") + File.separator + "Desktop";
-        // Testing purposes
-        fixingActivities.put(productionClass + ".java", 0);
-        // end test snippet
-        DevelopersVisitor devVisitor = new DevelopersVisitor(productionClass, fixingActivities);
+        DevelopersVisitor devVisitor = new DevelopersVisitor(productionClass);
         new RepositoryMining()
                 .in(GitRepository.singleProject(projectPath))
                 .through(Commits.since(commitSinceDate))
@@ -55,5 +50,9 @@ public class DataMiner implements Study{
 
         // Tracks the number of bug fixing activities done in every production class detected
         fixingActivities = devVisitor.getFixingActivities();
+        // Printing the HashMap
+        fixingActivities.entrySet().forEach(entry->{
+            System.out.println(entry.getKey() + " " + entry.getValue());
+        });
     }
 }
