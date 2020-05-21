@@ -1,9 +1,22 @@
 package main.windowConstruction;
 
+import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
+import data.ClassCoverageInfo;
+import data.FlakyTestsInfo;
+import data.TestClassAnalysis;
+import data.TestProjectAnalysis;
+import it.unisa.testSmellDiffusion.beans.ClassBean;
+import it.unisa.testSmellDiffusion.beans.PackageBean;
+import it.unisa.testSmellDiffusion.testMutation.TestMutationUtilities;
 import main.contextualAnalysis.DataMiner;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import org.repodriller.RepoDriller;
+import processor.CoverageProcessor;
+import processor.FlakyTestsProcessor;
+import processor.MutationCoverageProcessor;
+import storage.ReportManager;
+import utils.VectorFind;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -12,10 +25,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 public class ContextualAnalysisFrame extends JFrame {
+    private static TestProjectAnalysis projectAnalysis;
     private static JFrame mainFrame;
     private static JLabel productionClassLabel, productionClassName, timePeriod, analyseCommitSince, sinceDate;
     private static String projectPath, productionClass;
@@ -99,9 +115,64 @@ public class ContextualAnalysisFrame extends JFrame {
         // StartAnalysis Button COL2,ROW2 2[--x]
         startAnalysis = new JButton("Start Analysis");
         startAnalysis.addActionListener(new ActionListener() {
+
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.setVisible(false);
+                String intellijpath = PathManager.getPluginsPath();
+                String pluginPath = intellijpath + "/TestFactorsPlugin/lib";
+                projectAnalysis.setPluginPath(pluginPath);
+                Vector<PackageBean> packages = projectAnalysis.getPackages();
+                Vector<PackageBean> testPackages = projectAnalysis.getTestPackages();
+                TestMutationUtilities utils = new TestMutationUtilities();
+                ArrayList<ClassBean> classes = utils.getClasses(packages);
+                Vector<ClassCoverageInfo> coverageInfos = null;
+                Vector<FlakyTestsInfo> flakyInfos = null;
+                Vector<TestClassAnalysis> classAnalyses = new Vector<>();
+
+                coverageInfos = CoverageProcessor.calculate(projectAnalysis);
+
+                flakyInfos = FlakyTestsProcessor.calculate(projectAnalysis, 10);
+
+                for (ClassBean prodClass : classes) {
+                    ClassBean testSuite = utils.getTestClassBy(prodClass.getName(), testPackages);
+
+                    if (testSuite != null) {
+
+                        TestClassAnalysis analysis = new TestClassAnalysis();
+                        analysis.setName(testSuite.getName());
+                        analysis.setBelongingPackage(testSuite.getBelongingPackage());
+                        analysis.setProductionClass(prodClass.getBelongingPackage() + "." + prodClass.getName());
+
+                        if (coverageInfos != null) {
+                            analysis.setCoverage(VectorFind.findCoverageInfo(coverageInfos, testSuite.getName()));
+                        } else {
+                            analysis.setCoverage(new ClassCoverageInfo());
+                        }
+
+                        analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
+
+                        if(flakyInfos != null) {
+                            analysis.setFlakyTests(VectorFind.findFlakyInfo(flakyInfos, testSuite.getName()));
+                        }else
+                            analysis.setFlakyTests(new FlakyTestsInfo());
+                        classAnalyses.add(analysis);
+                    }
+                }
+                projectAnalysis.setClassAnalysis(classAnalyses);
+                String smellyClassName = smellInfo.getClassWithSmell().getName();
+
+                if(smellyClassName != null){
+
+                    for (TestClassAnalysis classAnalysis : classAnalyses) {
+                        if (classAnalysis.getName().equalsIgnoreCase(smellyClassName)) {
+                            System.out.println("branch coverage:" + classAnalysis.getCoverage().getBranchCoverage());
+                            System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
+                            System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
+                            System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
+                        }
+                    }
+                }
                 new RepoDriller().start(new DataMiner(smellInfo, projectPath, sinceCommitDate));
             }
         });
@@ -112,8 +183,9 @@ public class ContextualAnalysisFrame extends JFrame {
         pane.add(startAnalysis, layoutConstraints);
     }
 
-    public ContextualAnalysisFrame(Project project, TestSmellInfo smellInfo) {
+    public ContextualAnalysisFrame(Project project, TestSmellInfo smellInfo, TestProjectAnalysis projectAnalysis) {
         mainFrame = new JFrame("Contextual Analysis");
+        this.projectAnalysis = projectAnalysis;
         this.projectPath = project.getBasePath();
         this.smellInfo = smellInfo;
         this.productionClass = smellInfo.getClassWithSmell().getProductionClass().getName();
