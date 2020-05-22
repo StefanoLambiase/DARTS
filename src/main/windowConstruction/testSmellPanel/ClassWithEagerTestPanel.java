@@ -3,8 +3,10 @@ package main.windowConstruction.testSmellPanel;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.SystemInfo;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiPackageStatement;
 import com.intellij.psi.util.PsiTreeUtil;
@@ -32,6 +34,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -227,6 +230,12 @@ public class ClassWithEagerTestPanel extends JPanel {
                         projectAnalysis.setName(project.getName());
                         projectAnalysis.setPath(project.getBasePath());
                         projectAnalysis.setJavaPath(javaPath);
+                        VirtualFile[] libraries = OrderEnumerator.orderEntries(project).runtimeOnly().librariesOnly().getClassesRoots();
+                        ArrayList<String> librariesPaths = new ArrayList<>();
+                        for(VirtualFile file : libraries){
+                            librariesPaths.add(file.getPath());
+                        }
+                        projectAnalysis.setLibrariesPaths(librariesPaths);
                         Vector<TestClassAnalysis> classAnalysis = new Vector<>();
                         if ((test.isDirectory()) && (!test.isHidden())) {
                             try {

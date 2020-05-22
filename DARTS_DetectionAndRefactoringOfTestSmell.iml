@@ -10,7 +10,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="repodriller" level="project" />
-    <orderEntry type="library" name="TestFactorsPlugin" level="project" />
     <orderEntry type="library" name="TestSmellDiffusion" level="project" />
+    <orderEntry type="library" name="TestFactorsPlugin" level="project" />
   </component>
 </module>

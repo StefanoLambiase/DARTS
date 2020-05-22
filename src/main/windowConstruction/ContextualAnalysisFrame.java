@@ -150,7 +150,7 @@ public class ContextualAnalysisFrame extends JFrame {
                             analysis.setCoverage(new ClassCoverageInfo());
                         }
 
-                        analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
+                        //analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
 
                         if(flakyInfos != null) {
                             analysis.setFlakyTests(VectorFind.findFlakyInfo(flakyInfos, testSuite.getName()));
@@ -169,7 +169,7 @@ public class ContextualAnalysisFrame extends JFrame {
                             System.out.println("branch coverage:" + classAnalysis.getCoverage().getBranchCoverage());
                             System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
                             System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
-                            System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
+                            //System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
                         }
                     }
                 }
