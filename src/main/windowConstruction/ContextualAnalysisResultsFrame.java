@@ -1,8 +1,5 @@
 package main.windowConstruction;
 
-import a.b.D;
-import com.intellij.ui.components.JBList;
-import com.intellij.ui.components.JBScrollPane;
 import org.repodriller.domain.Commit;
 
 import javax.swing.*;

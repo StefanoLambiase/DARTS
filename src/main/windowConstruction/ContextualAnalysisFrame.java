@@ -2,6 +2,7 @@ package main.windowConstruction;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.util.ui.JBUI;
 import data.ClassCoverageInfo;
 import data.FlakyTestsInfo;
 import data.TestClassAnalysis;
@@ -19,6 +20,7 @@ import storage.ReportManager;
 import utils.VectorFind;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -119,6 +121,7 @@ public class ContextualAnalysisFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.setVisible(false);
+                JFrame progressBar = swingProgressBar();
                 String intellijpath = PathManager.getPluginsPath();
                 String pluginPath = intellijpath + "/TestFactorsPlugin/lib";
                 projectAnalysis.setPluginPath(pluginPath);
@@ -159,7 +162,10 @@ public class ContextualAnalysisFrame extends JFrame {
                         classAnalyses.add(analysis);
                     }
                 }
+                progressBar.dispose();
                 projectAnalysis.setClassAnalysis(classAnalyses);
+                progressBar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
                 String smellyClassName = smellInfo.getClassWithSmell().getName();
                 TestClassAnalysis smellyClassAnalysis = null;
                 if(smellyClassName != null){
@@ -216,5 +222,26 @@ public class ContextualAnalysisFrame extends JFrame {
     private static String printDateLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(sinceCommitDate.getTime());
+    }
+
+    private static JFrame swingProgressBar() {
+        JFrame frame = new JFrame("Performing analysis");
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(400, 150));
+        JPanel panel = new JPanel();
+        panel.setBorder(new EmptyBorder(50, 50, 50, 50));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(new JLabel("Loading, please wait"));
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        JProgressBar pbar = new JProgressBar();
+        pbar.setIndeterminate(true);
+        pbar.setVisible(true);
+        panel.add(pbar);
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setResizable(false);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        return frame;
     }
 }
