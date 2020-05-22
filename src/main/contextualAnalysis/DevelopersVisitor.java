@@ -10,13 +10,18 @@ import org.repodriller.scm.CommitVisitor;
 import org.repodriller.scm.SCMRepository;
 
 import java.util.HashMap;
+import java.util.Vector;
 
 public class DevelopersVisitor implements CommitVisitor {
     private String javaClass;
     private HashMap<String, Integer> fixingActivities;
+    private Vector<Commit> commitsAnalyzed;
+    private HashMap<String, Integer> commitsPerAuthor;
 
     public DevelopersVisitor(String productionClass) {
         javaClass = productionClass;
+        this.commitsAnalyzed = new Vector<>();
+        this.commitsPerAuthor = new HashMap<>();
         this.fixingActivities = new HashMap<>();
         initializeHashMap();
     }
@@ -36,6 +41,17 @@ public class DevelopersVisitor implements CommitVisitor {
                 String className = fileEditedName.replace(".java", "");
                 updateActivities(className);
                 if (isProductionClass) {
+                    // Add the commit inside the list of the commit analyzed
+                    commitsAnalyzed.add(commit);
+                    // Tracking authors and commits done
+                    if (commitsPerAuthor.containsKey(commit.getAuthor().getName())) {
+                        int count = commitsPerAuthor.get(commit.getAuthor().getName());
+                        count++;
+                        commitsPerAuthor.put(commit.getAuthor().getName(), count);
+                    } else {
+                        commitsPerAuthor.put(commit.getAuthor().getName(), 1);
+                    }
+                    // Writing commit information into the csv file
                     persistenceMechanism.write(
                             commit.getHash(),
                             commit.getCommitter().getName(),
@@ -63,6 +79,14 @@ public class DevelopersVisitor implements CommitVisitor {
                 fixingActivities.put(productionClassName, 0);
             }
         }
+    }
+
+    public Vector<Commit> getCommitsAnalyzed() {
+        return commitsAnalyzed;
+    }
+
+    public HashMap<String, Integer> getCommitsPerAuthor() {
+        return commitsPerAuthor;
     }
 
     public HashMap<String, Integer> getFixingActivities() {

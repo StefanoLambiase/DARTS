@@ -1,6 +1,8 @@
 package main.contextualAnalysis;
 
+import data.TestClassAnalysis;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
+import main.windowConstruction.ContextualAnalysisResultsFrame;
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
 import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;
@@ -15,6 +17,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Map;
 
 //class able to manage the data extraction
 public class DataMiner implements Study{
@@ -24,9 +27,11 @@ public class DataMiner implements Study{
     private String projectPath;
     private GregorianCalendar commitSinceDate;
     private HashMap<String, Integer> fixingActivities;
+    private TestClassAnalysis testClassAnalysis;
 
-    public DataMiner(TestSmellInfo info, String projectPath, GregorianCalendar commitSinceDate){
+    public DataMiner(TestSmellInfo info, TestClassAnalysis testClassAnalysis, String projectPath, GregorianCalendar commitSinceDate){
         smell = info;
+        this.testClassAnalysis = testClassAnalysis;
         productionClass = info.getClassWithSmell().getProductionClass().getName();
         this.projectPath = projectPath;
         this.commitSinceDate = commitSinceDate;
@@ -43,16 +48,32 @@ public class DataMiner implements Study{
                 .filters(
                         new OnlyNoMerge(),
                         new OnlyModificationsWithFileTypes(Arrays.asList(".java")))
-                .collect( new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
-                .collect( new CollectConfiguration().commitMessages())
+                .collect(new CollectConfiguration().sourceCode().diffs(new OnlyDiffsWithFileTypes(Arrays.asList(".java"))))
+                .collect(new CollectConfiguration().commitMessages())
                 .process(devVisitor, new CSVFile(userDesktop + File.separator + "devs.csv"))
                 .mine();
 
         // Tracks the number of bug fixing activities done in every production class detected
         fixingActivities = devVisitor.getFixingActivities();
-        // Printing the HashMap
+        // Printing the HashMap for debugging purposes
         fixingActivities.entrySet().forEach(entry->{
             System.out.println(entry.getKey() + " " + entry.getValue());
         });
+        // Extracting the author with the max numbers of commits
+        Map.Entry<String, Integer> authorMaxCommits = null;
+        for (Map.Entry<String, Integer> entry : devVisitor.getCommitsPerAuthor().entrySet()) {
+            if (authorMaxCommits == null || entry.getValue().compareTo(authorMaxCommits.getValue()) > 0) {
+                authorMaxCommits = entry;
+            }
+        }
+
+        // Showing the results frame to the user
+        new ContextualAnalysisResultsFrame(
+                productionClass,
+                devVisitor.getCommitsAnalyzed(),
+                authorMaxCommits.getKey(),
+                testClassAnalysis.getCoverage().getLineCoverage(),
+                testClassAnalysis.getCoverage().getBranchCoverage(),
+                testClassAnalysis.getFlakyTests().getFlakyMethods().size());
     }
 }

@@ -161,7 +161,7 @@ public class ContextualAnalysisFrame extends JFrame {
                 }
                 projectAnalysis.setClassAnalysis(classAnalyses);
                 String smellyClassName = smellInfo.getClassWithSmell().getName();
-
+                TestClassAnalysis smellyClassAnalysis = null;
                 if(smellyClassName != null){
 
                     for (TestClassAnalysis classAnalysis : classAnalyses) {
@@ -170,10 +170,13 @@ public class ContextualAnalysisFrame extends JFrame {
                             System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
                             System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
                             //System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
+                            smellyClassAnalysis = classAnalysis;
                         }
                     }
                 }
-                new RepoDriller().start(new DataMiner(smellInfo, projectPath, sinceCommitDate));
+                if (smellyClassAnalysis != null) {
+                    new RepoDriller().start(new DataMiner(smellInfo, smellyClassAnalysis, projectPath, sinceCommitDate));
+                }
             }
         });
         layoutConstraints.insets = new Insets(0, 0, 20, 20);
