@@ -13,6 +13,7 @@ public class ContextualAnalysisResultsFrame extends JFrame {
     private JFrame mainFrame;
     private static String className;
     private static JLabel resultsInfos, commitListLabel, commitInfoLabel, commitHashLabel, commitAuthorLabel, commitMsgLabel;
+    private static JTextArea commitMsgArea;
     private static JList commitList;
     private static Vector<Commit> commitListItems;
     private static String reviser;
@@ -68,7 +69,8 @@ public class ContextualAnalysisResultsFrame extends JFrame {
                     Commit commitSelected = (Commit) commitList.getSelectedValue();
                     commitHashLabel.setText("Hash: " + commitSelected.getHash());
                     commitAuthorLabel.setText("Author: " + commitSelected.getAuthor().getName());
-                    commitMsgLabel.setText("<html><p>Message: " + commitSelected.getMsg() + "</p></html>");
+                    //commitMsgLabel.setText("<html><p>Message: " + commitSelected.getMsg() + "</p></html>");
+                    commitMsgArea.setText(commitSelected.getMsg());
                 }
             }
         });
@@ -76,7 +78,7 @@ public class ContextualAnalysisResultsFrame extends JFrame {
         scrollPane.setPreferredSize(new Dimension(250, 200));
         layoutConstraints.fill = GridBagConstraints.VERTICAL;
         layoutConstraints.insets = new Insets(20, 20, 20, 0);
-        layoutConstraints.gridheight = 3; // 3 rows big
+        layoutConstraints.gridheight = 4; // 4 rows big
         layoutConstraints.gridx = 0;
         layoutConstraints.gridy = 2;
         layoutConstraints.anchor = GridBagConstraints.LINE_START;
@@ -109,6 +111,15 @@ public class ContextualAnalysisResultsFrame extends JFrame {
         layoutConstraints.gridy = 4;
         layoutConstraints.anchor = GridBagConstraints.LINE_START;
         pane.add(commitMsgLabel, layoutConstraints);
+
+        // Commit Message TextArea COL1,ROW5
+        commitMsgArea = new JTextArea(5, 20);
+        commitMsgArea.setEditable(false);
+        JScrollPane jScrollPane = new JScrollPane(commitMsgArea);
+        layoutConstraints.insets = new Insets(20, 20, 0, 20);
+        layoutConstraints.gridx = 1;
+        layoutConstraints.gridy = 5;
+        pane.add(commitMsgArea, layoutConstraints);
     }
 
     public ContextualAnalysisResultsFrame(String className,
