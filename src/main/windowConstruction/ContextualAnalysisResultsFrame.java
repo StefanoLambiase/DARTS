@@ -114,6 +114,7 @@ public class ContextualAnalysisResultsFrame extends JFrame {
 
         // Commit Message TextArea COL1,ROW5
         commitMsgArea = new JTextArea(5, 20);
+        commitMsgArea.setLineWrap(true);
         commitMsgArea.setEditable(false);
         JScrollPane jScrollPane = new JScrollPane(commitMsgArea);
         layoutConstraints.insets = new Insets(20, 20, 0, 20);
