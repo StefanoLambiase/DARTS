@@ -26,6 +26,8 @@ public class LoadingFrame extends JFrame {
         mainFrame.setPreferredSize(new Dimension(400, 150));
         mainFrame.add(panel, BorderLayout.CENTER);
         mainFrame.setResizable(false);
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        mainFrame.setLocation(dimension.width/2-mainFrame.getSize().width/2, dimension.height/2-mainFrame.getSize().height/2);
         mainFrame.pack();
         mainFrame.setVisible(true);
     }
