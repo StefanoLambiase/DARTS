@@ -120,69 +120,73 @@ public class ContextualAnalysisFrame extends JFrame {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.setVisible(false);
-                JFrame progressBar = swingProgressBar();
-                String intellijpath = PathManager.getPluginsPath();
-                String pluginPath = intellijpath + "/TestFactorsPlugin/lib";
-                projectAnalysis.setPluginPath(pluginPath);
-                Vector<PackageBean> packages = projectAnalysis.getPackages();
-                Vector<PackageBean> testPackages = projectAnalysis.getTestPackages();
-                TestMutationUtilities utils = new TestMutationUtilities();
-                ArrayList<ClassBean> classes = utils.getClasses(packages);
-                Vector<ClassCoverageInfo> coverageInfos = null;
-                Vector<FlakyTestsInfo> flakyInfos = null;
-                Vector<TestClassAnalysis> classAnalyses = new Vector<>();
+                new Thread() {
+                    public void run() {
+                        mainFrame.setVisible(false);
+                        LoadingFrame loadingFrame = new LoadingFrame();
+                        String intellijpath = PathManager.getPluginsPath();
+                        String pluginPath = intellijpath + "/TestFactorsPlugin/lib";
+                        projectAnalysis.setPluginPath(pluginPath);
+                        Vector<PackageBean> packages = projectAnalysis.getPackages();
+                        Vector<PackageBean> testPackages = projectAnalysis.getTestPackages();
+                        TestMutationUtilities utils = new TestMutationUtilities();
+                        ArrayList<ClassBean> classes = utils.getClasses(packages);
+                        Vector<ClassCoverageInfo> coverageInfos = null;
+                        Vector<FlakyTestsInfo> flakyInfos = null;
+                        Vector<TestClassAnalysis> classAnalyses = new Vector<>();
 
-                coverageInfos = CoverageProcessor.calculate(projectAnalysis);
+                        coverageInfos = CoverageProcessor.calculate(projectAnalysis);
 
-                flakyInfos = FlakyTestsProcessor.calculate(projectAnalysis, 10);
+                        flakyInfos = FlakyTestsProcessor.calculate(projectAnalysis, 10);
 
-                for (ClassBean prodClass : classes) {
-                    ClassBean testSuite = utils.getTestClassBy(prodClass.getName(), testPackages);
+                        for (
+                                ClassBean prodClass : classes) {
+                            ClassBean testSuite = utils.getTestClassBy(prodClass.getName(), testPackages);
 
-                    if (testSuite != null) {
+                            if (testSuite != null) {
 
-                        TestClassAnalysis analysis = new TestClassAnalysis();
-                        analysis.setName(testSuite.getName());
-                        analysis.setBelongingPackage(testSuite.getBelongingPackage());
-                        analysis.setProductionClass(prodClass.getBelongingPackage() + "." + prodClass.getName());
+                                TestClassAnalysis analysis = new TestClassAnalysis();
+                                analysis.setName(testSuite.getName());
+                                analysis.setBelongingPackage(testSuite.getBelongingPackage());
+                                analysis.setProductionClass(prodClass.getBelongingPackage() + "." + prodClass.getName());
 
-                        if (coverageInfos != null) {
-                            analysis.setCoverage(VectorFind.findCoverageInfo(coverageInfos, testSuite.getName()));
-                        } else {
-                            analysis.setCoverage(new ClassCoverageInfo());
+                                if (coverageInfos != null) {
+                                    analysis.setCoverage(VectorFind.findCoverageInfo(coverageInfos, testSuite.getName()));
+                                } else {
+                                    analysis.setCoverage(new ClassCoverageInfo());
+                                }
+
+                                //analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
+
+                                if (flakyInfos != null) {
+                                    analysis.setFlakyTests(VectorFind.findFlakyInfo(flakyInfos, testSuite.getName()));
+                                } else
+                                    analysis.setFlakyTests(new FlakyTestsInfo());
+                                classAnalyses.add(analysis);
+                            }
                         }
+                        loadingFrame.dispose();
+                        projectAnalysis.setClassAnalysis(classAnalyses);
 
-                        //analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
+                        String smellyClassName = smellInfo.getClassWithSmell().getName();
+                        TestClassAnalysis smellyClassAnalysis = null;
+                        if (smellyClassName != null) {
 
-                        if(flakyInfos != null) {
-                            analysis.setFlakyTests(VectorFind.findFlakyInfo(flakyInfos, testSuite.getName()));
-                        }else
-                            analysis.setFlakyTests(new FlakyTestsInfo());
-                        classAnalyses.add(analysis);
-                    }
-                }
-                progressBar.dispose();
-                projectAnalysis.setClassAnalysis(classAnalyses);
-                progressBar.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-                String smellyClassName = smellInfo.getClassWithSmell().getName();
-                TestClassAnalysis smellyClassAnalysis = null;
-                if(smellyClassName != null){
-
-                    for (TestClassAnalysis classAnalysis : classAnalyses) {
-                        if (classAnalysis.getName().equalsIgnoreCase(smellyClassName)) {
-                            System.out.println("branch coverage:" + classAnalysis.getCoverage().getBranchCoverage());
-                            System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
-                            System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
-                            //System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
-                            smellyClassAnalysis = classAnalysis;
+                            for (TestClassAnalysis classAnalysis : classAnalyses) {
+                                if (classAnalysis.getName().equalsIgnoreCase(smellyClassName)) {
+                                    System.out.println("branch coverage:" + classAnalysis.getCoverage().getBranchCoverage());
+                                    System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
+                                    System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
+                                    //System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
+                                    smellyClassAnalysis = classAnalysis;
+                                }
+                            }
+                        }
+                        if (smellyClassAnalysis != null) {
+                            new RepoDriller().start(new DataMiner(smellInfo, smellyClassAnalysis, projectPath, sinceCommitDate));
                         }
                     }
-                }
-                if (smellyClassAnalysis != null) {
-                    new RepoDriller().start(new DataMiner(smellInfo, smellyClassAnalysis, projectPath, sinceCommitDate));
-                }
+                }.start();
             }
         });
         layoutConstraints.insets = new Insets(0, 0, 20, 20);
@@ -222,26 +226,5 @@ public class ContextualAnalysisFrame extends JFrame {
     private static String printDateLabel() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         return sdf.format(sinceCommitDate.getTime());
-    }
-
-    private static JFrame swingProgressBar() {
-        JFrame frame = new JFrame("Performing analysis");
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 150));
-        JPanel panel = new JPanel();
-        panel.setBorder(new EmptyBorder(50, 50, 50, 50));
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.add(new JLabel("Loading, please wait"));
-        panel.add(Box.createRigidArea(new Dimension(0, 10)));
-        JProgressBar pbar = new JProgressBar();
-        pbar.setIndeterminate(true);
-        pbar.setVisible(true);
-        panel.add(pbar);
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setResizable(false);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        return frame;
     }
 }
