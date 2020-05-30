@@ -1,4 +1,4 @@
-package main.windowConstruction;
+package main.oldWindowConstruction;
 
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;

@@ -1,8 +1,7 @@
-package main.windowConstruction;
+package main.oldWindowConstruction;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.JBUI;
 import data.ClassCoverageInfo;
 import data.FlakyTestsInfo;
 import data.TestClassAnalysis;
@@ -15,12 +14,9 @@ import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import org.repodriller.RepoDriller;
 import processor.CoverageProcessor;
 import processor.FlakyTestsProcessor;
-import processor.MutationCoverageProcessor;
-import storage.ReportManager;
 import utils.VectorFind;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
