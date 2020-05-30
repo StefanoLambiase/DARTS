@@ -58,16 +58,20 @@
                           <text value="Refactoring preview"/>
                         </properties>
                       </component>
-                      <hspacer id="f0821">
-                        <constraints>
-                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                        </constraints>
-                      </hspacer>
                       <hspacer id="75e8d">
                         <constraints>
                           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                         </constraints>
                       </hspacer>
+                      <component id="f5219" class="javax.swing.JButton" binding="executeContextualAnalysis">
+                        <constraints>
+                          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <font style="1"/>
+                          <text value="Execute Contextual Analysis"/>
+                        </properties>
+                      </component>
                     </children>
                   </grid>
                 </children>

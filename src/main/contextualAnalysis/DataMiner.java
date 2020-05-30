@@ -2,7 +2,7 @@ package main.contextualAnalysis;
 
 import data.TestClassAnalysis;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
-import main.windowConstruction.ContextualAnalysisResultsFrame;
+import main.windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisResultsFrame;
 import org.repodriller.RepositoryMining;
 import org.repodriller.Study;
 import org.repodriller.filter.commit.OnlyModificationsWithFileTypes;

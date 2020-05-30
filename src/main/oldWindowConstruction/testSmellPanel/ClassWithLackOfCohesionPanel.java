@@ -1,4 +1,4 @@
-package main.windowConstruction.testSmellPanel;
+package main.oldWindowConstruction.testSmellPanel;
 
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
@@ -18,7 +18,7 @@ import it.unisa.testSmellDiffusion.utility.FolderToJavaProjectConverter;
 import main.refactor.IRefactor;
 import main.refactor.strategy.LackOfCohesionStrategy;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowConstruction.ContextualAnalysisFrame;
+import main.windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
 
 import javax.swing.*;
 import javax.swing.border.Border;

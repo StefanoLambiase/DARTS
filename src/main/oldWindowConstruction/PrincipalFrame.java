@@ -1,4 +1,4 @@
-package main.windowConstruction;
+package main.oldWindowConstruction;
 
 import com.intellij.ui.components.JBTabbedPane;
 

@@ -1,8 +1,7 @@
-package main.windowConstruction;
+package main.windowCommitConstruction.contextualAnalysisPanel;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.util.ui.JBUI;
 import data.ClassCoverageInfo;
 import data.FlakyTestsInfo;
 import data.TestClassAnalysis;
@@ -11,16 +10,14 @@ import it.unisa.testSmellDiffusion.beans.ClassBean;
 import it.unisa.testSmellDiffusion.beans.PackageBean;
 import it.unisa.testSmellDiffusion.testMutation.TestMutationUtilities;
 import main.contextualAnalysis.DataMiner;
+import main.windowCommitConstruction.LoadingFrame;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import org.repodriller.RepoDriller;
 import processor.CoverageProcessor;
 import processor.FlakyTestsProcessor;
-import processor.MutationCoverageProcessor;
-import storage.ReportManager;
 import utils.VectorFind;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;

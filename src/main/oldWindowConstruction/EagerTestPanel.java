@@ -1,35 +1,35 @@
-package main.windowConstruction;
+package main.oldWindowConstruction;
 
 import com.intellij.openapi.project.Project;
-import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowConstruction.testSmellPanel.ClassWithLackOfCohesionPanel;
+import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
+import main.oldWindowConstruction.testSmellPanel.ClassWithEagerTestPanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class LackOfCohesionPanel extends JPanel {
-    private ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion;
+public class EagerTestPanel extends JPanel {
+    private ArrayList<EagerTestInfo> classesWithEagerTest;
 
-    public LackOfCohesionPanel(ArrayList<LackOfCohesionInfo> classesWithLOC, Project project){
+    public EagerTestPanel(ArrayList<EagerTestInfo> classesWithET, Project project){
         //Parte relativa al titolo ed al bordo del panel
-        TitledBorder border = new TitledBorder("LACK OF COHESION");
+        TitledBorder border = new TitledBorder("EAGER TEST");
         border.setTitleJustification(TitledBorder.CENTER);
         border.setTitlePosition(TitledBorder.TOP);
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(border);
 
-        if (!classesWithLOC.isEmpty()){
+        if (!classesWithET.isEmpty()){
             //Parte relativa all'inizializzazione del Panel per EagerTest
-            classesWithLackOfCohesion = classesWithLOC;
+            classesWithEagerTest = classesWithET;
 
             //Creazione della parte alta del JPanel
             JPanel topPanel = new JPanel(new GridLayout(1,3));
             topPanel.add(new JLabel("CLASS NAME"));
             topPanel.add(new JLabel("PRODUCTION CLASS NAME"));
-            JLabel dettagliLabel = new JLabel("DETAILS");
+            JLabel dettagliLabel = new JLabel("METHODS DETAILS");
             dettagliLabel.setHorizontalAlignment(SwingConstants.CENTER);
             topPanel.add(dettagliLabel);
 
@@ -39,8 +39,8 @@ public class LackOfCohesionPanel extends JPanel {
             this.add(topPanel);
 
             //Parte relativa alla creazione delle singole info per ogni classe affetta da EagerTest
-            for(LackOfCohesionInfo loci : classesWithLackOfCohesion){
-                JPanel classPanel = new ClassWithLackOfCohesionPanel(loci, project);
+            for(EagerTestInfo eti : classesWithEagerTest){
+                JPanel classPanel = new ClassWithEagerTestPanel(eti, project);
                 classPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 5000));
                 this.add(classPanel);
             }
@@ -51,4 +51,15 @@ public class LackOfCohesionPanel extends JPanel {
             this.add(emptyPanel);
         }
     }
+
+
+    public ArrayList<EagerTestInfo> getClassesWithEagerTest() {
+        return classesWithEagerTest;
+    }
+
+    public void setClassesWithEagerTest(ArrayList<EagerTestInfo> classesWithEagerTest) {
+        this.classesWithEagerTest = classesWithEagerTest;
+    }
+
+
 }

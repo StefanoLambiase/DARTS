@@ -7,7 +7,8 @@ import main.testSmellDetection.detector.TestSmellStructuralDetector;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowConstruction.TestSmellWindowFactory;
+import main.oldWindowConstruction.TestSmellWindowFactory;
+import main.windowCommitConstruction.CommitWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class StructuralDetectionAction extends AnAction {
         if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
             System.out.println("\nNon si è trovato alcuno Smell");
         } else {
-            TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+            //TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+            CommitWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
         }
     }
 
