@@ -1,6 +1,5 @@
-package main.windowConstruction.testSmellPanel;
+package main.oldWindowConstruction.testSmellPanel;
 
-import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEnumerator;
@@ -13,20 +12,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import data.TestClassAnalysis;
 import data.TestProjectAnalysis;
-import gui.PluginInitGUI;
-import init.PluginInit;
 import it.unisa.testSmellDiffusion.beans.PackageBean;
 import it.unisa.testSmellDiffusion.utility.FileUtility;
 import it.unisa.testSmellDiffusion.utility.FolderToJavaProjectConverter;
-import javafx.scene.control.RadioButton;
-import main.contextualAnalysis.DataMiner;
 import main.refactor.IRefactor;
 import main.refactor.strategy.EagerTestStrategy;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
-import main.windowConstruction.ContextualAnalysisFrame;
-import org.repodriller.RepoDriller;
+import main.oldWindowConstruction.ContextualAnalysisFrame;
 
 import javax.swing.*;
 import javax.swing.border.Border;
