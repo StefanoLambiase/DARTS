@@ -20,7 +20,7 @@ import main.refactor.strategy.EagerTestStrategy;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
-import main.oldWindowConstruction.ContextualAnalysisFrame;
+import main.windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
 
 import javax.swing.*;
 import javax.swing.border.Border;

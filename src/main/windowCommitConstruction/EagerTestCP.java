@@ -44,7 +44,8 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
             // Mi prendo tutti i nomi delle classi affette dallo smell.
             for (EagerTestInfo eti : classesWithEagerTest){
                 //classesNames.add(eti.getClassWithEagerTest().getName());
-                model.addElement(eti);
+                if(eti.getMethodsThatCauseEagerTest() != null)
+                    model.addElement(eti);
             }
 
             // Setup della lista delle classi.
@@ -59,7 +60,8 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
             classScrollPane.setBorder(new TitledBorder("CLASSES"));
 
             // Inizializzo la secondSplitPane per la prima esecuzione.
-            secondSplitPane = new ETSmellPanel(classesWithEagerTest.get(0), project, this);
+            if(classesWithET.get(0).getMethodsThatCauseEagerTest() != null)
+                secondSplitPane = new ETSmellPanel(classesWithEagerTest.get(0), project, this);
 
             // Creazione dello split pane con la lista delle classi e la secondSplitPane.
             firstSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, classScrollPane, secondSplitPane);
@@ -68,7 +70,10 @@ public class EagerTestCP extends JPanel implements ListSelectionListener {
 
             Dimension minimumSize = new Dimension(150, 100);
             classScrollPane.setMinimumSize(minimumSize);
-            secondSplitPane.setMinimumSize(minimumSize);
+
+            if(secondSplitPane != null)
+                secondSplitPane.setMinimumSize(minimumSize);
+
             firstSplitPane.setPreferredSize(new Dimension(400, 200));
 
             this.add(firstSplitPane);

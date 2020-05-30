@@ -1,4 +1,4 @@
-package main.oldWindowConstruction;
+package main.windowCommitConstruction;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;

@@ -1,4 +1,4 @@
-package main.oldWindowConstruction;
+package main.windowCommitConstruction.contextualAnalysisPanel;
 
 import com.intellij.openapi.application.PathManager;
 import com.intellij.openapi.project.Project;
@@ -10,6 +10,7 @@ import it.unisa.testSmellDiffusion.beans.ClassBean;
 import it.unisa.testSmellDiffusion.beans.PackageBean;
 import it.unisa.testSmellDiffusion.testMutation.TestMutationUtilities;
 import main.contextualAnalysis.DataMiner;
+import main.windowCommitConstruction.LoadingFrame;
 import main.testSmellDetection.testSmellInfo.TestSmellInfo;
 import org.repodriller.RepoDriller;
 import processor.CoverageProcessor;

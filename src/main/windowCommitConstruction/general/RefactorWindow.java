@@ -28,7 +28,7 @@ import main.utility.TestSmellUtilities;
 import main.windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import main.windowCommitConstruction.testSmellPanel.GFSmellPanel;
 import main.windowCommitConstruction.testSmellPanel.LOCSmellPanel;
-import main.oldWindowConstruction.ContextualAnalysisFrame;
+import main.windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

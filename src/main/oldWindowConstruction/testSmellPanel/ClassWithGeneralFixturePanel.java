@@ -18,7 +18,7 @@ import main.refactor.IRefactor;
 import main.refactor.strategy.GeneralFixtureStrategy;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
-import main.oldWindowConstruction.ContextualAnalysisFrame;
+import main.windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
 
 import javax.swing.*;
 import javax.swing.border.Border;

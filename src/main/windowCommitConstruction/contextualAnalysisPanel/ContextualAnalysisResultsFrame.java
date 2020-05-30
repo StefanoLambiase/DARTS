@@ -1,4 +1,4 @@
-package main.oldWindowConstruction;
+package main.windowCommitConstruction.contextualAnalysisPanel;
 
 import org.repodriller.domain.Commit;
 
