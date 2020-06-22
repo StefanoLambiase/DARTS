@@ -13,6 +13,7 @@ import org.repodriller.persistence.csv.CSVFile;
 import org.repodriller.scm.CollectConfiguration;
 import org.repodriller.scm.GitRepository;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
@@ -59,21 +60,28 @@ public class DataMiner implements Study{
         fixingActivities.entrySet().forEach(entry->{
             System.out.println(entry.getKey() + " " + entry.getValue());
         });
-        // Extracting the author with the max numbers of commits
-        Map.Entry<String, Integer> authorMaxCommits = null;
-        for (Map.Entry<String, Integer> entry : devVisitor.getCommitsPerAuthor().entrySet()) {
-            if (authorMaxCommits == null || entry.getValue().compareTo(authorMaxCommits.getValue()) > 0) {
-                authorMaxCommits = entry;
+        if (devVisitor.getCommitsAnalyzed().isEmpty()) {
+            JOptionPane.showMessageDialog(null,
+                    "The analysis didn't find any useful commit in the period chosen!",
+                    "Contextual Analysis",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Extracting the author with the max numbers of commits
+            Map.Entry<String, Integer> authorMaxCommits = null;
+            for (Map.Entry<String, Integer> entry : devVisitor.getCommitsPerAuthor().entrySet()) {
+                if (authorMaxCommits == null || entry.getValue().compareTo(authorMaxCommits.getValue()) > 0) {
+                    authorMaxCommits = entry;
+                }
             }
-        }
 
-        // Showing the results frame to the user
-        new ContextualAnalysisResultsFrame(
-                productionClass,
-                devVisitor.getCommitsAnalyzed(),
-                authorMaxCommits.getKey(),
-                testClassAnalysis.getCoverage().getLineCoverage(),
-                testClassAnalysis.getCoverage().getBranchCoverage(),
-                testClassAnalysis.getFlakyTests().getFlakyMethods().size());
+            // Showing the results frame to the user
+            new ContextualAnalysisResultsFrame(
+                    productionClass,
+                    devVisitor.getCommitsAnalyzed(),
+                    authorMaxCommits.getKey(),
+                    testClassAnalysis.getCoverage().getLineCoverage(),
+                    testClassAnalysis.getCoverage().getBranchCoverage(),
+                    testClassAnalysis.getFlakyTests().getFlakyMethods().size());
+        }
     }
 }
