@@ -1,7 +1,7 @@
 # DARTS
 
 **DARTS** (**D**etection **A**nd **R**efactoring of **T**est **S**mells) is an Intellij plug-in which implements a state-of-the-art detection mechanism to detect instances of three test smell types, *i.e., General Fixture, Eager Test, and Lack of Cohesion of Test Methods*, at commit-level and enables their automated refactoring through the integrated APIs provided by Intellij. 
-It also provide a mechanism able to mine data from projects' repositories in order to evaluate if detected smells impact on change- and defect- proneness of the production classes.
+In this fork, it also provide a mechanism able to mine data from projects' repositories in order to evaluate if detected smells impact on change- and defect- proneness of the production classes.
 
 ## Getting Started
 
