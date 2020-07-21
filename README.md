@@ -9,6 +9,9 @@
 5. Select the **DARTS_DetectionAndRefactoringOfTestSmell.jar** and click **OK**.
 6. Click **OK** to apply the changes and restart the IDE.
 
+# How to use
+1. The code must be organized into one directory ("src" for example) divided into two directories, one for *production classes* ("main" for example), one for *test classes* ("test" for example).
+
 # To contribute
 1. Clone this project.
 2. Open the project in IntelliJ.
