@@ -2,7 +2,7 @@
 **DARTS (Detection And Refactoring of Test Smells)** is an Intellij plug-in which implements a state-of-the-art detection mechanism to detect instances of three test smell types, *i.e.*, *General Fixture*, *Eager Test*, and *Lack of Cohesion of Test Methods*, at commit-level and enables their automated refactoring through the integrated APIs provided by Intellij.
 
 # Installation guide
-1. Download the file **DARTS_DetectionAndRefactoringOfTestSmell.jar** in the **Installer** directory contained in this project.
+1. Download the file **DARTS_DetectionAndRefactoringOfTestSmell.jar** located in the **Installer** directory contained in this project.
 2. Open your IntelliJ IDEA and go in the **Settings/Preferences** dialog.
 3. Select **Plugins**.
 4. On the **Plugins** page, click the *wheel-shaped* button and then click **Install Plugin from Disk**.
