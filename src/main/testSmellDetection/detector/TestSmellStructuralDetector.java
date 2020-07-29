@@ -1,6 +1,7 @@
 package main.testSmellDetection.detector;
 
 import com.intellij.openapi.project.Project;
+import main.contextualAnalysis.hashUtilies.ProductionClassesSingleton;
 import main.testSmellDetection.bean.PsiClassBean;
 import main.testSmellDetection.bean.PsiMethodBean;
 import main.testSmellDetection.structuralRules.EagerTestStructural;
@@ -23,6 +24,7 @@ public class TestSmellStructuralDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
     private ArrayList<PsiClassBean> productionClasses;
+    private ProductionClassesSingleton productionClassesSingleton;
 
     //variabili per l'analisi di GeneralFixture
     private int numberOfProductionTypes = 3;
@@ -32,6 +34,8 @@ public class TestSmellStructuralDetector implements IDetector{
         classBeans = ConverterUtilities.getClassesFromPackages(project);
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
         productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
+        productionClassesSingleton = ProductionClassesSingleton.getIstance();
+        productionClassesSingleton.setProductionClasses(productionClasses);
     }
 
     public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture() {
@@ -49,9 +53,11 @@ public class TestSmellStructuralDetector implements IDetector{
     public ArrayList<EagerTestInfo> executeDetectionForEagerTest() {
         ArrayList<EagerTestInfo> classesWithEagerTest = new ArrayList<>();
         for(PsiClassBean testClass : testClasses){
-            if(EagerTestStructural.isEagerTest(testClass, testClasses, productionClasses)){
-                ArrayList<MethodWithEagerTest> methodWithEagerTests = EagerTestTextual.checkMethodsThatCauseEagerTest(testClass, testClass.getProductionClass());
-                classesWithEagerTest.add(new EagerTestInfo(testClass, testClass.getProductionClass(), methodWithEagerTests));
+            if(testClass.getProductionClass() != null) {
+                if (EagerTestStructural.isEagerTest(testClass, testClasses, productionClasses)) {
+                    ArrayList<MethodWithEagerTest> methodWithEagerTests = EagerTestTextual.checkMethodsThatCauseEagerTest(testClass, testClass.getProductionClass());
+                    classesWithEagerTest.add(new EagerTestInfo(testClass, testClass.getProductionClass(), methodWithEagerTests));
+                }
             }
         }
         return classesWithEagerTest;
@@ -61,9 +67,11 @@ public class TestSmellStructuralDetector implements IDetector{
     public ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion() {
         ArrayList<LackOfCohesionInfo> classesWithLackOfCohesion = new ArrayList<>();
         for(PsiClassBean testClass : testClasses){
-            if(LackOfCohesionOfTestSmellStructural.isLackOfCohesion(testClass)){
-                ArrayList<PsiMethodBean> methodsWithLackOfCohesion = LackOfCohesionOfTestSmellTextual.checkMethodsThatCauseLackOfCohesion(testClass);
-                classesWithLackOfCohesion.add(new LackOfCohesionInfo(testClass, testClass.getProductionClass(), methodsWithLackOfCohesion));
+            if(testClass.getProductionClass() != null) {
+                if (LackOfCohesionOfTestSmellStructural.isLackOfCohesion(testClass)) {
+                    ArrayList<PsiMethodBean> methodsWithLackOfCohesion = LackOfCohesionOfTestSmellTextual.checkMethodsThatCauseLackOfCohesion(testClass);
+                    classesWithLackOfCohesion.add(new LackOfCohesionInfo(testClass, testClass.getProductionClass(), methodsWithLackOfCohesion));
+                }
             }
         }
         return classesWithLackOfCohesion;

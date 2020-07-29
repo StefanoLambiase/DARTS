@@ -35,7 +35,8 @@ public abstract class PsiTestSmellUtilities {
         for(PsiVariable psiVariable : instanceVariables){
             Collection<PsiReference> referenceList = ReferencesSearch.search(psiVariable).findAll();
             for(PsiReference reference : referenceList){
-                PsiMethod parentMethod = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiMethod.class);
+                //(PsiElement) reference
+                PsiMethod parentMethod = PsiTreeUtil.getParentOfType(reference.getElement(), PsiMethod.class);
                 if(parentMethod != null && parentMethod.getName().equals(psiMethod.getName()))
                     if(reference instanceof PsiReferenceExpression){
                         PsiAssignmentExpression psiAssignmentExpression = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiAssignmentExpression.class);
@@ -54,7 +55,8 @@ public abstract class PsiTestSmellUtilities {
         for(PsiVariable psiVariable : instanceVariables){
             Collection<PsiReference> referenceList = ReferencesSearch.search(psiVariable).findAll();
             for(PsiReference reference : referenceList){
-                PsiMethod parentMethod = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiMethod.class);
+                //(PsiElement) reference
+                PsiMethod parentMethod = PsiTreeUtil.getParentOfType(reference.getElement(), PsiMethod.class);
                 if(parentMethod != null && parentMethod.getName().equals(psiMethod.getName()))
                     if (reference instanceof PsiReferenceExpression) {
                         PsiAssignmentExpression psiAssignmentExpression = PsiTreeUtil.getParentOfType((PsiElement) reference, PsiAssignmentExpression.class);
