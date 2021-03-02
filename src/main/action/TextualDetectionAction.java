@@ -7,7 +7,7 @@ import main.testSmellDetection.detector.TestSmellTextualDetector;
 import main.testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import main.testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import main.testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import main.windowConstruction.TestSmellWindowFactory;
+import main.windowCommitConstruction.CommitWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -38,7 +38,8 @@ public class TextualDetectionAction extends AnAction {
         if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
             System.out.println("\n Non si è trovato alcuno Smell");
         } else {
-            TestSmellWindowFactory.createWindow(true, false, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+            //TestSmellWindowFactory.createWindow(true, false, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+            CommitWindowFactory.createWindow(true, false, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
         }
     }
 
