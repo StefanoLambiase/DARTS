@@ -1,0 +1,38 @@
+<idea-plugin>
+  <id>com.your.company.unique.plugin.id</id>
+  <name>DARTS</name>
+  <version>2.0</version>
+  <vendor url="https://sesalab.github.io/">UNISA: SESA Lab</vendor>
+
+  <!-- Product and plugin compatibility requirements -->
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.java</depends>
+
+  <!-- Text to display as description on Preferences/Settings | Plugin page -->
+  <description>
+    <![CDATA[
+      Just-In-Time Test Smell Detection and Refactoring
+    ]]>
+  </description>
+  <change-notes>
+    <![CDATA[
+      <ul>
+        <li><b>2.0.0</b> Convert to Gradle-based plugin</li>
+        <li><b>1.0.0</b> Initial release.</li>
+      </ul>
+    ]]>
+  </change-notes>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <checkinHandlerFactory implementation="extension.CommitFactory"/>
+  </extensions>
+
+  <actions>
+    <group id="MyPlugin.SampleMenu" text="TestSmell detection" description="Sample menu" popup="true">
+      <add-to-group group-id="AnalyzeMenu" anchor="last"  />
+      <action id="Myplugin.TextSmellTextualDetection" class="action.TextualDetectionAction" text="Execute Textual detection" description="A test menu item" />
+      <action id="Myplugin.TextSmellStructuralDetection" class="action.StructuralDetectionAction" text="Execute Structural detection" description="A test menu item" />
+    </group>
+  </actions>
+
+</idea-plugin>
