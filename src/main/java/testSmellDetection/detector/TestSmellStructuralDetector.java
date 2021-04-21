@@ -1,7 +1,6 @@
 package testSmellDetection.detector;
 
 import com.intellij.openapi.project.Project;
-import contextualAnalysis.hashUtilies.ProductionClassesSingleton;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.structuralRules.EagerTestStructural;
@@ -24,7 +23,6 @@ public class TestSmellStructuralDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
     private ArrayList<PsiClassBean> productionClasses;
-    private ProductionClassesSingleton productionClassesSingleton;
 
     //variabili per l'analisi di GeneralFixture
     private int numberOfProductionTypes = 3;
@@ -34,8 +32,6 @@ public class TestSmellStructuralDetector implements IDetector{
         classBeans = ConverterUtilities.getClassesFromPackages(project);
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
         productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
-        productionClassesSingleton = ProductionClassesSingleton.getIstance();
-        productionClassesSingleton.setProductionClasses(productionClasses);
     }
 
     public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture() {

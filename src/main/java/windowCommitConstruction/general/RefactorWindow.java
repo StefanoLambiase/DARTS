@@ -8,11 +8,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiSubstitutor;
 import com.intellij.psi.PsiVariable;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
-import data.TestClassAnalysis;
-import data.TestProjectAnalysis;
-import it.unisa.testSmellDiffusion.beans.PackageBean;
-import it.unisa.testSmellDiffusion.utility.FileUtility;
-import it.unisa.testSmellDiffusion.utility.FolderToJavaProjectConverter;
 import refactor.IRefactor;
 import refactor.strategy.EagerTestStrategy;
 import refactor.strategy.GeneralFixtureStrategy;
@@ -94,7 +89,7 @@ public class RefactorWindow extends JPanel implements ActionListener{
         methodTextArea.setText(signature);
 
         refactorPreviewButton.addActionListener(this);
-        setupContextualAnalysisButton(generalFixtureInfo);
+//        setupContextualAnalysisButton(generalFixtureInfo);
     }
 
     /**
@@ -127,7 +122,7 @@ public class RefactorWindow extends JPanel implements ActionListener{
         methodTextArea.setText(signature);
 
         refactorPreviewButton.addActionListener(this);
-        setupContextualAnalysisButton(eagerTestInfo);
+//        setupContextualAnalysisButton(eagerTestInfo);
     }
 
     /**
@@ -156,7 +151,7 @@ public class RefactorWindow extends JPanel implements ActionListener{
         methodTextArea.setText(signature);
 
         refactorPreviewButton.addActionListener(this);
-        setupContextualAnalysisButton(lackOfCohesionInfo);
+//        setupContextualAnalysisButton(lackOfCohesionInfo);
     }
 
     @Override
@@ -194,137 +189,137 @@ public class RefactorWindow extends JPanel implements ActionListener{
     * This method is called when generating panels and it's used to setup the Contextual Analysis button's action listener.
     * @param testSmellInfo
      */
-    private void setupContextualAnalysisButton(TestSmellInfo testSmellInfo) {
-        executeContextualAnalysis.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (testSmellInfo.getClassWithSmell().getProductionClass() == null) {
-                    JOptionPane.showMessageDialog(null, "Unable to retrieve the Production Class!");
-                } else {
-                    String userDir = System.getProperty("user.home");
-
-                    String pluginFolder = userDir + File.separator + "vitrum";
-                    String pluginFolderWin = userDir + "\\vitrum";
-                    File config = new File(pluginFolder + "/default_config.ini");
-                    File jacocoProp = new File(pluginFolder + "/jacoco-agent.properties");
-                    if (!config.exists()) {
-                        String output = "[NONDA]" +
-                                "\nname=Number of Non-Documented Assertions " +
-                                "\ndescription=Number of assert statements without a description " +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=ASSERTION_ROULETTE " +
-                                "\n[APCMC]" +
-                                "\nname=Average Production Class Methods Calls " +
-                                "\ndescription=Number of production class' methods calls in the test suite, divided by the number of test methods " +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=EAGER_TEST " +
-                                "\n[MEXR] " +
-                                "\nname=Methods using External Resources " +
-                                "\ndescription=Number of external resources uses made by test methods" +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=MYSTERY_GUEST " +
-                                "\n[NEXEA] " +
-                                "\nname=Number of EXternal resources Existence Assumptions " +
-                                "\ndescription=Number of assumptions made in test methods about the existence of external resources (e.g. Files, Database) " +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=RESOURCE_OPTIMISM " +
-                                "\n[GFMR]" +
-                                "\nname=General Fixture Methods Rate " +
-                                "\ndescription=The rate of test methods not using all the set-up variables defined " +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=GENERAL_FIXTURE " +
-                                "\n[MTOOR] " +
-                                "\nname=Methods Testing Other Objects Rate " +
-                                "\ndescription=The rate of methods testing objects which are different from the production class " +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=INDIRECT_TESTING " +
-                                "\n[TSEC] " +
-                                "\nname=toString invocations in Equality Checks " +
-                                "\ndescription=The number of toString invocations in equality checks " +
-                                "\ndetectionThreshold=1.0 " +
-                                "\nguardThreshold=3.0 " +
-                                "\nbelongingSmells=SENSITIVE_EQUALITY";
-                        File plugin = new File(pluginFolder);
-                        plugin.mkdirs();
-                        File plugin2 = new File(pluginFolderWin);
-                        plugin2.mkdirs();
-                        FileUtility.writeFile(output, pluginFolder + "/" + "default_config.ini");
-
-                    }
-                    if (!jacocoProp.exists()) {
-                        if (SystemInfo.getOsNameAndVersion().toLowerCase().contains("windows")) {
-                            pluginFolderWin = pluginFolderWin.replace("\\", "\\\\");
-                            String output = "destfile = " + pluginFolderWin + "\\\\jacoco.exec";
-                            FileUtility.writeFile(output, pluginFolderWin + "\\" + "jacoco-agent.properties");
-                        } else {
-                            String output = "destfile = " + pluginFolder + "/jacoco.exec";
-                            FileUtility.writeFile(output, pluginFolder + "/" + "jacoco-agent.properties");
-                        }
-                    }
-                    TestProjectAnalysis projectAnalysis = new TestProjectAnalysis();
-                    //Project proj = e.getData(PlatformDataKeys.PROJECT);
-                    String projectFolder = project.getBasePath();
-                    File root = new File(projectFolder);
-                    String srcPath = root.getAbsolutePath() + "/src";
-                    String mainPath = srcPath + "/main";
-                    String testPath = srcPath + "/test";
-                    File main = new File(mainPath);
-                    File test = new File(testPath);
-                    if (!main.exists() || !test.exists()) {
-                        JOptionPane.showMessageDialog(null, "PROJECT'S FOLDER STRUCTURE IS NOT CORRECT. PLEASE USE MAVEN DIRECTORY LAYOUT.");
-                    } else {
-                        boolean isMaven = false;
-                        for (File file : root.listFiles()) {
-                            if (file.isFile() && file.getName().equalsIgnoreCase("pom.xml"))
-                                isMaven = true;
-                        }
-                        projectAnalysis.setMaven(isMaven);
-                        String projectSDK = ProjectRootManager.getInstance(project).getProjectSdk().getHomePath();
-                        //LOGGER.info(projectSDK);
-                        String os = SystemInfo.getOsNameAndVersion();
-                        String javaPath;
-                        if (os.toLowerCase().contains("windows"))
-                            javaPath = projectSDK + "/bin/java.exe";
-                        else
-                            javaPath = projectSDK + "/bin/java";
-                        projectAnalysis.setName(project.getName());
-                        projectAnalysis.setPath(project.getBasePath());
-                        projectAnalysis.setJavaPath(javaPath);
-                        VirtualFile[] libraries = OrderEnumerator.orderEntries(project).runtimeOnly().librariesOnly().getClassesRoots();
-                        ArrayList<String> librariesPaths = new ArrayList<>();
-                        for (VirtualFile file : libraries) {
-                            librariesPaths.add(file.getPath());
-                        }
-                        projectAnalysis.setLibrariesPaths(librariesPaths);
-                        Vector<TestClassAnalysis> classAnalysis = new Vector<>();
-                        if ((test.isDirectory()) && (!test.isHidden())) {
-                            try {
-                                Vector<PackageBean> testPackages = FolderToJavaProjectConverter.convert(test.getAbsolutePath());
-                                if (testPackages.size() == 1 && testPackages.get(0).getClasses().size() == 0)
-                                    JOptionPane.showMessageDialog(null, "TESTING SOURCE FILES NOT FOUND");
-                                else {
-                                    Vector<PackageBean> packages = FolderToJavaProjectConverter.convert(mainPath);
-                                    projectAnalysis.setPackages(packages);
-                                    projectAnalysis.setTestPackages(testPackages);
-                                    projectAnalysis.setConfigPath(System.getProperty("user.home") + "/vitrum");
-                                    new ContextualAnalysisFrame(project, testSmellInfo, projectAnalysis);
-
-                                }
-                            } catch (Exception ex) {
-                                ex.printStackTrace();
-                            }
-
-
-                        }
-                    }
-                }
-            }
-        });
-    }
+//    private void setupContextualAnalysisButton(TestSmellInfo testSmellInfo) {
+//        executeContextualAnalysis.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                if (testSmellInfo.getClassWithSmell().getProductionClass() == null) {
+//                    JOptionPane.showMessageDialog(null, "Unable to retrieve the Production Class!");
+//                } else {
+//                    String userDir = System.getProperty("user.home");
+//
+//                    String pluginFolder = userDir + File.separator + "vitrum";
+//                    String pluginFolderWin = userDir + "\\vitrum";
+//                    File config = new File(pluginFolder + "/default_config.ini");
+//                    File jacocoProp = new File(pluginFolder + "/jacoco-agent.properties");
+//                    if (!config.exists()) {
+//                        String output = "[NONDA]" +
+//                                "\nname=Number of Non-Documented Assertions " +
+//                                "\ndescription=Number of assert statements without a description " +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=ASSERTION_ROULETTE " +
+//                                "\n[APCMC]" +
+//                                "\nname=Average Production Class Methods Calls " +
+//                                "\ndescription=Number of production class' methods calls in the test suite, divided by the number of test methods " +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=EAGER_TEST " +
+//                                "\n[MEXR] " +
+//                                "\nname=Methods using External Resources " +
+//                                "\ndescription=Number of external resources uses made by test methods" +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=MYSTERY_GUEST " +
+//                                "\n[NEXEA] " +
+//                                "\nname=Number of EXternal resources Existence Assumptions " +
+//                                "\ndescription=Number of assumptions made in test methods about the existence of external resources (e.g. Files, Database) " +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=RESOURCE_OPTIMISM " +
+//                                "\n[GFMR]" +
+//                                "\nname=General Fixture Methods Rate " +
+//                                "\ndescription=The rate of test methods not using all the set-up variables defined " +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=GENERAL_FIXTURE " +
+//                                "\n[MTOOR] " +
+//                                "\nname=Methods Testing Other Objects Rate " +
+//                                "\ndescription=The rate of methods testing objects which are different from the production class " +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=INDIRECT_TESTING " +
+//                                "\n[TSEC] " +
+//                                "\nname=toString invocations in Equality Checks " +
+//                                "\ndescription=The number of toString invocations in equality checks " +
+//                                "\ndetectionThreshold=1.0 " +
+//                                "\nguardThreshold=3.0 " +
+//                                "\nbelongingSmells=SENSITIVE_EQUALITY";
+//                        File plugin = new File(pluginFolder);
+//                        plugin.mkdirs();
+//                        File plugin2 = new File(pluginFolderWin);
+//                        plugin2.mkdirs();
+//                        FileUtility.writeFile(output, pluginFolder + "/" + "default_config.ini");
+//
+//                    }
+//                    if (!jacocoProp.exists()) {
+//                        if (SystemInfo.getOsNameAndVersion().toLowerCase().contains("windows")) {
+//                            pluginFolderWin = pluginFolderWin.replace("\\", "\\\\");
+//                            String output = "destfile = " + pluginFolderWin + "\\\\jacoco.exec";
+//                            FileUtility.writeFile(output, pluginFolderWin + "\\" + "jacoco-agent.properties");
+//                        } else {
+//                            String output = "destfile = " + pluginFolder + "/jacoco.exec";
+//                            FileUtility.writeFile(output, pluginFolder + "/" + "jacoco-agent.properties");
+//                        }
+//                    }
+//                    TestProjectAnalysis projectAnalysis = new TestProjectAnalysis();
+//                    //Project proj = e.getData(PlatformDataKeys.PROJECT);
+//                    String projectFolder = project.getBasePath();
+//                    File root = new File(projectFolder);
+//                    String srcPath = root.getAbsolutePath() + "/src";
+//                    String mainPath = srcPath + "/main";
+//                    String testPath = srcPath + "/test";
+//                    File main = new File(mainPath);
+//                    File test = new File(testPath);
+//                    if (!main.exists() || !test.exists()) {
+//                        JOptionPane.showMessageDialog(null, "PROJECT'S FOLDER STRUCTURE IS NOT CORRECT. PLEASE USE MAVEN DIRECTORY LAYOUT.");
+//                    } else {
+//                        boolean isMaven = false;
+//                        for (File file : root.listFiles()) {
+//                            if (file.isFile() && file.getName().equalsIgnoreCase("pom.xml"))
+//                                isMaven = true;
+//                        }
+//                        projectAnalysis.setMaven(isMaven);
+//                        String projectSDK = ProjectRootManager.getInstance(project).getProjectSdk().getHomePath();
+//                        //LOGGER.info(projectSDK);
+//                        String os = SystemInfo.getOsNameAndVersion();
+//                        String javaPath;
+//                        if (os.toLowerCase().contains("windows"))
+//                            javaPath = projectSDK + "/bin/java.exe";
+//                        else
+//                            javaPath = projectSDK + "/bin/java";
+//                        projectAnalysis.setName(project.getName());
+//                        projectAnalysis.setPath(project.getBasePath());
+//                        projectAnalysis.setJavaPath(javaPath);
+//                        VirtualFile[] libraries = OrderEnumerator.orderEntries(project).runtimeOnly().librariesOnly().getClassesRoots();
+//                        ArrayList<String> librariesPaths = new ArrayList<>();
+//                        for (VirtualFile file : libraries) {
+//                            librariesPaths.add(file.getPath());
+//                        }
+//                        projectAnalysis.setLibrariesPaths(librariesPaths);
+//                        Vector<TestClassAnalysis> classAnalysis = new Vector<>();
+//                        if ((test.isDirectory()) && (!test.isHidden())) {
+//                            try {
+//                                Vector<PackageBean> testPackages = FolderToJavaProjectConverter.convert(test.getAbsolutePath());
+//                                if (testPackages.size() == 1 && testPackages.get(0).getClasses().size() == 0)
+//                                    JOptionPane.showMessageDialog(null, "TESTING SOURCE FILES NOT FOUND");
+//                                else {
+//                                    Vector<PackageBean> packages = FolderToJavaProjectConverter.convert(mainPath);
+//                                    projectAnalysis.setPackages(packages);
+//                                    projectAnalysis.setTestPackages(testPackages);
+//                                    projectAnalysis.setConfigPath(System.getProperty("user.home") + "/vitrum");
+//                                    new ContextualAnalysisFrame(project, testSmellInfo, projectAnalysis);
+//
+//                                }
+//                            } catch (Exception ex) {
+//                                ex.printStackTrace();
+//                            }
+//
+//
+//                        }
+//                    }
+//                }
+//            }
+//        });
+//    }
 }

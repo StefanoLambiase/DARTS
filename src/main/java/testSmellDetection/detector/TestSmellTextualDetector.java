@@ -1,7 +1,6 @@
 package testSmellDetection.detector;
 
 import com.intellij.openapi.project.Project;
-import contextualAnalysis.hashUtilies.ProductionClassesSingleton;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -21,14 +20,11 @@ public class TestSmellTextualDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
     private ArrayList<PsiClassBean> productionClasses;
-    private ProductionClassesSingleton productionClassesSingleton;
 
     public TestSmellTextualDetector(Project project){
         classBeans = ConverterUtilities.getClassesFromPackages(project);
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
         productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
-        productionClassesSingleton = ProductionClassesSingleton.getIstance();
-        productionClassesSingleton.setProductionClasses(productionClasses);
     }
 
     public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture() {
