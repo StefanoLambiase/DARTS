@@ -10,6 +10,7 @@ import testSmellDetection.detector.TestSmellStructuralDetector;
 import testSmellDetection.detector.TestSmellTextualDetector;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import windowCommitConstruction.general.WarningWindow;
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +26,12 @@ public class CommitFactory  extends CheckinHandlerFactory{
     private ArrayList<GeneralFixtureInfo> generalFixtureInfos;
     private ArrayList<EagerTestInfo> eagerTestInfos;
     private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos;
+    private ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos;
 
     private ArrayList<GeneralFixtureInfo> generalFixtureInfos2;
     private ArrayList<EagerTestInfo> eagerTestInfos2;
     private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos2;
+    private ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos2;
 
     @NotNull
     @Override
@@ -42,6 +45,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 generalFixtureInfos2 = new ArrayList<>();
                 eagerTestInfos2 = new ArrayList<>();
                 lackOfCohesionInfos2 = new ArrayList<>();
+                hardCodedTestDataInfos2 = new ArrayList<>();
 
                 //Stampa di inizio
                 System.out.println("\n\n############# COMMIT FACTORY ##################\n\n");
@@ -57,6 +61,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
 
                 generalFixtureInfos = detector.executeDetectionForGeneralFixture();
                 eagerTestInfos = detector.executeDetectionForEagerTest();
+                hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
                 //lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
                 lackOfCohesionInfos = detector2.executeDetectionForLackOfCohesion();
 
@@ -97,6 +102,15 @@ public class CommitFactory  extends CheckinHandlerFactory{
                     }
                     find = false;
                 }
+                for(String s : filesNames){
+                    for(HardCodedTestDataInfo hctdi : hardCodedTestDataInfos){
+                        if(hctdi.getClassWithSmell().getName().equals(s) && !find){
+                            hardCodedTestDataInfos2.add(hctdi);
+                            find = true;
+                        }
+                    }
+                    find = false;
+                }
                 /* FINE PARTE PER ANALISI DELLE CLASSI CHE VENGONO COMMITTATE */
 
                 return super.beforeCheckin();
@@ -111,7 +125,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 } else {
                     /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
                     //WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2, hardCodedTestDataInfos2);
                     warningWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                     warningWindow.setLocationRelativeTo(null);
