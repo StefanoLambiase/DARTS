@@ -89,22 +89,22 @@ public class HCTDSmellPanel extends JSplitPane implements ListSelectionListener 
     }
 
     public void doAfterRefactor() {
-//        int index = smellList.getSelectedIndex();
-//
-//        methodsNames.remove(index);
-//        eagerTestInfo.getMethodsThatCauseEagerTest().remove(index);
-//        model.remove(index);
-//
-//        if(model.getSize() == 0){
-//            eagerTestCP.doAfterRefactor();
-//        } else {
-//            if(index == model.getSize()){
-//                index --;
-//            }
-//            smellList.setSelectedIndex(index);
-//            smellList.ensureIndexIsVisible(index);
-//            updateRefactorPreviewLabel(smellList.getSelectedIndex());
-//        }
+        int index = smellList.getSelectedIndex();
+
+        methodsNames.remove(index);
+        hardCodedTestDataInfo.getMethodsThatCauseHardCodedTestData().remove(index);
+        model.remove(index);
+
+        if(model.getSize() == 0){
+            hardCodedTestDataCP.doAfterRefactor();
+        } else {
+            if(index == model.getSize()){
+                index --;
+            }
+            smellList.setSelectedIndex(index);
+            smellList.ensureIndexIsVisible(index);
+            updateRefactorPreviewLabel(smellList.getSelectedIndex());
+        }
     }
 
 }

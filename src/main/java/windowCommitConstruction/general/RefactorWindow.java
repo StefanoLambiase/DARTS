@@ -12,6 +12,7 @@ import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import refactor.IRefactor;
 import refactor.strategy.EagerTestStrategy;
 import refactor.strategy.GeneralFixtureStrategy;
+import refactor.strategy.HardCodedTestDataStrategy;
 import refactor.strategy.LackOfCohesionStrategy;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.TestSmellInfo;
@@ -208,7 +209,12 @@ public class RefactorWindow extends JPanel implements ActionListener{
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
                 locSmellPanel.doAfterRefactor();
-            } else {
+            } else if (hardCodedTestDataInfo != null) {
+                IRefactor refactor = new HardCodedTestDataStrategy(methodWithHardCodedTestData, project, hardCodedTestDataInfo);
+                refactor.doRefactor();
+                hctdSmellPanel.doAfterRefactor();
+            }
+            else {
                 System.out.println("\n\n" + TestSmellUtilities.ANSI_RED + "All Info are NULL\n");
             }
         } catch (PrepareFailedException exception){
