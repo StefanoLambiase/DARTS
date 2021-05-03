@@ -4,6 +4,7 @@ import com.intellij.openapi.project.Project;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import windowCommitConstruction.CommitWindowFactory;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ public class WarningWindow extends JFrame {
 
     private JFrame thisFrame;
 
-    public WarningWindow(Project project, ArrayList<GeneralFixtureInfo> generalFixtureInfos, ArrayList<EagerTestInfo> eagerTestInfos, ArrayList<LackOfCohesionInfo> lackOfCohesionInfos) throws HeadlessException {
+    public WarningWindow(Project project, ArrayList<GeneralFixtureInfo> generalFixtureInfos, ArrayList<EagerTestInfo> eagerTestInfos, ArrayList<LackOfCohesionInfo> lackOfCohesionInfos, ArrayList<MysteryGuestInfo> mysteryGuestInfos) throws HeadlessException {
         super("Test Smell Notifier");
         thisFrame = this;
 
@@ -38,7 +39,7 @@ public class WarningWindow extends JFrame {
         seeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommitWindowFactory.createWindow(true, false, project, generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+                CommitWindowFactory.createWindow(true, false, project, generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos, mysteryGuestInfos);
             }
         });
     }

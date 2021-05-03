@@ -5,6 +5,7 @@ import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiSubstitutor;
 import com.intellij.psi.PsiVariable;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
@@ -19,11 +20,14 @@ import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import testSmellDetection.testSmellInfo.mysteryGuest.MethodWithMysteryGuest;
+import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import utility.TestSmellUtilities;
 import windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import windowCommitConstruction.testSmellPanel.GFSmellPanel;
 import windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 import windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
+import windowCommitConstruction.testSmellPanel.MGSmellPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -47,16 +51,19 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private MethodWithGeneralFixture methodWithGeneralFixture;
     private MethodWithEagerTest methodWithEagerTest;
     private PsiMethodBean methodWithLOC;
+    private MethodWithMysteryGuest methodWithMysteryGuest;
 
     private GeneralFixtureInfo generalFixtureInfo = null;
     private EagerTestInfo eagerTestInfo = null;
     private LackOfCohesionInfo lackOfCohesionInfo = null;
+    private MysteryGuestInfo mysteryGuestInfo = null;
 
     private Project project;
 
     private GFSmellPanel gfSmellPanel;
     private ETSmellPanel etSmellPanel;
     private LOCSmellPanel locSmellPanel;
+    private MGSmellPanel mgSmellPanel;
 
     /**
      * Call this for General Fixture Panel.
@@ -152,6 +159,40 @@ public class RefactorWindow extends JPanel implements ActionListener{
 
         refactorPreviewButton.addActionListener(this);
 //        setupContextualAnalysisButton(lackOfCohesionInfo);
+    }
+
+    /**
+     * Call this for Mystery Guest Panel.
+     * @param methodWithMysteryGuest
+     * @param mysteryGuestInfo
+     * @param project
+     */
+    public RefactorWindow(MethodWithMysteryGuest methodWithMysteryGuest, MysteryGuestInfo mysteryGuestInfo, Project project, MGSmellPanel mgSmellPanel) {
+        super();
+        this.methodWithMysteryGuest = methodWithMysteryGuest;
+        this.mysteryGuestInfo = mysteryGuestInfo;
+        this.project = project;
+        this.mgSmellPanel = mgSmellPanel;
+
+        String methodName = "<html> Method " + methodWithMysteryGuest.getMethodWithMysteryGuest().getPsiMethod().getName() + " is affected by Mystery Guest because it uses the following files: <br/>";
+
+        for(PsiNewExpression psiNewExpression : methodWithMysteryGuest.getListOfNewFile()){
+            methodName = methodName + "   - " + psiNewExpression.getText() + "<br/>";
+        }
+
+        methodName = methodName + "<br/>This function is not complete, it is not able to determine the code that uses the file, so please delete useless code and use the created variable.<br/>";
+        methodName = methodName + "<br/>The Smell will be removed  using the following refactor operation:<br/>";
+        methodName = methodName + "   - Extract file text in a variable: the text of the file is assigned to a string variable which is used in its place.</html>";
+
+        tipsTextLabel.setText(methodName);
+
+        String signature = methodWithMysteryGuest.getMethodWithMysteryGuest().getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithMysteryGuest.getMethodWithMysteryGuest().getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
+
+        refactorPreviewButton.addActionListener(this);
+//        setupContextualAnalysisButton(eagerTestInfo);
     }
 
     @Override
