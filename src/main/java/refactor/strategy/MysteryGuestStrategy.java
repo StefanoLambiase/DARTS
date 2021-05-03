@@ -45,7 +45,8 @@ public class MysteryGuestStrategy implements IRefactor {
                     WriteCommandAction.runWriteCommandAction(project, ()->{
                         PsiElementFactory psiElementFactory = JavaPsiFacade.getInstance(project).getElementFactory();
                         PsiField psiField = psiElementFactory.createFieldFromText("String fileString = \""+textFile+"\";", null);
-                        mysteryGuestInfo.getClassWithSmell().getPsiClass().addBefore(psiField, psiNewExpression);
+                        mysteryGuestInfo.getClassWithSmell().getPsiClass().addAfter(psiField, psiNewExpression.getParent().getParent());
+                        psiNewExpression.getParent().delete();
                     });
                 });
             }catch (Exception e) {
