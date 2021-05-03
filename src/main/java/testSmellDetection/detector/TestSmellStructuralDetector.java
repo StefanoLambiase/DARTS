@@ -11,9 +11,12 @@ import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import testSmellDetection.testSmellInfo.mysteryGuest.MethodWithMysteryGuest;
+import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import testSmellDetection.textualRules.EagerTestTextual;
 import testSmellDetection.textualRules.GeneralFixtureTextual;
 import testSmellDetection.textualRules.LackOfCohesionOfTestSmellTextual;
+import testSmellDetection.textualRules.MysteryGuestTextual;
 import utility.ConverterUtilities;
 import utility.TestSmellUtilities;
 
@@ -71,5 +74,18 @@ public class TestSmellStructuralDetector implements IDetector{
             }
         }
         return classesWithLackOfCohesion;
+    }
+
+    public ArrayList<MysteryGuestInfo> executeDetectionForMysteryGuest() {
+        ArrayList<MysteryGuestInfo> classesWithMysteryGuest = new ArrayList<>();
+        for(PsiClassBean testClass : testClasses){
+            if(testClass.getProductionClass() != null) {
+                ArrayList<MethodWithMysteryGuest> methodWithMysteryGuests = MysteryGuestTextual.checkMethodsThatCauseMysteryGuest(testClass);
+                if (methodWithMysteryGuests != null) {
+                    classesWithMysteryGuest.add(new MysteryGuestInfo(testClass, methodWithMysteryGuests));
+                }
+            }
+        }
+        return classesWithMysteryGuest;
     }
 }
