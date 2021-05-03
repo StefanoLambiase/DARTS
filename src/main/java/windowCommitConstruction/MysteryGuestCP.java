@@ -106,24 +106,24 @@ public class MysteryGuestCP extends JPanel implements ListSelectionListener {
     }
 
     public void doAfterRefactor(){
-//        int index = classList.getSelectedIndex();
-//
-//        classesWithEagerTest.remove(index);
-//        model.remove(index);
-//
-//        if(model.getSize() == 0){
-//            JLabel label = new JLabel("All smells resolved");
-//            this.removeAll();
-//            this.validate();
-//            this.repaint();
-//            this.add(label);
-//        } else {
-//            if(index == model.getSize()){
-//                index --;
-//            }
-//            classList.setSelectedIndex(index);
-//            classList.ensureIndexIsVisible(index);
-//            updateSmellPanel(classList.getSelectedIndex());
-//        }
+        int index = classList.getSelectedIndex();
+
+        classesWithMysteryGuest.remove(index);
+        model.remove(index);
+
+        if(model.getSize() == 0){
+            JLabel label = new JLabel("All smells resolved");
+            this.removeAll();
+            this.validate();
+            this.repaint();
+            this.add(label);
+        } else {
+            if(index == model.getSize()){
+                index --;
+            }
+            classList.setSelectedIndex(index);
+            classList.ensureIndexIsVisible(index);
+            updateSmellPanel(classList.getSelectedIndex());
+        }
     }
 }
