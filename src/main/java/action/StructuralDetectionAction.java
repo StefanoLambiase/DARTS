@@ -3,11 +3,13 @@ package action;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
+import stats.Stats;
 import testSmellDetection.detector.IDetector;
 import testSmellDetection.detector.TestSmellStructuralDetector;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import utility.StatsSerializator;
 import windowCommitConstruction.CommitWindowFactory;
 
 import java.util.ArrayList;
@@ -19,10 +21,20 @@ public class StructuralDetectionAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+
+        Stats.getInstance().setProjectName(anActionEvent.getProject().getName());
+
+        long startTime = System.currentTimeMillis();
         IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
         ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
         ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+        long endTime = System.currentTimeMillis();
+
+        Stats.getInstance().setStartTime(startTime);
+        Stats.getInstance().setEndTime(endTime);
+
+        System.out.println("File salvato:" + StatsSerializator.serialize(Stats.getInstance(), System.getProperty("user.home") + "/Desktop/stats.json"));
 
         System.out.println("\nDETECTOR STRUTTURALE: risultato dell'analisi.");
         for(GeneralFixtureInfo info : generalFixtureInfos){
