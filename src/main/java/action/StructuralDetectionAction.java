@@ -8,6 +8,7 @@ import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import oldWindowConstruction.TestSmellWindowFactory;
+import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
 import windowCommitConstruction.CommitWindowFactory;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +25,7 @@ public class StructuralDetectionAction extends AnAction {
         ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
         ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+        ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
 
         System.out.println("\nDETECTOR STRUTTURALE: risultato dell'analisi.");
         for(GeneralFixtureInfo info : generalFixtureInfos){
@@ -40,7 +42,7 @@ public class StructuralDetectionAction extends AnAction {
             System.out.println("\nNon si è trovato alcuno Smell");
         } else {
             //TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-            CommitWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+            CommitWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos, testCodeDuplicationInfos);
         }
     }
 

@@ -1,5 +1,6 @@
 package windowCommitConstruction.general;
 
+import com.harukizaemon.simian.Block;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.ProjectRootManager;
@@ -19,17 +20,21 @@ import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import testSmellDetection.testSmellInfo.testCodeDuplication.MethodWithTestCodeDuplication;
+import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
 import utility.TestSmellUtilities;
 import windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import windowCommitConstruction.testSmellPanel.GFSmellPanel;
 import windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 import windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
+import windowCommitConstruction.testSmellPanel.TCDSmellPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Vector;
 
 public class RefactorWindow extends JPanel implements ActionListener{
@@ -47,16 +52,19 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private MethodWithGeneralFixture methodWithGeneralFixture;
     private MethodWithEagerTest methodWithEagerTest;
     private PsiMethodBean methodWithLOC;
+    private MethodWithTestCodeDuplication methodWithTestCodeDuplication;
 
     private GeneralFixtureInfo generalFixtureInfo = null;
     private EagerTestInfo eagerTestInfo = null;
     private LackOfCohesionInfo lackOfCohesionInfo = null;
+    private TestCodeDuplicationInfo testCodeDuplicationInfo = null;
 
     private Project project;
 
     private GFSmellPanel gfSmellPanel;
     private ETSmellPanel etSmellPanel;
     private LOCSmellPanel locSmellPanel;
+    private TCDSmellPanel tcdSmellPanel;
 
     /**
      * Call this for General Fixture Panel.
@@ -150,6 +158,37 @@ public class RefactorWindow extends JPanel implements ActionListener{
         signature = signature + " " + methodBody;
         methodTextArea.setText(signature);
 
+        refactorPreviewButton.addActionListener(this);
+//        setupContextualAnalysisButton(lackOfCohesionInfo);
+    }
+
+    /**
+     * Call this for Test Code Duplication.
+     *
+     * @param testCodeDuplicationInfo
+     * @param project
+     */
+    public RefactorWindow(MethodWithTestCodeDuplication methodWithTestCodeDuplication, TestCodeDuplicationInfo testCodeDuplicationInfo, Project project, TCDSmellPanel tcdSmellPanel) {
+        super();
+        this.methodWithTestCodeDuplication = methodWithTestCodeDuplication;
+        this.testCodeDuplicationInfo = testCodeDuplicationInfo;
+        this.project = project;
+        this.tcdSmellPanel = tcdSmellPanel;
+        String methodName = "<html> Method " + methodWithTestCodeDuplication.getMethodWithTestCodeDuplication().getPsiMethod().getName() + " is affected by Test Code Duplication because it has the following repeated code blocks: <br/>";
+        for (Map.Entry<String, ArrayList<Block>> entryBlock : methodWithTestCodeDuplication.getBlocksOfDuplicatedCode().entrySet()) {
+            methodName = methodName + "   - Same block: <br/>";
+            for (Block block : entryBlock.getValue()) {
+                methodName = methodName + "&nbsp &nbsp &nbsp &nbsp - from line " + block.getStartLineNumber() + " to line " + block.getEndLineNumber() + "<br/>";
+            }
+            methodName = methodName + "<br/>";
+        }
+        methodName = methodName + "<br/>The Smell will be removed  using the following refactor operation:<br/>";
+        methodName = methodName + "   - Extract Method.</html>";
+        tipsTextLabel.setText(methodName);
+        String signature = methodWithTestCodeDuplication.getMethodWithTestCodeDuplication().getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithTestCodeDuplication.getMethodWithTestCodeDuplication().getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
         refactorPreviewButton.addActionListener(this);
 //        setupContextualAnalysisButton(lackOfCohesionInfo);
     }

@@ -11,6 +11,7 @@ import testSmellDetection.detector.TestSmellTextualDetector;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
 import windowCommitConstruction.general.WarningWindow;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,10 +26,12 @@ public class CommitFactory  extends CheckinHandlerFactory{
     private ArrayList<GeneralFixtureInfo> generalFixtureInfos;
     private ArrayList<EagerTestInfo> eagerTestInfos;
     private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos;
+    private ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos;
 
     private ArrayList<GeneralFixtureInfo> generalFixtureInfos2;
     private ArrayList<EagerTestInfo> eagerTestInfos2;
     private ArrayList<LackOfCohesionInfo> lackOfCohesionInfos2;
+    private ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos2;
 
     @NotNull
     @Override
@@ -42,6 +45,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 generalFixtureInfos2 = new ArrayList<>();
                 eagerTestInfos2 = new ArrayList<>();
                 lackOfCohesionInfos2 = new ArrayList<>();
+                testCodeDuplicationInfos2 = new ArrayList<>();
 
                 //Stampa di inizio
                 System.out.println("\n\n############# COMMIT FACTORY ##################\n\n");
@@ -59,6 +63,7 @@ public class CommitFactory  extends CheckinHandlerFactory{
                 eagerTestInfos = detector.executeDetectionForEagerTest();
                 //lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
                 lackOfCohesionInfos = detector2.executeDetectionForLackOfCohesion();
+                testCodeDuplicationInfos = detector2.executeDetectionForTestCodeDuplication();
 
                 /* PARTE USATA PER FARE L'ANALISI SOLO DELLE CLASSI DI TEST CHE VENGONO COMMITTATE */
                 ArrayList<VirtualFile> listOfFiles = (ArrayList<VirtualFile>) panel.getVirtualFiles();
@@ -97,6 +102,15 @@ public class CommitFactory  extends CheckinHandlerFactory{
                     }
                     find = false;
                 }
+                for(String s : filesNames){
+                    for(TestCodeDuplicationInfo tcdi : testCodeDuplicationInfos){
+                        if(tcdi.getClassWithSmell().getName().equals(s) && !find){
+                            testCodeDuplicationInfos2.add(tcdi);
+                            find = true;
+                        }
+                    }
+                    find = false;
+                }
                 /* FINE PARTE PER ANALISI DELLE CLASSI CHE VENGONO COMMITTATE */
 
                 return super.beforeCheckin();
@@ -106,12 +120,12 @@ public class CommitFactory  extends CheckinHandlerFactory{
             public void checkinSuccessful() {
 
                 // Creo la window
-                if(generalFixtureInfos2.isEmpty() && eagerTestInfos2.isEmpty() && lackOfCohesionInfos2.isEmpty()){
+                if(generalFixtureInfos2.isEmpty() && eagerTestInfos2.isEmpty() && lackOfCohesionInfos2.isEmpty() && testCodeDuplicationInfos2.isEmpty()){
                     System.out.println("\n   Non si è trovato alcuno Smell");
                 } else {
                     /* La prima linea esegue l'analisi su tutte le classi del sistema, la seconda solo sulle classi che vengono committate */
                     //WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2);
+                    WarningWindow warningWindow = new WarningWindow(myPanel.getProject(), generalFixtureInfos2, eagerTestInfos2, lackOfCohesionInfos2, testCodeDuplicationInfos2);
                     warningWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
                     warningWindow.setLocationRelativeTo(null);
