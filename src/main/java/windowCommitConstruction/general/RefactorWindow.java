@@ -13,6 +13,7 @@ import refactor.IRefactor;
 import refactor.strategy.EagerTestStrategy;
 import refactor.strategy.GeneralFixtureStrategy;
 import refactor.strategy.LackOfCohesionStrategy;
+import refactor.strategy.TestCodeDuplicationStrategy;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.TestSmellInfo;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -208,6 +209,10 @@ public class RefactorWindow extends JPanel implements ActionListener{
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
                 locSmellPanel.doAfterRefactor();
+            } else if(testCodeDuplicationInfo!= null){
+                IRefactor refactor = new TestCodeDuplicationStrategy(methodWithTestCodeDuplication, project, testCodeDuplicationInfo);
+                refactor.doRefactor();
+                tcdSmellPanel.doAfterRefactor();
             } else {
                 System.out.println("\n\n" + TestSmellUtilities.ANSI_RED + "All Info are NULL\n");
             }
