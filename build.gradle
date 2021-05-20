@@ -16,6 +16,7 @@ repositories {
 
 dependencies {
   implementation 'org.repodriller:repodriller:2.0.1'
+  implementation 'com.github.jiangxincode:simian:2.5.10'
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
