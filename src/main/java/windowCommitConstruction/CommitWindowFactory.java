@@ -3,6 +3,7 @@ package windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
+import stats.StatsPanel;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
@@ -86,6 +87,9 @@ public class CommitWindowFactory {
             JBScrollPane scroll = new JBScrollPane(lackOfCohesionPanel);
             tp.add("LackOfCohesion", scroll);
         }
+
+        tp.add("Statistics", new StatsPanel());
+
         return tp;
     }
 }

@@ -3,6 +3,7 @@ package action;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.jetbrains.annotations.NotNull;
+import stats.Session;
 import stats.Stats;
 import testSmellDetection.detector.IDetector;
 import testSmellDetection.detector.TestSmellStructuralDetector;
@@ -12,6 +13,7 @@ import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import utility.StatsSerializator;
 import windowCommitConstruction.CommitWindowFactory;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 /**
@@ -19,22 +21,33 @@ import java.util.ArrayList;
  */
 public class StructuralDetectionAction extends AnAction {
 
+    private Stats stats;
+    private Session lastSession;
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
 
-        Stats.getInstance().setProjectName(anActionEvent.getProject().getName());
+        this.stats = Stats.getInstance();
+        this.stats.addSession(new Session());
+        this.lastSession = stats.getLastSession();
+
+        this.lastSession.setProjectName(anActionEvent.getProject().getName());
+        this.stats.incrementNOfExecutionStructural();
+        this.lastSession.setKind("Structural");
 
         long startTime = System.currentTimeMillis();
+        this.lastSession.setStartTime(startTime);
+
         IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
+
         ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
+        this.lastSession.setNOfGF(generalFixtureInfos.size());
+
         ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
+        this.lastSession.setNOfET(eagerTestInfos.size());
+
         ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
-        long endTime = System.currentTimeMillis();
-
-        Stats.getInstance().setStartTime(startTime);
-        Stats.getInstance().setEndTime(endTime);
-
-        System.out.println("File salvato:" + StatsSerializator.serialize(Stats.getInstance(), System.getProperty("user.home") + "/Desktop/stats.json"));
+        this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
 
         System.out.println("\nDETECTOR STRUTTURALE: risultato dell'analisi.");
         for(GeneralFixtureInfo info : generalFixtureInfos){
@@ -47,11 +60,20 @@ public class StructuralDetectionAction extends AnAction {
             System.out.println("\n   LACK OF COHESION: " + info.toString());
         }
 
+        long endTime = System.currentTimeMillis();
+        this.lastSession.setEndTime(endTime);
+
         if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
             System.out.println("\nNon si è trovato alcuno Smell");
         } else {
             //TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
             CommitWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+        }
+
+        String PATH = Paths.get(anActionEvent.getProject().getBasePath()).toAbsolutePath().normalize() + "/stats.json";
+
+        if (StatsSerializator.serialize(Stats.getInstance(), PATH)) {
+            System.out.println("File salvato in: " + PATH);
         }
     }
 
