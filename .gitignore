@@ -77,6 +77,4 @@ fabric.properties
 .idea/*
 .gradle
 build
-gradlew
-gradlew.bat
 Installer
