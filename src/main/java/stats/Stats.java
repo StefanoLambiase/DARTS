@@ -1,18 +1,19 @@
 package stats;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Stats {
 
   private static Stats instance = null;
 
-  HashMap<String, Session> sessions;
+  ArrayList<Session> sessions;
   String lastSessionID;
   private int nOfExecutionTextual = 0;
   private int nOfExecutionStructural = 0;
 
   private Stats() {
-    this.sessions = new HashMap<String, Session>();
+    this.sessions = new ArrayList<Session>();
     this.lastSessionID = "";
   }
 
@@ -23,26 +24,18 @@ public class Stats {
     return instance;
   }
 
-  public HashMap<String, Session> getSessions() {
+  public ArrayList<Session> getSessions() {
     return sessions;
   }
 
-  public void setSessions(HashMap<String, Session> sessions) {
-    this.sessions = sessions;
-  }
-
   public Session addSession(Session session) {
-    this.sessions.put(session.getID(), session);
+    this.sessions.add(session);
     this.lastSessionID = session.getID();
     return session;
   }
 
-  public Session getSession(String sessionID) {
-    return this.sessions.get(sessionID);
-  }
-
   public Session getLastSession() {
-    return this.sessions.get(this.lastSessionID);
+    return this.sessions.get(this.sessions.size()-1);
   }
 
   public int getNOfExecutionTextual() {

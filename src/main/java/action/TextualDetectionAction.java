@@ -32,7 +32,7 @@ public class TextualDetectionAction extends AnAction {
         this.lastSession = stats.getLastSession();
 
         this.lastSession.setProjectName(anActionEvent.getProject().getName());
-        this.stats.incrementNOfExecutionStructural();
+        this.stats.incrementNOfExecutionTextual();
         this.lastSession.setKind("Textual");
 
         long startTime = System.currentTimeMillis();
