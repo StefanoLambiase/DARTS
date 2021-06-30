@@ -5,12 +5,14 @@ import com.intellij.openapi.roots.OrderEnumerator;
 import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiSubstitutor;
 import com.intellij.psi.PsiVariable;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import refactor.IRefactor;
 import refactor.strategy.EagerTestStrategy;
 import refactor.strategy.GeneralFixtureStrategy;
+import refactor.strategy.HardCodedTestDataStrategy;
 import refactor.strategy.LackOfCohesionStrategy;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.TestSmellInfo;
@@ -18,10 +20,13 @@ import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
+import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
+import testSmellDetection.testSmellInfo.hardCodedTestData.MethodWithHardCodedTestData;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import utility.TestSmellUtilities;
 import windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import windowCommitConstruction.testSmellPanel.GFSmellPanel;
+import windowCommitConstruction.testSmellPanel.HCTDSmellPanel;
 import windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 import windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
 
@@ -47,16 +52,19 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private MethodWithGeneralFixture methodWithGeneralFixture;
     private MethodWithEagerTest methodWithEagerTest;
     private PsiMethodBean methodWithLOC;
+    private MethodWithHardCodedTestData methodWithHardCodedTestData;
 
     private GeneralFixtureInfo generalFixtureInfo = null;
     private EagerTestInfo eagerTestInfo = null;
     private LackOfCohesionInfo lackOfCohesionInfo = null;
+    private HardCodedTestDataInfo hardCodedTestDataInfo = null;
 
     private Project project;
 
     private GFSmellPanel gfSmellPanel;
     private ETSmellPanel etSmellPanel;
     private LOCSmellPanel locSmellPanel;
+    private HCTDSmellPanel hctdSmellPanel;
 
     /**
      * Call this for General Fixture Panel.
@@ -154,6 +162,38 @@ public class RefactorWindow extends JPanel implements ActionListener{
 //        setupContextualAnalysisButton(lackOfCohesionInfo);
     }
 
+    /**
+     * Call this for Hard Coded Test Data.
+     * @param hardCodedTestDataInfo
+     * @param project
+     */
+    public RefactorWindow(MethodWithHardCodedTestData methodWithHardCodedTestData, HardCodedTestDataInfo hardCodedTestDataInfo, Project project, HCTDSmellPanel hctdSmellPanel) {
+        super();
+        this.methodWithHardCodedTestData = methodWithHardCodedTestData;
+        this.hardCodedTestDataInfo = hardCodedTestDataInfo;
+        this.project = project;
+        this.hctdSmellPanel = hctdSmellPanel;
+
+        String methodName = "<html> Method " + methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getName() + " is affected by Hard Coded Test Data because it use the following constants: <br/>";
+
+        for(PsiExpression constantExpression : methodWithHardCodedTestData.getListOfMethodsCalledWithConstants()){
+            methodName = methodName + "   - " + constantExpression.getText() + "<br/>";
+        }
+
+        methodName = methodName + "<br/>The Smell will be removed  using the following refactor operation:<br/>";
+        methodName = methodName + "   - Replace constants with variables.</html>";
+
+        tipsTextLabel.setText(methodName);
+
+        String signature = methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
+
+        refactorPreviewButton.addActionListener(this);
+//        setupContextualAnalysisButton(lackOfCohesionInfo);
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         try{
@@ -169,7 +209,12 @@ public class RefactorWindow extends JPanel implements ActionListener{
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
                 locSmellPanel.doAfterRefactor();
-            } else {
+            } else if (hardCodedTestDataInfo != null) {
+                IRefactor refactor = new HardCodedTestDataStrategy(methodWithHardCodedTestData, project, hardCodedTestDataInfo);
+                refactor.doRefactor();
+                hctdSmellPanel.doAfterRefactor();
+            }
+            else {
                 System.out.println("\n\n" + TestSmellUtilities.ANSI_RED + "All Info are NULL\n");
             }
         } catch (PrepareFailedException exception){

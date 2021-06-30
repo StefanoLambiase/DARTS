@@ -74,6 +74,6 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 .gradle
-build/
+/build/
 
 **/.DS_Store
