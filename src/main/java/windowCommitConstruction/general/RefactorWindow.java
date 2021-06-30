@@ -6,12 +6,14 @@ import com.intellij.openapi.roots.ProjectRootManager;
 import com.intellij.openapi.util.SystemInfo;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiNewExpression;
+import com.intellij.psi.PsiExpression;
 import com.intellij.psi.PsiSubstitutor;
 import com.intellij.psi.PsiVariable;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import refactor.IRefactor;
 import refactor.strategy.EagerTestStrategy;
 import refactor.strategy.GeneralFixtureStrategy;
+import refactor.strategy.HardCodedTestDataStrategy;
 import refactor.strategy.LackOfCohesionStrategy;
 import refactor.strategy.MysteryGuestStrategy;
 import testSmellDetection.bean.PsiMethodBean;
@@ -20,12 +22,15 @@ import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
+import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
+import testSmellDetection.testSmellInfo.hardCodedTestData.MethodWithHardCodedTestData;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import testSmellDetection.testSmellInfo.mysteryGuest.MethodWithMysteryGuest;
 import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import utility.TestSmellUtilities;
 import windowCommitConstruction.testSmellPanel.ETSmellPanel;
 import windowCommitConstruction.testSmellPanel.GFSmellPanel;
+import windowCommitConstruction.testSmellPanel.HCTDSmellPanel;
 import windowCommitConstruction.testSmellPanel.LOCSmellPanel;
 import windowCommitConstruction.contextualAnalysisPanel.ContextualAnalysisFrame;
 import windowCommitConstruction.testSmellPanel.MGSmellPanel;
@@ -52,11 +57,13 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private MethodWithGeneralFixture methodWithGeneralFixture;
     private MethodWithEagerTest methodWithEagerTest;
     private PsiMethodBean methodWithLOC;
+    private MethodWithHardCodedTestData methodWithHardCodedTestData;
     private MethodWithMysteryGuest methodWithMysteryGuest;
 
     private GeneralFixtureInfo generalFixtureInfo = null;
     private EagerTestInfo eagerTestInfo = null;
     private LackOfCohesionInfo lackOfCohesionInfo = null;
+    private HardCodedTestDataInfo hardCodedTestDataInfo = null;
     private MysteryGuestInfo mysteryGuestInfo = null;
 
     private Project project;
@@ -64,6 +71,7 @@ public class RefactorWindow extends JPanel implements ActionListener{
     private GFSmellPanel gfSmellPanel;
     private ETSmellPanel etSmellPanel;
     private LOCSmellPanel locSmellPanel;
+    private HCTDSmellPanel hctdSmellPanel;
     private MGSmellPanel mgSmellPanel;
 
     /**
@@ -161,6 +169,37 @@ public class RefactorWindow extends JPanel implements ActionListener{
         refactorPreviewButton.addActionListener(this);
 //        setupContextualAnalysisButton(lackOfCohesionInfo);
     }
+  
+    /**
+     * Call this for Hard Coded Test Data.
+     * @param hardCodedTestDataInfo
+     * @param project
+     */
+    public RefactorWindow(MethodWithHardCodedTestData methodWithHardCodedTestData, HardCodedTestDataInfo hardCodedTestDataInfo, Project project, HCTDSmellPanel hctdSmellPanel) {
+        super();
+        this.methodWithHardCodedTestData = methodWithHardCodedTestData;
+        this.hardCodedTestDataInfo = hardCodedTestDataInfo;
+        this.project = project;
+        this.hctdSmellPanel = hctdSmellPanel;
+
+        String methodName = "<html> Method " + methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getName() + " is affected by Hard Coded Test Data because it use the following constants: <br/>";
+
+        for(PsiExpression constantExpression : methodWithHardCodedTestData.getListOfMethodsCalledWithConstants()){
+            methodName = methodName + "   - " + constantExpression.getText() + "<br/>";
+        }
+
+        methodName = methodName + "<br/>The Smell will be removed  using the following refactor operation:<br/>";
+        methodName = methodName + "   - Replace constants with variables.</html>";
+
+        tipsTextLabel.setText(methodName);
+
+        String signature = methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getSignature(PsiSubstitutor.EMPTY).toString();
+        String methodBody = methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getBody().getText();
+        signature = signature + " " + methodBody;
+        methodTextArea.setText(signature);
+
+        refactorPreviewButton.addActionListener(this);
+    }
 
     /**
      * Call this for Mystery Guest Panel.
@@ -193,7 +232,6 @@ public class RefactorWindow extends JPanel implements ActionListener{
         methodTextArea.setText(signature);
 
         refactorPreviewButton.addActionListener(this);
-//        setupContextualAnalysisButton(eagerTestInfo);
     }
 
     @Override
@@ -211,6 +249,10 @@ public class RefactorWindow extends JPanel implements ActionListener{
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
                 locSmellPanel.doAfterRefactor();
+            } else if (hardCodedTestDataInfo != null) {
+                IRefactor refactor = new HardCodedTestDataStrategy(methodWithHardCodedTestData, project, hardCodedTestDataInfo);
+                refactor.doRefactor();
+                hctdSmellPanel.doAfterRefactor();
             } else if(mysteryGuestInfo != null){
                 IRefactor refactor = new MysteryGuestStrategy(methodWithMysteryGuest, project, mysteryGuestInfo);
                 refactor.doRefactor();

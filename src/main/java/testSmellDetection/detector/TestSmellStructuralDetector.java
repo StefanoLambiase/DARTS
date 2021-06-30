@@ -10,11 +10,14 @@ import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
+import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
+import testSmellDetection.testSmellInfo.hardCodedTestData.MethodWithHardCodedTestData;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import testSmellDetection.testSmellInfo.mysteryGuest.MethodWithMysteryGuest;
 import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import testSmellDetection.textualRules.EagerTestTextual;
 import testSmellDetection.textualRules.GeneralFixtureTextual;
+import testSmellDetection.textualRules.HardCodedTestDataTextual;
 import testSmellDetection.textualRules.LackOfCohesionOfTestSmellTextual;
 import testSmellDetection.textualRules.MysteryGuestTextual;
 import utility.ConverterUtilities;
@@ -75,6 +78,19 @@ public class TestSmellStructuralDetector implements IDetector{
         }
         return classesWithLackOfCohesion;
     }
+  
+    public ArrayList<HardCodedTestDataInfo> executeDetectionForHardCodedTestData() {
+        ArrayList<HardCodedTestDataInfo> classesWithHardCodedTestData = new ArrayList<>();
+        for(PsiClassBean testClass : testClasses){
+            if(testClass.getProductionClass() != null) {
+                ArrayList<MethodWithHardCodedTestData> methodsWithHardCodedTestData = HardCodedTestDataTextual.checkMethodsThatCauseHardCodedTestData(testClass);
+                if (methodsWithHardCodedTestData != null) {
+                    classesWithHardCodedTestData.add(new HardCodedTestDataInfo(testClass, methodsWithHardCodedTestData));
+                }
+            }
+        }
+        return classesWithHardCodedTestData;
+    }
 
     public ArrayList<MysteryGuestInfo> executeDetectionForMysteryGuest() {
         ArrayList<MysteryGuestInfo> classesWithMysteryGuest = new ArrayList<>();
@@ -88,4 +104,5 @@ public class TestSmellStructuralDetector implements IDetector{
         }
         return classesWithMysteryGuest;
     }
+
 }
