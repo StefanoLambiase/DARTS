@@ -13,12 +13,15 @@ import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
 import testSmellDetection.testSmellInfo.hardCodedTestData.MethodWithHardCodedTestData;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import testSmellDetection.testSmellInfo.testCodeDuplication.MethodWithTestCodeDuplication;
+import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
 import testSmellDetection.testSmellInfo.mysteryGuest.MethodWithMysteryGuest;
 import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import testSmellDetection.textualRules.EagerTestTextual;
 import testSmellDetection.textualRules.GeneralFixtureTextual;
 import testSmellDetection.textualRules.HardCodedTestDataTextual;
 import testSmellDetection.textualRules.LackOfCohesionOfTestSmellTextual;
+import testSmellDetection.textualRules.TestCodeDuplicationTextual;
 import testSmellDetection.textualRules.MysteryGuestTextual;
 import utility.ConverterUtilities;
 import utility.TestSmellUtilities;
@@ -104,5 +107,17 @@ public class TestSmellStructuralDetector implements IDetector{
         }
         return classesWithMysteryGuest;
     }
-
+    
+    public ArrayList<TestCodeDuplicationInfo> executeDetectionForTestCodeDuplication() {
+        ArrayList<TestCodeDuplicationInfo> classesWithTestCodeDuplication = new ArrayList<>();
+        for (PsiClassBean testClass : testClasses) {
+            if (testClass.getProductionClass() != null) {
+                ArrayList<MethodWithTestCodeDuplication> methodsWithTestCodeDuplication = TestCodeDuplicationTextual.checkMethodsThatCauseTestCodeDuplication(testClass);
+                if (methodsWithTestCodeDuplication != null) {
+                    classesWithTestCodeDuplication.add(new TestCodeDuplicationInfo(testClass, methodsWithTestCodeDuplication));
+                }
+            }
+        }
+        return classesWithTestCodeDuplication;
+    }
 }
