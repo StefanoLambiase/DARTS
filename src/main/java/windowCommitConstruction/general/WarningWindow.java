@@ -3,8 +3,10 @@ package windowCommitConstruction.general;
 import com.intellij.openapi.project.Project;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
+import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import windowCommitConstruction.CommitWindowFactory;
 
 import javax.swing.*;
@@ -21,7 +23,7 @@ public class WarningWindow extends JFrame {
 
     private JFrame thisFrame;
 
-    public WarningWindow(Project project, ArrayList<GeneralFixtureInfo> generalFixtureInfos, ArrayList<EagerTestInfo> eagerTestInfos, ArrayList<LackOfCohesionInfo> lackOfCohesionInfos, ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos) throws HeadlessException {
+    public WarningWindow(Project project, ArrayList<GeneralFixtureInfo> generalFixtureInfos, ArrayList<EagerTestInfo> eagerTestInfos, ArrayList<LackOfCohesionInfo> lackOfCohesionInfos, ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos, ArrayList<MysteryGuestInfo> mysteryGuestInfos, ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos) throws HeadlessException {
         super("Test Smell Notifier");
         thisFrame = this;
 
@@ -39,7 +41,7 @@ public class WarningWindow extends JFrame {
         seeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CommitWindowFactory.createWindow(true, false, project, generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos, testCodeDuplicationInfos);
+                CommitWindowFactory.createWindow(true, false, project, generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos, hardCodedTestDataInfos, mysteryGuestInfos, testCodeDuplicationInfos);
             }
         });
     }
