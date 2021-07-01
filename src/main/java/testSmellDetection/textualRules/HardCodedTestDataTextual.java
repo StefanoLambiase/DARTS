@@ -28,8 +28,25 @@ public abstract class HardCodedTestDataTextual {
                     }
                 }
                 if (!constantExpression.isEmpty()) {
-                    MethodWithHardCodedTestData methodWithHardCodedTestData = new MethodWithHardCodedTestData(psiMethodBeanInside, constantExpression);
-                    methodsWithHardCodedTestData.add(methodWithHardCodedTestData);
+                    while(!constantExpression.isEmpty()) {
+                        boolean isDuplicated = false;
+                        PsiExpression cExpr = constantExpression.remove(0);
+                        for (MethodWithHardCodedTestData methodWithHardCodedTestData : methodsWithHardCodedTestData) {
+                            if (!methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getName().equals(methodName))
+                                continue;
+                            if (methodWithHardCodedTestData.getListOfMethodsCalledWithConstants().get(0).textMatches(cExpr)) {
+                                methodWithHardCodedTestData.getListOfMethodsCalledWithConstants().add(cExpr);
+                                isDuplicated = true;
+                                break;
+                            }
+                        }
+                        if (!isDuplicated) {
+                            ArrayList<PsiExpression> cExprArray = new ArrayList<>();
+                            cExprArray.add(cExpr);
+                            MethodWithHardCodedTestData methodWithHardCodedTestData = new MethodWithHardCodedTestData(psiMethodBeanInside, cExprArray);
+                            methodsWithHardCodedTestData.add(methodWithHardCodedTestData);
+                        }
+                    }
                 }
             }
         }
