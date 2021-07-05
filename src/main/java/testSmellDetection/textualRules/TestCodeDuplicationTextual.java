@@ -4,21 +4,31 @@ import com.harukizaemon.simian.*;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.vfs.LocalFileSystem;
+import com.intellij.openapi.vfs.impl.local.LocalFileSystemBase;
 import com.intellij.openapi.wm.WindowManager;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
+import org.jetbrains.annotations.TestOnly;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.testCodeDuplication.MethodWithTestCodeDuplication;
 
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestCodeDuplicationTextual {
-    public static ArrayList<MethodWithTestCodeDuplication> checkMethodsThatCauseTestCodeDuplication(PsiClassBean testClass) {
+    public static ArrayList<MethodWithTestCodeDuplication> checkMethodsThatCauseTestCodeDuplication(PsiClassBean testClass, Project project) throws Exception {
         ArrayList<MethodWithTestCodeDuplication> methodsWithTestCodeDuplication = new ArrayList<>();
         for (PsiMethodBean psiMethodBeanInside : testClass.getPsiMethodBeans()) {
             String methodName = psiMethodBeanInside.getPsiMethod().getName();
@@ -77,19 +87,9 @@ public class TestCodeDuplicationTextual {
 
                 }
 
-                // Ottengo il progetto corrente
-                Project[] projects = ProjectManager.getInstance().getOpenProjects();
-                Project activeProject = null;
-                for (Project project : projects) {
-                    Window window = WindowManager.getInstance().suggestParentWindow(project);
-                    if (window != null && window.isActive()) {
-                        activeProject = project;
-                    }
-                }
-
                 // Ottengo il file corrente ed il riferimento al documento
-                PsiDocumentManager documentManager = PsiDocumentManager.getInstance(activeProject);
-                PsiFile file = testClass.getPsiClass().getContainingFile();
+                PsiDocumentManager documentManager = PsiDocumentManager.getInstance(project);
+                PsiFile file = testClass.getPsiClass().getContainingFile().getOriginalFile();
                 Document document = documentManager.getDocument(file);
 
                 // Calcolo la linea di inizio del metodo e quella di fine
@@ -111,11 +111,15 @@ public class TestCodeDuplicationTextual {
 
                 FileLoader fileLoader = new FileLoader(streamLoader);
 
-                fileLoader.load(file.getVirtualFile().getPath());
+                Path tempFile = Files.createTempFile("classTestCodeDuplicationTempFile-" + UUID.randomUUID().toString().replace("-", ""), ".java");
+
+                Files.write(tempFile, file.getText().getBytes(StandardCharsets.UTF_8));
+
+                fileLoader.load(tempFile.toFile());
 
                 checker.check();
 
-                Map<String, ArrayList<Block>> codeBlocks = auditListener.getBlocksOfDuplicatedCode();
+                tempFile.toFile().delete();
 
                 if (!auditListener.getBlocksOfDuplicatedCode().isEmpty()) {
                     boolean isEmpty = false;

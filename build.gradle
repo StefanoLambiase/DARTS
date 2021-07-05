@@ -5,6 +5,9 @@ plugins {
   id 'org.jetbrains.intellij' version '0.7.2'
 }
 
+apply plugin: 'java'
+apply plugin: 'org.jetbrains.intellij'
+
 group 'org.intellij.sdk'
 version '2.0.0'
 
@@ -22,7 +25,8 @@ dependencies {
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
   version = '2020.2.4'
-  plugins = ['com.intellij.java']
+  type = project.hasProperty('intellij_type') ? project.intellij_type : 'IC'
+  plugins = ['java', 'java-i18n', 'properties', 'yaml']
 }
 
 buildSearchableOptions {

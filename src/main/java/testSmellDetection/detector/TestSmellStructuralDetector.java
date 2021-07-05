@@ -32,6 +32,7 @@ public class TestSmellStructuralDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
     private ArrayList<PsiClassBean> productionClasses;
+    private Project project;
 
     //variabili per l'analisi di GeneralFixture
     private int numberOfProductionTypes = 3;
@@ -41,6 +42,7 @@ public class TestSmellStructuralDetector implements IDetector{
         classBeans = ConverterUtilities.getClassesFromPackages(project);
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
         productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
+        this.project = project;
     }
 
     public ArrayList<GeneralFixtureInfo> executeDetectionForGeneralFixture() {
@@ -111,12 +113,14 @@ public class TestSmellStructuralDetector implements IDetector{
     public ArrayList<TestCodeDuplicationInfo> executeDetectionForTestCodeDuplication() {
         ArrayList<TestCodeDuplicationInfo> classesWithTestCodeDuplication = new ArrayList<>();
         for (PsiClassBean testClass : testClasses) {
-            if (testClass.getProductionClass() != null) {
-                ArrayList<MethodWithTestCodeDuplication> methodsWithTestCodeDuplication = TestCodeDuplicationTextual.checkMethodsThatCauseTestCodeDuplication(testClass);
-                if (methodsWithTestCodeDuplication != null) {
-                    classesWithTestCodeDuplication.add(new TestCodeDuplicationInfo(testClass, methodsWithTestCodeDuplication));
+            try {
+                if (testClass.getProductionClass() != null) {
+                    ArrayList<MethodWithTestCodeDuplication> methodsWithTestCodeDuplication = TestCodeDuplicationTextual.checkMethodsThatCauseTestCodeDuplication(testClass, project);
+                    if (methodsWithTestCodeDuplication != null) {
+                        classesWithTestCodeDuplication.add(new TestCodeDuplicationInfo(testClass, methodsWithTestCodeDuplication));
+                    }
                 }
-            }
+            } catch (Exception e) {}
         }
         return classesWithTestCodeDuplication;
     }
