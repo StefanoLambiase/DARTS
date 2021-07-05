@@ -48,7 +48,7 @@ public abstract class TestSmellUtilities {
      */
     public static boolean isTestClass(PsiClassBean psiClassBean){
         PsiClass psiClass = psiClassBean.getPsiClass();
-        if(psiClass.getName().contains("Test") || psiClass.getName().contains("test") || psiClass.getText().contains(" extends TestCase")){
+        if(psiClass.getName().endsWith("Test") || psiClass.getName().contains("test") || psiClass.getText().contains(" extends TestCase")){
             return true;
         } else {
             return false;
