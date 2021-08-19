@@ -21,7 +21,7 @@ public class StatsPanel extends JPanel {
 
     this.add(new JLabel("Statistiche", SwingConstants.CENTER), BorderLayout.NORTH);
 
-    this.statsInfo = new JPanel(new GridLayout(6, 1, 1, 1));
+    this.statsInfo = new JPanel(new GridLayout(7, 1, 1, 1));
     this.add(this.statsInfo, BorderLayout.WEST);
 
     this.statsInfo.add(new JLabel("Session ID: " + this.session.getID()));
