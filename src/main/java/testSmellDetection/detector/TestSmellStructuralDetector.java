@@ -76,4 +76,8 @@ public class TestSmellStructuralDetector implements IDetector{
         }
         return classesWithLackOfCohesion;
     }
+
+    public int getClassBeansNumber() {
+        return classBeans.size();
+    }
 }

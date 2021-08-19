@@ -11,6 +11,7 @@ public class Stats {
   String lastSessionID;
   private int nOfExecutionTextual = 0;
   private int nOfExecutionStructural = 0;
+  private String FILE_PATH;
 
   private Stats() {
     this.sessions = new ArrayList<Session>();
@@ -52,5 +53,13 @@ public class Stats {
 
   public void incrementNOfExecutionStructural() {
     this.nOfExecutionStructural++;
+  }
+
+  public String getFILE_PATH() {
+    return FILE_PATH;
+  }
+
+  public void setFILE_PATH(String FILE_PATH) {
+    this.FILE_PATH = FILE_PATH;
   }
 }

@@ -76,4 +76,8 @@ public class TestSmellTextualDetector implements IDetector{
         }
         return classesWithLackOfCohesion;
     }
+
+    public int getClassBeansNumber() {
+        return classBeans.size();
+    }
 }

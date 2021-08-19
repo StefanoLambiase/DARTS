@@ -3,10 +3,12 @@ package stats;
 import utility.NetUtility;
 import utility.StatsUtility;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Session {
 
+  private ArrayList<Action> actions;
   private String userId;
   private final String ID;
   private String projectName;
@@ -16,11 +18,21 @@ public class Session {
   private int nOfGF = 0;
   private int nOfET = 0;
   private int nOfLOC = 0;
+  private int nOfTotalClasses = 0;
   private String kind;
 
   public Session() {
     this.userId = NetUtility.getMACAddress();
     this.ID = StatsUtility.md5(new Date().getTime() + System.getProperty("user.name"));
+    this.actions = new ArrayList<Action>();
+  }
+
+  public int getnOfTotalClasses() {
+    return nOfTotalClasses;
+  }
+
+  public void setnOfTotalClasses(int nOfTotalClasses) {
+    this.nOfTotalClasses = nOfTotalClasses;
   }
 
   public String getKind() {
@@ -93,5 +105,13 @@ public class Session {
 
   public void setNOfLOC(int nOfLOC) {
     this.nOfLOC = nOfLOC;
+  }
+
+  public ArrayList<Action> getActions() {
+    return actions;
+  }
+
+  public void setActions(ArrayList<Action> actions) {
+    this.actions = actions;
   }
 }

@@ -12,4 +12,6 @@ public interface IDetector {
     ArrayList<EagerTestInfo> executeDetectionForEagerTest();
 
     ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion();
+
+    int getClassBeansNumber();
 }

@@ -40,6 +40,8 @@ public class TextualDetectionAction extends AnAction {
 
         IDetector detector = new TestSmellTextualDetector(anActionEvent.getProject());
 
+        this.lastSession.setnOfTotalClasses(detector.getClassBeansNumber());
+
         ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         this.lastSession.setNOfGF(generalFixtureInfos.size());
 
@@ -72,9 +74,7 @@ public class TextualDetectionAction extends AnAction {
 
         String PATH = Paths.get(anActionEvent.getProject().getBasePath()).toAbsolutePath().normalize() + "/stats.json";
 
-        if (StatsSerializator.serialize(Stats.getInstance(), PATH)) {
-            System.out.println("File salvato in: " + PATH);
-        }
+        this.stats.setFILE_PATH(PATH);
     }
 
 }
