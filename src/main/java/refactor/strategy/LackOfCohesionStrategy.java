@@ -11,6 +11,7 @@ import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class LackOfCohesionStrategy implements IRefactor {
@@ -104,6 +105,7 @@ public class LackOfCohesionStrategy implements IRefactor {
         action.setPackageName(originalClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.LACK_OF_COHESION);
         action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setTimestamp(new Date().getTime());
         action.setActionCanceled(false);
         action.setActionDone(true);
 

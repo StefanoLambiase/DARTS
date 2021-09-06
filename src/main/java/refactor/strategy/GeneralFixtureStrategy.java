@@ -22,6 +22,7 @@ import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.generalFixture.MethodWithGeneralFixture;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class GeneralFixtureStrategy implements IRefactor {
@@ -161,6 +162,7 @@ public class GeneralFixtureStrategy implements IRefactor {
         action.setPackageName(originalClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.GENERAL_FIXTURE);
         action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setTimestamp(new Date().getTime());
         action.setActionCanceled(false);
         action.setActionDone(true);
 

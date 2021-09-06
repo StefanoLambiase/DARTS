@@ -17,6 +17,7 @@ import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.eagerTest.MethodWithEagerTest;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /* Classe utile per eseguire le tecniche di Refactoring atte all'eliminazione di Eager Test
  * implementa l'interfaccia IRefactor
@@ -134,6 +135,7 @@ public class EagerTestStrategy implements IRefactor {
         action.setPackageName(originalClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.EAGER_TEST);
         action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setTimestamp(new Date().getTime());
         action.setActionCanceled(false);
         action.setActionDone(true);
 
