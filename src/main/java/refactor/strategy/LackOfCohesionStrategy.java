@@ -103,6 +103,7 @@ public class LackOfCohesionStrategy implements IRefactor {
         action.setMethodName(this.informations.getMethodsThatCauseLackOfCohesion().get(0).getPsiMethod().getName());
         action.setPackageName(originalClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.LACK_OF_COHESION);
+        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
         action.setActionCanceled(false);
         action.setActionDone(true);
 

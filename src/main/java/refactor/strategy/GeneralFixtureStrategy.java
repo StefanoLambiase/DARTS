@@ -160,6 +160,7 @@ public class GeneralFixtureStrategy implements IRefactor {
         action.setMethodName(methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName());
         action.setPackageName(originalClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.GENERAL_FIXTURE);
+        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
         action.setActionCanceled(false);
         action.setActionDone(true);
 
