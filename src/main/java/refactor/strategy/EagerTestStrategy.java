@@ -9,6 +9,8 @@ import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
 import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import refactor.IRefactor;
+import stats.Action;
+import stats.Stats;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -100,23 +102,42 @@ public class EagerTestStrategy implements IRefactor {
             }
         }
 
-        //Creo l'annotation "@Test" da aggiungere al metodo appena estratto
-        PsiAnnotation annotation = JavaPsiFacade.getElementFactory(project).createAnnotationFromText("@Test",processor.getExtractedMethod().getContext());
+        if(processor.getExtractedMethod() != null) {
 
-        //Aggiungo l'annotation creata al metodo
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            classPsi.addBefore(annotation, processor.getExtractedMethod());
-        });
+            //Creo l'annotation "@Test" da aggiungere al metodo appena estratto
+            PsiAnnotation annotation = JavaPsiFacade.getElementFactory(project).createAnnotationFromText("@Test",processor.getExtractedMethod().getContext());
 
-        //elimino la chiamata al metodo appena creato
-        WriteCommandAction.runWriteCommandAction(project, () -> {
-            PsiStatement[] statements = psiMethod.getBody().getStatements();
-            String methodName = processor.getExtractedMethod().getName() + "();";
-            for(PsiStatement statement : statements){
-                if(statement.getText().equals(methodName)){
-                    statement.delete();
+            //Aggiungo l'annotation creata al metodo
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                classPsi.addBefore(annotation, processor.getExtractedMethod());
+            });
+
+            //elimino la chiamata al metodo appena creato
+            WriteCommandAction.runWriteCommandAction(project, () -> {
+                PsiStatement[] statements = psiMethod.getBody().getStatements();
+                String methodName = processor.getExtractedMethod().getName() + "();";
+                for(PsiStatement statement : statements){
+                    if(statement.getText().equals(methodName)){
+                        statement.delete();
+                    }
                 }
-            }
-        });
+            });
+        }
+    }
+
+    public void doAfterRefactor() {
+        PsiClassBean originalClassBean = eagerTestInfo.getClassWithEagerTest();
+
+        Action action = new Action();
+        action.setClassName(originalClassBean.getPsiClass().getName());
+        action.setMethodName(methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getName());
+        action.setPackageName(originalClassBean.getPsiPackage().getName());
+        action.setSmellKind(Action.SmellKindEnum.EAGER_TEST);
+        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setActionCanceled(false);
+        action.setActionDone(true);
+
+        Stats.getInstance().getLastSession().getActions().add(action);
+        System.out.println("adding action:" + action);
     }
 }

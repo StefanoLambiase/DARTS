@@ -4,4 +4,6 @@ import com.intellij.refactoring.extractMethod.PrepareFailedException;
 
 public interface IRefactor {
     void doRefactor() throws PrepareFailedException;
+
+    void doAfterRefactor();
 }

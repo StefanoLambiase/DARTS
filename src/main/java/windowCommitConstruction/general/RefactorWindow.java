@@ -164,49 +164,25 @@ public class RefactorWindow extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Action action = new Action();
-        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
-        action.setTimestamp(System.currentTimeMillis());
-
         try{
             if(generalFixtureInfo != null){
                 IRefactor refactor = new GeneralFixtureStrategy(methodWithGeneralFixture, project, generalFixtureInfo);
                 refactor.doRefactor();
-
-                PsiClassBean originalClassBean = generalFixtureInfo.getClassWithGeneralFixture();
-                action.setClassName(originalClassBean.getPsiClass().getName());
-                action.setMethodName(methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName());
-                action.setPackageName(originalClassBean.getPsiPackage().getName());
-                action.setSmellKind(Action.SmellKindEnum.GENERAL_FIXTURE);
-
+                refactor.doAfterRefactor();
                 gfSmellPanel.doAfterRefactor();
             } else if(eagerTestInfo != null){
                 IRefactor refactor = new EagerTestStrategy(methodWithEagerTest, project, eagerTestInfo);
                 refactor.doRefactor();
-
-                PsiClassBean originalClassBean = eagerTestInfo.getClassWithEagerTest();
-                action.setClassName(originalClassBean.getPsiClass().getName());
-                action.setMethodName(methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getName());
-                action.setPackageName(originalClassBean.getPsiPackage().getName());
-                action.setSmellKind(Action.SmellKindEnum.EAGER_TEST);
-
+                refactor.doAfterRefactor();
                 etSmellPanel.doAfterRefactor();
             } else if(lackOfCohesionInfo != null){
                 IRefactor refactor = new LackOfCohesionStrategy(lackOfCohesionInfo, project);
                 refactor.doRefactor();
-
-                PsiClassBean originalClassBean = lackOfCohesionInfo.getClassWithSmell();
-                action.setClassName(originalClassBean.getPsiClass().getName());
-                action.setMethodName(lackOfCohesionInfo.getMethodsThatCauseLackOfCohesion().get(0).getPsiMethod().getName());
-                action.setPackageName(originalClassBean.getPsiPackage().getName());
-                action.setSmellKind(Action.SmellKindEnum.LACK_OF_COHESION);
-
+                refactor.doAfterRefactor();
                 locSmellPanel.doAfterRefactor();
             } else {
                 System.out.println("\n\n" + TestSmellUtilities.ANSI_RED + "All Info are NULL\n");
             }
-            Stats.getInstance().getLastSession().getActions().add(action);
-            System.out.println("adding action:" + action);
         } catch (PrepareFailedException exception){
             exception.printStackTrace();
         }

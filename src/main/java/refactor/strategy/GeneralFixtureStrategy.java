@@ -9,7 +9,13 @@ import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
 import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import com.intellij.refactoring.extractclass.ExtractClassProcessor;
+import com.intellij.refactoring.listeners.RefactoringEventData;
+import com.intellij.refactoring.listeners.RefactoringEventListener;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import refactor.IRefactor;
+import stats.Action;
+import stats.Stats;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
@@ -144,5 +150,20 @@ public class GeneralFixtureStrategy implements IRefactor {
                 classShortName);
         processor.setPreviewUsages(true);
         processor.run();
+    }
+
+    public void doAfterRefactor() {
+        PsiClassBean originalClassBean = generalFixtureInfo.getClassWithGeneralFixture();
+
+        Action action = new Action();
+        action.setClassName(originalClassBean.getPsiClass().getName());
+        action.setMethodName(methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName());
+        action.setPackageName(originalClassBean.getPsiPackage().getName());
+        action.setSmellKind(Action.SmellKindEnum.GENERAL_FIXTURE);
+        action.setActionCanceled(false);
+        action.setActionDone(true);
+
+        Stats.getInstance().getLastSession().getActions().add(action);
+        System.out.println("adding action:" + action);
     }
 }

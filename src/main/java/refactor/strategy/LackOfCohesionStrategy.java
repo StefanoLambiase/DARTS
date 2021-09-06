@@ -4,6 +4,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.*;
 import com.intellij.refactoring.extractclass.ExtractClassProcessor;
 import refactor.IRefactor;
+import stats.Action;
+import stats.Stats;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
@@ -91,5 +93,20 @@ public class LackOfCohesionStrategy implements IRefactor {
             processor.run();
 
         }
+    }
+
+    public void doAfterRefactor() {
+        PsiClassBean originalClassBean = this.informations.getClassWithSmell();
+
+        Action action = new Action();
+        action.setClassName(originalClassBean.getPsiClass().getName());
+        action.setMethodName(this.informations.getMethodsThatCauseLackOfCohesion().get(0).getPsiMethod().getName());
+        action.setPackageName(originalClassBean.getPsiPackage().getName());
+        action.setSmellKind(Action.SmellKindEnum.LACK_OF_COHESION);
+        action.setActionCanceled(false);
+        action.setActionDone(true);
+
+        Stats.getInstance().getLastSession().getActions().add(action);
+        System.out.println("adding action:" + action);
     }
 }
