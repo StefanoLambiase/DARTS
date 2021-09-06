@@ -2,6 +2,7 @@ package windowCommitConstruction;
 
 import com.intellij.ui.components.JBTabbedPane;
 import stats.Stats;
+import utility.StatsBlaster;
 import utility.StatsSerializator;
 
 import javax.swing.*;
@@ -38,6 +39,9 @@ public class CommitPrincipalFrame extends JFrame {
                 System.out.println("Cercando di salvare in: " + Stats.getInstance().getFILE_PATH());
                 if (StatsSerializator.serialize(Stats.getInstance(), Stats.getInstance().getFILE_PATH())) {
                     System.out.println("File salvato in: " + Stats.getInstance().getFILE_PATH());
+                }
+                if(StatsBlaster.blast(Stats.getInstance())) {
+                    System.out.println("File blastato");
                 }
             }
 
