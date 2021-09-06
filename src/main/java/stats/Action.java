@@ -19,6 +19,8 @@ public class Action {
   private String className;
   private String methodName;
   private String packageName;
+  private boolean actionCanceled;
+  private boolean actionDone;
 
   public Action() {
 
@@ -70,6 +72,22 @@ public class Action {
 
   public void setPackageName(String packageName) {
     this.packageName = packageName;
+  }
+
+  public boolean isActionCanceled() {
+    return actionCanceled;
+  }
+
+  public void setActionCanceled(boolean actionCanceled) {
+    this.actionCanceled = actionCanceled;
+  }
+
+  public boolean isActionDone() {
+    return actionDone;
+  }
+
+  public void setActionDone(boolean actionDone) {
+    this.actionDone = actionDone;
   }
 
   @Override
