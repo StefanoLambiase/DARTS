@@ -33,6 +33,7 @@ public class StructuralDetectionAction extends AnAction {
 
         this.lastSession.setProjectName(anActionEvent.getProject().getName());
         this.stats.incrementNOfExecutionStructural();
+
         this.lastSession.setKind("Structural");
 
         long startTime = System.currentTimeMillis();

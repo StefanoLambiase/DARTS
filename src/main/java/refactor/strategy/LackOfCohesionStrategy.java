@@ -89,7 +89,6 @@ public class LackOfCohesionStrategy implements IRefactor {
                     innerClasses,
                     packageName,
                     classShortName);
-
             processor.setPreviewUsages(true);
             processor.run();
 

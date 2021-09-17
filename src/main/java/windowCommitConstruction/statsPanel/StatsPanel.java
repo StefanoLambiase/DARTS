@@ -1,4 +1,7 @@
-package stats;
+package windowCommitConstruction.statsPanel;
+
+import stats.Session;
+import stats.Stats;
 
 import javax.swing.*;
 import java.awt.*;

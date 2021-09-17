@@ -3,7 +3,7 @@ package windowCommitConstruction;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.components.JBTabbedPane;
-import stats.StatsPanel;
+import windowCommitConstruction.statsPanel.StatsPanel;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
