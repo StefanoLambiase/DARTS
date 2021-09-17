@@ -110,12 +110,14 @@ public class GeneralFixtureStrategy implements IRefactor {
                 }
             }
             editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
+            @Nullable
             ExtractMethodProcessor methodProcessor = new ExtractMethodProcessor(project, editor, elementsToMove, null, "setUpRefactored", "setUp", null);
 
             if (methodProcessor.prepare()) {
                 //methodProcessor.setMethodVisibility(PsiModifier.PUBLIC);
                 methodProcessor.testPrepare();
-                methodProcessor.testNullability();
+                //this method doesn't work and I don't know why.
+                //methodProcessor.testNullability();
                 ExtractMethodHandler.extractMethod(project, methodProcessor);
             }
 

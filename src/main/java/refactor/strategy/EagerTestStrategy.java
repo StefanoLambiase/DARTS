@@ -8,6 +8,7 @@ import com.intellij.psi.*;
 import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
 import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
+import org.jetbrains.annotations.Nullable;
 import refactor.IRefactor;
 import stats.Action;
 import stats.Stats;
@@ -93,11 +94,11 @@ public class EagerTestStrategy implements IRefactor {
 
         //instanzio un processor per manipolare l'extract class
         ExtractMethodProcessor processor = new ExtractMethodProcessor(project, editor, elementsToMove, type, "ExtractMethodRefactoring", "refactoredOne", null);
-
         //controllo preliminare per inizializzare i parametri del processor
         if (processor.prepare()) {
             processor.testPrepare();
-            processor.testNullability();
+            //this method doesn't work and I don't know why.
+            //methodProcessor.testNullability();
             if(processor.showDialog()) {
                 ExtractMethodHandler.extractMethod(project, processor);
             }
