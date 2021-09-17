@@ -1,6 +1,5 @@
 package stats;
 
-import utility.NetUtility;
 import utility.StatsUtility;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ public class Session {
   private String kind;
 
   public Session() {
-    this.userId = NetUtility.getMACAddress();
+    this.userId = StatsUtility.md5(new Date().getTime() + System.getProperty("user.name"));
     this.ID = StatsUtility.md5(new Date().getTime() + System.getProperty("user.name"));
     this.actions = new ArrayList<Action>();
   }
