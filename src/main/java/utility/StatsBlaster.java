@@ -17,7 +17,7 @@ public class StatsBlaster {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     try {
-      URL url = new URL("http://localhost:3000/api/stat");
+      URL url = new URL("https://dartsstats.herokuapp.com/api/stat");
       URLConnection con = url.openConnection();
       HttpURLConnection http = (HttpURLConnection) con;
       http.setRequestMethod("POST");
