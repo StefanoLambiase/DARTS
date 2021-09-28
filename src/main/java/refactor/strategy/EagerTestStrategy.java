@@ -8,7 +8,6 @@ import com.intellij.psi.*;
 import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
 import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
-import org.jetbrains.annotations.Nullable;
 import refactor.IRefactor;
 import stats.Action;
 import stats.Stats;
@@ -98,7 +97,7 @@ public class EagerTestStrategy implements IRefactor {
         if (processor.prepare()) {
             processor.testPrepare();
             //this method doesn't work and I don't know why.
-            //methodProcessor.testNullability();
+            //processor.testNullability();
             if(processor.showDialog()) {
                 ExtractMethodHandler.extractMethod(project, processor);
             }
@@ -129,18 +128,25 @@ public class EagerTestStrategy implements IRefactor {
 
     public void doAfterRefactor() {
         PsiClassBean originalClassBean = eagerTestInfo.getClassWithEagerTest();
+        getActionForStats(originalClassBean);
+    }
 
+    /**
+     * Method that uses getter and setter's Action class, in order to obtain from psiClassBean
+     * the result of the Eager Test smell that we ne need for Stats. Finally adding the action to the session.
+     * @param psiClassBean
+     */
+    public void getActionForStats(PsiClassBean psiClassBean){
         Action action = new Action();
-        action.setClassName(originalClassBean.getPsiClass().getName());
+        action.setClassName(psiClassBean.getPsiClass().getName());
         action.setMethodName(methodWithEagerTest.getMethodWithEagerTest().getPsiMethod().getName());
-        action.setPackageName(originalClassBean.getPsiPackage().getName());
+        action.setPackageName(psiClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.EAGER_TEST);
         action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
         action.setTimestamp(new Date().getTime());
         action.setActionCanceled(false);
         action.setActionDone(true);
-
         Stats.getInstance().getLastSession().getActions().add(action);
-        System.out.println("adding action:" + action);
+        System.out.println("adding action: " + action);
     }
 }

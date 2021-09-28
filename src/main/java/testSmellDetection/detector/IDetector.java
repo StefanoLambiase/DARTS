@@ -1,5 +1,6 @@
 package testSmellDetection.detector;
 
+import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
@@ -14,4 +15,5 @@ public interface IDetector {
     ArrayList<LackOfCohesionInfo> executeDetectionForLackOfCohesion();
 
     int getClassBeansNumber();
+    int getMethodBeansNumber();
 }

@@ -20,12 +20,22 @@ import java.util.ArrayList;
 public class TestSmellTextualDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
+    private ArrayList<PsiMethodBean> methodBeans;
     private ArrayList<PsiClassBean> productionClasses;
     private ProductionClassesSingleton productionClassesSingleton;
+
+    private ArrayList<PsiMethodBean> methodBeansTemp;
 
     public TestSmellTextualDetector(Project project){
         classBeans = ConverterUtilities.getClassesFromPackages(project);
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
+        for(PsiClassBean psiClassBean : testClasses) {
+            methodBeansTemp = ConverterUtilities.getMethodFromClass(psiClassBean.getPsiClass());
+            for(PsiMethodBean psiMethodBean : methodBeansTemp){
+                methodBeans.add(psiMethodBean);
+            }
+        }
+
         productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
         productionClassesSingleton = ProductionClassesSingleton.getIstance();
         productionClassesSingleton.setProductionClasses(productionClasses);
@@ -80,4 +90,6 @@ public class TestSmellTextualDetector implements IDetector{
     public int getClassBeansNumber() {
         return classBeans.size();
     }
+    //add the density also for Textual Detection
+    public int getMethodBeansNumber(){ return methodBeans.size();}
 }

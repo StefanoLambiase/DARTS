@@ -110,7 +110,6 @@ public class GeneralFixtureStrategy implements IRefactor {
                 }
             }
             editor = FileEditorManager.getInstance(project).getSelectedTextEditor();
-            @Nullable
             ExtractMethodProcessor methodProcessor = new ExtractMethodProcessor(project, editor, elementsToMove, null, "setUpRefactored", "setUp", null);
 
             if (methodProcessor.prepare()) {
@@ -157,11 +156,19 @@ public class GeneralFixtureStrategy implements IRefactor {
 
     public void doAfterRefactor() {
         PsiClassBean originalClassBean = generalFixtureInfo.getClassWithGeneralFixture();
+        getActionForStats(originalClassBean);
+    }
 
+    /**
+     * Method that uses getter and setter's Action class, in order to obtain from psiClassBean
+     * the result of the General Fixture smell that we ne need for Stats. Finally adding the action to the session.
+     * @param psiClassBean
+     */
+    public void getActionForStats(PsiClassBean psiClassBean){
         Action action = new Action();
-        action.setClassName(originalClassBean.getPsiClass().getName());
+        action.setClassName(psiClassBean.getPsiClass().getName());
         action.setMethodName(methodWithGeneralFixture.getMethodWithGeneralFixture().getPsiMethod().getName());
-        action.setPackageName(originalClassBean.getPsiPackage().getName());
+        action.setPackageName(psiClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.GENERAL_FIXTURE);
         action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
         action.setTimestamp(new Date().getTime());

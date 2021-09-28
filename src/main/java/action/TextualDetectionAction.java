@@ -41,6 +41,7 @@ public class TextualDetectionAction extends AnAction {
         IDetector detector = new TestSmellTextualDetector(anActionEvent.getProject());
 
         this.lastSession.setnOfTotalClasses(detector.getClassBeansNumber());
+        this.lastSession.setnOfTotalMethod(detector.getMethodBeansNumber());
 
         ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         this.lastSession.setNOfGF(generalFixtureInfos.size());

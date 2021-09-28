@@ -23,16 +23,30 @@ import java.util.ArrayList;
 public class TestSmellStructuralDetector implements IDetector{
     private ArrayList<PsiClassBean> classBeans;
     private ArrayList<PsiClassBean> testClasses;
+    private ArrayList<PsiMethodBean> methodBeans;
     private ArrayList<PsiClassBean> productionClasses;
     private ProductionClassesSingleton productionClassesSingleton;
+
+    private ArrayList<PsiMethodBean> methodBeansTemp;
 
     //variabili per l'analisi di GeneralFixture
     private int numberOfProductionTypes = 3;
     private int numberOfObjectUsesInSetup = 3;
+    public TestSmellStructuralDetector(){
+
+    }
 
     public TestSmellStructuralDetector(Project project){
+        methodBeans = new ArrayList<PsiMethodBean>();
         classBeans = ConverterUtilities.getClassesFromPackages(project);
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
+        for(PsiClassBean psiClassBean : testClasses) {
+            methodBeansTemp = ConverterUtilities.getMethodFromClass(psiClassBean.getPsiClass());
+            for(PsiMethodBean psiMethodBean : methodBeansTemp){
+                methodBeans.add(psiMethodBean);
+            }
+        }
+
         productionClasses = TestSmellUtilities.getAllProductionClasses(classBeans, testClasses);
         productionClassesSingleton = ProductionClassesSingleton.getIstance();
         productionClassesSingleton.setProductionClasses(productionClasses);
@@ -80,4 +94,9 @@ public class TestSmellStructuralDetector implements IDetector{
     public int getClassBeansNumber() {
         return classBeans.size();
     }
+
+    public int getMethodBeansNumber(){
+        return this.methodBeans.size();
+    }
+
 }

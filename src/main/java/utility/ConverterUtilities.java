@@ -11,6 +11,8 @@ import com.intellij.psi.*;
 import com.intellij.util.containers.ContainerUtil;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
+import testSmellDetection.detector.IDetector;
+import testSmellDetection.detector.TestSmellStructuralDetector;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -18,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 public abstract class ConverterUtilities {
-
     /**
      * Restituisce un array contenenti tutte le classi del progetto in esame sotto forma di PsiClass.
      * @param myProject il progetto in esame.
@@ -45,7 +46,6 @@ public abstract class ConverterUtilities {
             }*/
             System.out.println("\n   METODI");
             ArrayList<PsiMethodBean> psiMethodBeans = getMethodFromClass(psiClassBean.getPsiClass());
-
             psiClassBean.setPsiMethodBeans(psiMethodBeans);
 
             for(PsiMethodBean m : psiMethodBeans){
@@ -66,13 +66,13 @@ public abstract class ConverterUtilities {
         }
         return classBeans;
     }
-
     /**
      * Metodo usato per ottenere la lista dei metodi di una classe con alcune informazioni aggiuntive.
      * @param psiClass la classe in esame.
      * @return la lista di metodi se ce ne sono, null altrimenti.
      */
-    private static ArrayList<PsiMethodBean> getMethodFromClass(PsiClass psiClass){
+    //changed from private to public in order to have a direct call in TestSmellTextualDetector and TestSmellStructuralDetector
+    public static ArrayList<PsiMethodBean> getMethodFromClass(PsiClass psiClass){
         ArrayList<PsiMethodBean> methodBeans = new ArrayList<>();
         ArrayList<PsiVariable> instanceVariables = PsiTestSmellUtilities.getAllInstanceVariable(psiClass);
 

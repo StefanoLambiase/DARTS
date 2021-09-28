@@ -97,11 +97,20 @@ public class LackOfCohesionStrategy implements IRefactor {
 
     public void doAfterRefactor() {
         PsiClassBean originalClassBean = this.informations.getClassWithSmell();
+        getActionForStats(originalClassBean);
 
+    }
+
+    /**
+     * Method that uses getter and setter's Action class, in order to obtain from psiClassBean
+     * the result of the Lack Of Cohesion smell that we ne need for Stats. Finally adding the action to the session.
+     * @param psiClassBean
+     */
+    public void getActionForStats(PsiClassBean psiClassBean){
         Action action = new Action();
-        action.setClassName(originalClassBean.getPsiClass().getName());
+        action.setClassName(psiClassBean.getPsiClass().getName());
         action.setMethodName(this.informations.getMethodsThatCauseLackOfCohesion().get(0).getPsiMethod().getName());
-        action.setPackageName(originalClassBean.getPsiPackage().getName());
+        action.setPackageName(psiClassBean.getPsiPackage().getName());
         action.setSmellKind(Action.SmellKindEnum.LACK_OF_COHESION);
         action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
         action.setTimestamp(new Date().getTime());

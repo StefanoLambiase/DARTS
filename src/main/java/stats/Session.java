@@ -18,6 +18,7 @@ public class Session {
   private int nOfET = 0;
   private int nOfLOC = 0;
   private int nOfTotalClasses = 0;
+  private int nOfTotalMethods = 0;
   private String kind;
 
   public Session() {
@@ -33,6 +34,12 @@ public class Session {
   public void setnOfTotalClasses(int nOfTotalClasses) {
     this.nOfTotalClasses = nOfTotalClasses;
   }
+
+  //for eager test smell
+  public void setnOfTotalMethod(int nOfTotalMethods) { this.nOfTotalMethods = nOfTotalMethods; }
+
+  //for eager test smell
+  public int getnOfTotalMethod(){ return nOfTotalMethods;}
 
   public String getKind() {
     return kind;
@@ -102,6 +109,45 @@ public class Session {
 
   public void setNOfLOC(int nOfLOC) {
     this.nOfLOC = nOfLOC;
+  }
+
+  public float densityET(){
+    if(this.getnOfTotalMethod() == 0){
+      return -1;
+    }else{
+      if(this.getNOfET() != 0){
+        float res = (float)getNOfET()/(float)getnOfTotalMethod();
+        return res;
+      }else{
+        return 0;
+      }
+    }
+  }
+
+  public float densityLOC(){
+    if(getnOfTotalClasses() == 0){
+      return -1;
+    }else{
+      if(getNOfLOC() != 0){
+        float res = (float)getNOfLOC()/(float)getnOfTotalClasses();
+        return res;
+      }else{
+        return 0;
+      }
+    }
+  }
+
+  public float densityGF(){
+    if(getnOfTotalClasses() == 0){
+      return -1;
+    }else{
+      if(getNOfGF() != 0){
+        float res = (float)getNOfGF()/(float)getnOfTotalClasses();
+        return res;
+      }else{
+        return 0;
+      }
+    }
   }
 
   public ArrayList<Action> getActions() {

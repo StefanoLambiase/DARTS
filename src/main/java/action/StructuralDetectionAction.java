@@ -24,6 +24,7 @@ public class StructuralDetectionAction extends AnAction {
     private Stats stats;
     private Session lastSession;
 
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
 
@@ -42,6 +43,7 @@ public class StructuralDetectionAction extends AnAction {
         IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
 
         this.lastSession.setnOfTotalClasses(detector.getClassBeansNumber());
+        this.lastSession.setnOfTotalMethod(detector.getMethodBeansNumber());
 
         ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         this.lastSession.setNOfGF(generalFixtureInfos.size());
@@ -65,6 +67,11 @@ public class StructuralDetectionAction extends AnAction {
 
         long endTime = System.currentTimeMillis();
         this.lastSession.setEndTime(endTime);
+
+        //ToDo: Contare la densità degli smell rispetto al numero di classi che ci sono nel progetto?
+        //System.out.println("Densità General Fixture: "+ lastSession.getNOfGF() / lastSession.getnOfTotalClasses() + "\n");
+        //System.out.println("Densità Eager Test: " + lastSession.getNOfET() / lastSession.getnOfTotalMethod() + "\n");
+        //System.out.println("Densità Lack Of Cohesion: " + lastSession.getNOfLOC() / lastSession.getnOfTotalClasses() + "\n");
 
         if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
             System.out.println("\nNon si è trovato alcuno Smell");
