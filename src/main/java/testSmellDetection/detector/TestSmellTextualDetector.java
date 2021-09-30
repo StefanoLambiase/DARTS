@@ -27,7 +27,9 @@ public class TestSmellTextualDetector implements IDetector{
     private ArrayList<PsiMethodBean> methodBeansTemp;
 
     public TestSmellTextualDetector(Project project){
+        methodBeans = new ArrayList<PsiMethodBean>();
         classBeans = ConverterUtilities.getClassesFromPackages(project);
+
         testClasses = TestSmellUtilities.getAllTestClasses(classBeans);
         for(PsiClassBean psiClassBean : testClasses) {
             methodBeansTemp = ConverterUtilities.getMethodFromClass(psiClassBean.getPsiClass());
@@ -88,7 +90,7 @@ public class TestSmellTextualDetector implements IDetector{
     }
 
     public int getClassBeansNumber() {
-        return classBeans.size();
+        return testClasses.size();
     }
     //add the density also for Textual Detection
     public int getMethodBeansNumber(){ return methodBeans.size();}

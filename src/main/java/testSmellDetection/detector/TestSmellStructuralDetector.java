@@ -92,7 +92,7 @@ public class TestSmellStructuralDetector implements IDetector{
     }
 
     public int getClassBeansNumber() {
-        return classBeans.size();
+        return testClasses.size();
     }
 
     public int getMethodBeansNumber(){
