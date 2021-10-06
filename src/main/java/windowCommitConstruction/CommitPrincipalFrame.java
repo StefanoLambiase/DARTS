@@ -37,12 +37,18 @@ public class CommitPrincipalFrame extends JFrame {
             @Override
             public void windowClosed(WindowEvent e) {
                 System.out.println("Cercando di salvare in: " + Stats.getInstance().getFILE_PATH());
+                if(StatsSerializator.fileExist(Stats.getInstance().getFILE_PATH())){
+                    StatsBlaster.blast(Stats.getInstance());
+                    System.out.println("File blastato");
+                }
                 if (StatsSerializator.serialize(Stats.getInstance(), Stats.getInstance().getFILE_PATH())) {
                     System.out.println("File salvato in: " + Stats.getInstance().getFILE_PATH());
                 }
                 if(StatsBlaster.blast(Stats.getInstance())) {
                     System.out.println("File blastato");
-                }
+                    StatsSerializator.deleteJsonFile(Stats.getInstance().getFILE_PATH());
+
+                    }
             }
 
             @Override
