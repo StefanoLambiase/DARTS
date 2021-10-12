@@ -12,10 +12,12 @@ public class Stats {
   private int nOfExecutionTextual = 0;
   private int nOfExecutionStructural = 0;
   private String FILE_PATH;
+  private long timestamp;
 
   private Stats() {
     this.sessions = new ArrayList<Session>();
     this.lastSessionID = "";
+    this.timestamp = new Date().getTime();
   }
 
   public static Stats getInstance() {
