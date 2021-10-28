@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>action</OriginalElement>
+  <nodes>
+    <node x="-23.583333333333314" y="352.0">utility.StatsUtility</node>
+    <node x="200.4384057971015" y="457.0">stats.Session</node>
+    <node x="709.4384057971015" y="1574.0">action.TextualDetectionAction</node>
+    <node x="450.4384057971015" y="1574.0">utility.StatsSerializator</node>
+    <node x="279.4166666666667" y="0.0">stats.Action</node>
+    <node x="247.4384057971015" y="1574.0">utility.StatsBlaster</node>
+    <node x="-60.561594202898505" y="1574.0">action.StructuralDetectionAction</node>
+    <node x="260.6884057971015" y="1237.0">stats.Stats</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="action.StructuralDetectionAction" target="stats.Session" relationship="TO_ONE">
+      <point x="-108.0" y="-27.5" />
+      <point x="-24.561594202898505" y="986.0" />
+      <point x="205.0" y="986.0" />
+      <point x="205.0" y="1084.0" />
+      <point x="-68.0" y="313.5" />
+    </edge>
+    <edge source="action.StructuralDetectionAction" target="stats.Session" relationship="CREATE">
+      <point x="-36.0" y="-27.5" />
+      <point x="47.438405797101495" y="963.0" />
+      <point x="205.0" y="963.0" />
+      <point x="205.0" y="1084.0" />
+      <point x="68.0" y="313.5" />
+    </edge>
+    <edge source="action.TextualDetectionAction" target="stats.Stats" relationship="TO_ONE">
+      <point x="-36.0" y="-27.5" />
+      <point x="817.4384057971015" y="1363.5" />
+      <point x="562.0" y="1363.5" />
+      <point x="562.0" y="1490.0" />
+      <point x="75.75" y="126.5" />
+    </edge>
+    <edge source="action.TextualDetectionAction" target="stats.Session" relationship="TO_ONE">
+      <point x="36.0" y="-27.5" />
+      <point x="889.4384057971015" y="1053.0" />
+      <point x="268.4384057971015" y="1053.0" />
+      <point x="-68.0" y="313.5" />
+    </edge>
+    <edge source="action.TextualDetectionAction" target="stats.Session" relationship="CREATE">
+      <point x="108.0" y="-27.5" />
+      <point x="961.4384057971015" y="1021.0" />
+      <point x="404.4384057971015" y="1021.0" />
+      <point x="68.0" y="313.5" />
+    </edge>
+    <edge source="stats.Session" target="stats.Action" relationship="DEPENDENCY">
+      <point x="90.66666666666669" y="-313.5" />
+      <point x="427.1050724637682" y="407.0" />
+      <point x="70.5" y="203.5" />
+    </edge>
+    <edge source="action.TextualDetectionAction" target="stats.Stats" relationship="DEPENDENCY">
+      <point x="-108.0" y="-27.5" />
+      <point x="745.4384057971015" y="1410.0" />
+      <point x="562.0" y="1410.0" />
+      <point x="562.0" y="1490.0" />
+      <point x="-75.75" y="126.5" />
+    </edge>
+    <edge source="action.StructuralDetectionAction" target="stats.Stats" relationship="TO_ONE">
+      <point x="108.0" y="-27.5" />
+      <point x="191.4384057971015" y="1447.0" />
+      <point x="487.9384057971015" y="1447.0" />
+      <point x="75.75" y="126.5" />
+    </edge>
+    <edge source="stats.Stats" target="stats.Session" relationship="DEPENDENCY">
+      <point x="75.75" y="-126.5" />
+      <point x="390.4384057971015" y="1237.0" />
+      <point x="390.4384057971015" y="1070.0" />
+      <point x="404.4384057971015" y="1070.0" />
+      <point x="68.0" y="313.5" />
+    </edge>
+    <edge source="action.StructuralDetectionAction" target="stats.Stats" relationship="DEPENDENCY">
+      <point x="36.0" y="-27.5" />
+      <point x="119.4384057971015" y="1412.0" />
+      <point x="336.4384057971015" y="1412.0" />
+      <point x="-75.75" y="126.5" />
+    </edge>
+    <edge source="stats.Session" target="stats.Action" relationship="TO_MANY">
+      <point x="0.0" y="-313.5" />
+      <point x="336.4384057971015" y="407.0" />
+      <point x="-70.5" y="203.5" />
+    </edge>
+    <edge source="stats.Stats" target="stats.Session" relationship="TO_MANY">
+      <point x="-75.75" y="-126.5" />
+      <point x="336.4384057971015" y="1340.0" />
+      <point x="119.4384057971015" y="1340.0" />
+      <point x="119.4384057971015" y="1027.0" />
+      <point x="205.0" y="1027.0" />
+      <point x="205.0" y="1084.0" />
+      <point x="-68.0" y="313.5" />
+    </edge>
+    <edge source="utility.StatsBlaster" target="stats.Stats" relationship="DEPENDENCY">
+      <point x="0.0" y="-27.5" />
+      <point x="-75.75" y="126.5" />
+    </edge>
+    <edge source="utility.StatsSerializator" target="stats.Stats" relationship="DEPENDENCY">
+      <point x="0.0" y="-49.5" />
+      <point x="572.4384057971015" y="1579.0" />
+      <point x="634.4384057971015" y="1579.0" />
+      <point x="634.4384057971015" y="1441.0" />
+      <point x="562.0" y="1441.0" />
+      <point x="562.0" y="1490.0" />
+      <point x="-75.75" y="126.5" />
+    </edge>
+    <edge source="stats.Session" target="utility.StatsUtility" relationship="DEPENDENCY">
+      <point x="-90.66666666666669" y="-313.5" />
+      <point x="245.7717391304348" y="407.0" />
+      <point x="0.0" y="27.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="true" x="311.5" y="341.5" />
+  <SelectedNodes>
+    <node>utility.StatsUtility</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

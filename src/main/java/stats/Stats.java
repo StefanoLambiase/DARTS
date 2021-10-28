@@ -1,5 +1,7 @@
 package stats;
 
+import com.amazon.ion.NullValueException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +35,9 @@ public class Stats {
   }
 
   public Session addSession(Session session) {
+    if(session == null){
+      return null;
+    }
     this.sessions.add(session);
     this.lastSessionID = session.getID();
     return session;
