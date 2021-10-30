@@ -55,19 +55,26 @@ public class StatsSerializatorTest {
         assertFalse(StatsSerializator.fileExist(filePath), "Il file non esiste!");
     }
 
+
     @Test
-    public void serializeTrueTest(){
+    public void serialize_StatsNull_ValidPath_Test(){
+        assertFalse(StatsSerializator.serialize(null, filePath));
+    }
+
+    @Test
+    public void serialize_StatsNull_InvalidPath_Test(){
+        assertFalse(StatsSerializator.serialize(null, null));
+    }
+
+    @Test
+    public void serialize_StatsValid_ValidPath_Test(){
         Stats stats = Stats.getInstance();
         assertTrue(StatsSerializator.serialize(stats, filePath));
     }
 
     @Test
-    public void serializeNullPointerTest(){
+    public void serialize_StatsValid_InvalidPath_Test(){
         Stats stats = Stats.getInstance();
-        assertThrows(NullPointerException.class, () -> {
-            StatsSerializator.serialize(stats, null);
-        });
+        assertFalse(StatsSerializator.serialize(stats, null));
     }
-
-
 }

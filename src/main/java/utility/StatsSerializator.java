@@ -11,6 +11,9 @@ import java.io.IOException;
 public class StatsSerializator {
 
   public static boolean serialize(Stats stats, String filePath) {
+    if(stats == null || filePath == null){
+      return false;
+    }
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     try {
       FileWriter writer = new FileWriter(filePath);
