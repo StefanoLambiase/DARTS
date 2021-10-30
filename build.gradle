@@ -10,12 +10,14 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    implementation files('lib/TestSmellDiffusion.jar')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     implementation files('lib/TestFactorsPlugin.jar')
     implementation group: 'org.knowm.xchart', name: 'xchart', version: '3.2.2'
-    compile group: 'org.repodriller', name: 'repodriller', version: '2.0.1'
+    implementation group: 'org.repodriller', name: 'repodriller', version: '2.0.1'
+
+    repositories { mavenCentral() }
+    dependencies { testImplementation "org.mockito:mockito-core:3.+" }
 
     implementation group: 'org.eclipse.core', name: 'runtime', version: '3.10.0-v20140318-2214'
     implementation group: 'org.eclipse.core', name: 'org.eclipse.core.resources', version: '3.7.100'
