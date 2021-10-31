@@ -78,3 +78,5 @@ fabric.properties
 .gradle
 build
 Installer
+
+.DS_Store
