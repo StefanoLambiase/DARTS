@@ -1,0 +1,26 @@
+<idea-plugin>
+    <id>DARTS</id>
+    <name>DARTS</name>
+    <vendor >sesa-lab</vendor>
+
+    <description>
+        DARTS (Detection And Refactoring of Test Smells) is an Intellij plug-in which implements a state-of-the-art detection mechanism to detect instances of three test smell types, i.e., General Fixture, Eager Test, and Lack of Cohesion of Test Methods, at commit-level and enables their automated refactoring through the integrated APIs provided by Intellij.
+    </description>
+
+    <!-- please see https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <checkinHandlerFactory implementation="extension.CommitFactory"/>
+    </extensions>
+
+    <actions>
+        <group id="MyPlugin.SampleMenu" text="TestSmell detection" description="Sample menu" popup="true">
+            <add-to-group group-id="AnalyzeMenu" anchor="last"  />
+            <action id="Myplugin.TextSmellTextualDetection" class="action.TextualDetectionAction" text="Execute Textual detection" description="A test menu item" />
+            <action id="Myplugin.TextSmellStructuralDetection" class="action.StructuralDetectionAction" text="Execute Structural detection" description="A test menu item" />
+        </group>
+    </actions>
+</idea-plugin>
