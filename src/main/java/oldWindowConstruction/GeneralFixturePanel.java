@@ -1,8 +1,8 @@
 package oldWindowConstruction;
 
 import com.intellij.openapi.project.Project;
-import oldWindowConstruction.testSmellPanel.ClassWithGeneralFixturePanel;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import oldWindowConstruction.testSmellPanel.ClassWithGeneralFixturePanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

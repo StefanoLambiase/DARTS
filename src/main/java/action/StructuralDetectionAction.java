@@ -9,9 +9,14 @@ import testSmellDetection.detector.IDetector;
 import testSmellDetection.detector.TestSmellStructuralDetector;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
+import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import utility.StatsSerializator;
+import oldWindowConstruction.TestSmellWindowFactory;
+import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
+import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import windowCommitConstruction.CommitWindowFactory;
+import org.jetbrains.annotations.NotNull;
+import utility.StatsSerializator;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -24,9 +29,16 @@ public class StructuralDetectionAction extends AnAction {
     private Stats stats;
     private Session lastSession;
 
-
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
+        IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
+        ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
+        ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
+        ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+        ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
+        ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
+        ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
+
 
         this.stats = Stats.getInstance();
         this.stats.addSession(new Session());
@@ -64,6 +76,9 @@ public class StructuralDetectionAction extends AnAction {
         for(LackOfCohesionInfo info : lackOfCohesionInfos){
             System.out.println("\n   LACK OF COHESION: " + info.toString());
         }
+        for(MysteryGuestInfo info : mysteryGuestInfos){
+            System.out.println("\n   MYSTERY GUEST: " + info.toString());
+        }
 
         long endTime = System.currentTimeMillis();
         this.lastSession.setEndTime(endTime);
@@ -77,7 +92,7 @@ public class StructuralDetectionAction extends AnAction {
             System.out.println("\nNon si è trovato alcuno Smell");
         } else {
             //TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
-            CommitWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);
+            CommitWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos, hardCodedTestDataInfos, mysteryGuestInfos, testCodeDuplicationInfos);
         }
 
         String PATH = Paths.get(anActionEvent.getProject().getBasePath()).toAbsolutePath().normalize() + "/stats.json";
