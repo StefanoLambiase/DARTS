@@ -1,8 +1,8 @@
 package oldWindowConstruction;
 
 import com.intellij.openapi.project.Project;
-import oldWindowConstruction.testSmellPanel.ClassWithEagerTestPanel;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
+import oldWindowConstruction.testSmellPanel.ClassWithEagerTestPanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

@@ -24,13 +24,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
 public class ContextualAnalysisFrame extends JFrame {
-    private static TestProjectAnalysis projectAnalysis;
     private static JFrame mainFrame;
     private static JLabel productionClassLabel, productionClassName, timePeriod, analyseCommitSince, sinceDate;
     private static String projectPath, productionClass;
@@ -113,79 +111,79 @@ public class ContextualAnalysisFrame extends JFrame {
         pane.add(sinceDate, layoutConstraints);
         // StartAnalysis Button COL2,ROW2 2[--x]
         startAnalysis = new JButton("Start Analysis");
-        startAnalysis.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Thread() {
-                    public void run() {
-                        mainFrame.setVisible(false);
-                        LoadingFrame loadingFrame = new LoadingFrame();
-                        String intellijpath = PathManager.getPluginsPath();
-                        String pluginPath = intellijpath + "/TestFactorsPlugin/lib";
-                        projectAnalysis.setPluginPath(pluginPath);
-                        Vector<PackageBean> packages = projectAnalysis.getPackages();
-                        Vector<PackageBean> testPackages = projectAnalysis.getTestPackages();
-                        TestMutationUtilities utils = new TestMutationUtilities();
-                        ArrayList<ClassBean> classes = utils.getClasses(packages);
-                        Vector<ClassCoverageInfo> coverageInfos = null;
-                        Vector<FlakyTestsInfo> flakyInfos = null;
-                        Vector<TestClassAnalysis> classAnalyses = new Vector<>();
-
-                        coverageInfos = CoverageProcessor.calculate(projectAnalysis);
-
-                        flakyInfos = FlakyTestsProcessor.calculate(projectAnalysis, 10);
-
-                        for (
-                                ClassBean prodClass : classes) {
-                            ClassBean testSuite = utils.getTestClassBy(prodClass.getName(), testPackages);
-
-                            if (testSuite != null) {
-
-                                TestClassAnalysis analysis = new TestClassAnalysis();
-                                analysis.setName(testSuite.getName());
-                                analysis.setBelongingPackage(testSuite.getBelongingPackage());
-                                analysis.setProductionClass(prodClass.getBelongingPackage() + "." + prodClass.getName());
-
-                                if (coverageInfos != null) {
-                                    analysis.setCoverage(VectorFind.findCoverageInfo(coverageInfos, testSuite.getName()));
-                                } else {
-                                    analysis.setCoverage(new ClassCoverageInfo());
-                                }
-
-                                //analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
-
-                                if (flakyInfos != null) {
-                                    analysis.setFlakyTests(VectorFind.findFlakyInfo(flakyInfos, testSuite.getName()));
-                                } else
-                                    analysis.setFlakyTests(new FlakyTestsInfo());
-                                classAnalyses.add(analysis);
-                            }
-                        }
-                        loadingFrame.dispose();
-                        projectAnalysis.setClassAnalysis(classAnalyses);
-
-                        String smellyClassName = smellInfo.getClassWithSmell().getName();
-                        TestClassAnalysis smellyClassAnalysis = null;
-                        if (smellyClassName != null) {
-
-                            for (TestClassAnalysis classAnalysis : classAnalyses) {
-                                if (classAnalysis.getName().equalsIgnoreCase(smellyClassName)) {
-                                    System.out.println("branch coverage:" + classAnalysis.getCoverage().getBranchCoverage());
-                                    System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
-                                    System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
-                                    //System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
-                                    smellyClassAnalysis = classAnalysis;
-                                }
-                            }
-                        }
-                        if (smellyClassAnalysis != null) {
-                            new RepoDriller().start(new DataMiner(smellInfo, smellyClassAnalysis, projectPath, sinceCommitDate));
-                        }
-                    }
-                }.start();
-            }
-        });
+//        startAnalysis.addActionListener(new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                new Thread() {
+//                    public void run() {
+//                        mainFrame.setVisible(false);
+//                        LoadingFrame loadingFrame = new LoadingFrame();
+//                        String intellijpath = PathManager.getPluginsPath();
+//                        String pluginPath = intellijpath + "/TestFactorsPlugin/lib";
+//                        projectAnalysis.setPluginPath(pluginPath);
+//                        Vector<PackageBean> packages = projectAnalysis.getPackages();
+//                        Vector<PackageBean> testPackages = projectAnalysis.getTestPackages();
+//                        TestMutationUtilities utils = new TestMutationUtilities();
+//                        ArrayList<ClassBean> classes = utils.getClasses(packages);
+//                        Vector<ClassCoverageInfo> coverageInfos = null;
+//                        Vector<FlakyTestsInfo> flakyInfos = null;
+//                        Vector<TestClassAnalysis> classAnalyses = new Vector<>();
+//
+//                        coverageInfos = CoverageProcessor.calculate(projectAnalysis);
+//
+//                        flakyInfos = FlakyTestsProcessor.calculate(projectAnalysis, 10);
+//
+//                        for (
+//                                ClassBean prodClass : classes) {
+//                            ClassBean testSuite = utils.getTestClassBy(prodClass.getName(), testPackages);
+//
+//                            if (testSuite != null) {
+//
+//                                TestClassAnalysis analysis = new TestClassAnalysis();
+//                                analysis.setName(testSuite.getName());
+//                                analysis.setBelongingPackage(testSuite.getBelongingPackage());
+//                                analysis.setProductionClass(prodClass.getBelongingPackage() + "." + prodClass.getName());
+//
+//                                if (coverageInfos != null) {
+//                                    analysis.setCoverage(VectorFind.findCoverageInfo(coverageInfos, testSuite.getName()));
+//                                } else {
+//                                    analysis.setCoverage(new ClassCoverageInfo());
+//                                }
+//
+//                                //analysis.setMutationCoverage(MutationCoverageProcessor.calculate(testSuite, prodClass, projectAnalysis, 10));
+//
+//                                if (flakyInfos != null) {
+//                                    analysis.setFlakyTests(VectorFind.findFlakyInfo(flakyInfos, testSuite.getName()));
+//                                } else
+//                                    analysis.setFlakyTests(new FlakyTestsInfo());
+//                                classAnalyses.add(analysis);
+//                            }
+//                        }
+//                        loadingFrame.dispose();
+//                        projectAnalysis.setClassAnalysis(classAnalyses);
+//
+//                        String smellyClassName = smellInfo.getClassWithSmell().getName();
+//                        TestClassAnalysis smellyClassAnalysis = null;
+//                        if (smellyClassName != null) {
+//
+//                            for (TestClassAnalysis classAnalysis : classAnalyses) {
+//                                if (classAnalysis.getName().equalsIgnoreCase(smellyClassName)) {
+//                                    System.out.println("branch coverage:" + classAnalysis.getCoverage().getBranchCoverage());
+//                                    System.out.println("line coverage" + classAnalysis.getCoverage().getLineCoverage());
+//                                    System.out.println("n. of flaxy methods" + classAnalysis.getFlakyTests().getFlakyMethods().size());
+//                                    //System.out.println("mutation coverage" + classAnalysis.getMutationCoverage().getMutationCoverage());
+//                                    smellyClassAnalysis = classAnalysis;
+//                                }
+//                            }
+//                        }
+//                        if (smellyClassAnalysis != null) {
+//                            new RepoDriller().start(new DataMiner(smellInfo, smellyClassAnalysis, projectPath, sinceCommitDate));
+//                        }
+//                    }
+//                }.start();
+//            }
+//        });
         layoutConstraints.insets = new Insets(0, 0, 20, 20);
         layoutConstraints.gridx = 2;
         layoutConstraints.gridy = 2;
@@ -193,9 +191,8 @@ public class ContextualAnalysisFrame extends JFrame {
         pane.add(startAnalysis, layoutConstraints);
     }
 
-    public ContextualAnalysisFrame(Project project, TestSmellInfo smellInfo, TestProjectAnalysis projectAnalysis) {
+    public ContextualAnalysisFrame(Project project, TestSmellInfo smellInfo) {
         mainFrame = new JFrame("Contextual Analysis");
-        this.projectAnalysis = projectAnalysis;
         this.projectPath = project.getBasePath();
         this.smellInfo = smellInfo;
         this.productionClass = smellInfo.getClassWithSmell().getProductionClass().getName();

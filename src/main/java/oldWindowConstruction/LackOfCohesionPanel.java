@@ -1,8 +1,8 @@
 package oldWindowConstruction;
 
 import com.intellij.openapi.project.Project;
-import oldWindowConstruction.testSmellPanel.ClassWithLackOfCohesionPanel;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
+import oldWindowConstruction.testSmellPanel.ClassWithLackOfCohesionPanel;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
