@@ -246,8 +246,6 @@ public class ClassWithEagerTestPanel extends JPanel {
                                 } } catch(Exception ex){
                                 ex.printStackTrace();
                             }
-
-
                         }
                     }
                 }

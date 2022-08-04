@@ -11,12 +11,9 @@ import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
 import testSmellDetection.testSmellInfo.generalFixture.GeneralFixtureInfo;
 import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
 import testSmellDetection.testSmellInfo.lackOfCohesion.LackOfCohesionInfo;
-import oldWindowConstruction.TestSmellWindowFactory;
 import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
 import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 import windowCommitConstruction.CommitWindowFactory;
-import org.jetbrains.annotations.NotNull;
-import utility.StatsSerializator;
 
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -39,7 +36,6 @@ public class StructuralDetectionAction extends AnAction {
         ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
         ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
 
-
         this.stats = Stats.getInstance();
         this.stats.addSession(new Session());
         this.lastSession = stats.getLastSession();
@@ -52,18 +48,12 @@ public class StructuralDetectionAction extends AnAction {
         long startTime = System.currentTimeMillis();
         this.lastSession.setStartTime(startTime);
 
-        IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
-
         this.lastSession.setnOfTotalClasses(detector.getClassBeansNumber());
         this.lastSession.setnOfTotalMethod(detector.getMethodBeansNumber());
 
-        ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         this.lastSession.setNOfGF(generalFixtureInfos.size());
-
-        ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
         this.lastSession.setNOfET(eagerTestInfos.size());
 
-        ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
         this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
 
         System.out.println("\nDETECTOR STRUTTURALE: risultato dell'analisi.");
@@ -96,7 +86,6 @@ public class StructuralDetectionAction extends AnAction {
         }
 
         String PATH = Paths.get(anActionEvent.getProject().getBasePath()).toAbsolutePath().normalize() + "/stats.json";
-
         this.stats.setFILE_PATH(PATH);
     }
 

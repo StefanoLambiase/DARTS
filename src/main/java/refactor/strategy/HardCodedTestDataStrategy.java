@@ -50,4 +50,9 @@ public class HardCodedTestDataStrategy implements IRefactor {
 //            introduceVariableHandler.invoke(project, editor, constantExpression);
 //        }
     }
+
+    @Override
+    public void doAfterRefactor() {
+
+    }
 }

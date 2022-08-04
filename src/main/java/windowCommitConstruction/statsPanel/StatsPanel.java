@@ -39,7 +39,5 @@ public class StatsPanel extends JPanel {
     this.statsInfo.add(new JLabel("Density number for General Fixture: " + this.session.densityGF()));
     this.statsInfo.add(new JLabel("Density number for Eager Test: " + this.session.densityET()));
     this.statsInfo.add(new JLabel("Density number for Lack Of Cohesion: " + this.session.densityLOC()));
-
-
   }
 }

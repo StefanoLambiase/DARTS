@@ -61,4 +61,9 @@ public class TestCodeDuplicationStrategy implements IRefactor {
         }
 
     }
+
+    @Override
+    public void doAfterRefactor() {
+
+    }
 }

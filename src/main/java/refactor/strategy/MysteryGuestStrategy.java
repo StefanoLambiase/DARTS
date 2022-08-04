@@ -80,4 +80,9 @@ public class MysteryGuestStrategy implements IRefactor {
             }
         }
     }
+
+    @Override
+    public void doAfterRefactor() {
+
+    }
 }
