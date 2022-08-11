@@ -83,7 +83,9 @@ public class CommitWindowFactory {
         }
         if (listLOCI != null){
             lackOfCohesionPanel = new LackOfCohesionCP(listLOCI, project);
-        }if (listHCTDI != null){
+        }
+
+        if (listHCTDI != null){
             hardCodedTestDataPanel = new HardCodedTestDataCP(listHCTDI, project);
         }
         if (listMGI != null){
@@ -107,7 +109,9 @@ public class CommitWindowFactory {
         if (listLOCI != null) {
             JBScrollPane scroll = new JBScrollPane(lackOfCohesionPanel);
             tp.add("LackOfCohesion", scroll);
-        }if (listHCTDI != null) {
+        }
+
+        if (listHCTDI != null) {
             JBScrollPane scroll = new JBScrollPane(hardCodedTestDataPanel);
             tp.add("HardCodedTestData", scroll);
         }

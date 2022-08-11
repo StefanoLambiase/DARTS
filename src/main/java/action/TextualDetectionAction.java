@@ -2,6 +2,7 @@ package action;
 
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
+import oldWindowConstruction.TestSmellWindowFactory;
 import testSmellDetection.detector.IDetector;
 import testSmellDetection.detector.TestSmellTextualDetector;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -59,11 +60,11 @@ public class TextualDetectionAction extends AnAction {
         this.lastSession.setNOfET(eagerTestInfos.size());
 
         ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
+        this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
+
         ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
         ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
         ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
-
-        this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
 
         System.out.println("\n\n ########################### ACTION - DETECTOR TESTUALE: risultato dell'analisi. ###########################\n\n");
         for(GeneralFixtureInfo info : generalFixtureInfos){
@@ -101,5 +102,4 @@ public class TextualDetectionAction extends AnAction {
 
         this.stats.setFILE_PATH(PATH);
     }
-
 }

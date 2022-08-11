@@ -28,14 +28,6 @@ public class StructuralDetectionAction extends AnAction {
 
     @Override
     public void actionPerformed(@NotNull AnActionEvent anActionEvent) {
-        IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
-        ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
-        ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
-        ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
-        ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
-        ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
-        ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
-
         this.stats = Stats.getInstance();
         this.stats.addSession(new Session());
         this.lastSession = stats.getLastSession();
@@ -48,13 +40,25 @@ public class StructuralDetectionAction extends AnAction {
         long startTime = System.currentTimeMillis();
         this.lastSession.setStartTime(startTime);
 
+        IDetector detector = new TestSmellStructuralDetector(anActionEvent.getProject());
+
         this.lastSession.setnOfTotalClasses(detector.getClassBeansNumber());
         this.lastSession.setnOfTotalMethod(detector.getMethodBeansNumber());
 
+        ArrayList<GeneralFixtureInfo> generalFixtureInfos = detector.executeDetectionForGeneralFixture();
         this.lastSession.setNOfGF(generalFixtureInfos.size());
+
+        ArrayList<EagerTestInfo> eagerTestInfos = detector.executeDetectionForEagerTest();
         this.lastSession.setNOfET(eagerTestInfos.size());
 
+        ArrayList<LackOfCohesionInfo> lackOfCohesionInfos = detector.executeDetectionForLackOfCohesion();
         this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
+
+        ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
+
+        ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
+
+        ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
 
         System.out.println("\nDETECTOR STRUTTURALE: risultato dell'analisi.");
         for(GeneralFixtureInfo info : generalFixtureInfos){
