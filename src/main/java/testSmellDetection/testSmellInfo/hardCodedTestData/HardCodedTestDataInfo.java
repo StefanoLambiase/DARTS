@@ -31,7 +31,6 @@ public class HardCodedTestDataInfo extends TestSmellInfo {
         this.classWithSmell = classWithSmell;
     }
 
-
     public ArrayList<MethodWithHardCodedTestData> getMethodsThatCauseHardCodedTestData() {
         return methodsThatCauseHardCodedTestData;
     }

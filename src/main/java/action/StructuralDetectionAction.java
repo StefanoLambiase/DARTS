@@ -55,10 +55,13 @@ public class StructuralDetectionAction extends AnAction {
         this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
 
         ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
+        this.lastSession.setNOfHCTD(hardCodedTestDataInfos.size());
 
         ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
+        this.lastSession.setNOfMG(mysteryGuestInfos.size());
 
         ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
+        this.lastSession.setNOfTCD(testCodeDuplicationInfos.size());
 
         System.out.println("\nDETECTOR STRUTTURALE: risultato dell'analisi.");
         for(GeneralFixtureInfo info : generalFixtureInfos){
@@ -70,19 +73,20 @@ public class StructuralDetectionAction extends AnAction {
         for(LackOfCohesionInfo info : lackOfCohesionInfos){
             System.out.println("\n   LACK OF COHESION: " + info.toString());
         }
+        for(HardCodedTestDataInfo info : hardCodedTestDataInfos){
+            System.out.print("\n HARD CODED TEST DATA: " + info.toString());
+        }
         for(MysteryGuestInfo info : mysteryGuestInfos){
             System.out.println("\n   MYSTERY GUEST: " + info.toString());
+        }
+        for(TestCodeDuplicationInfo info : testCodeDuplicationInfos){
+            System.out.println("\n TEST CODE DUPLICATION: " + info.toString());
         }
 
         long endTime = System.currentTimeMillis();
         this.lastSession.setEndTime(endTime);
 
-        //ToDo: Contare la densità degli smell rispetto al numero di classi che ci sono nel progetto?
-        //System.out.println("Densità General Fixture: "+ lastSession.getNOfGF() / lastSession.getnOfTotalClasses() + "\n");
-        //System.out.println("Densità Eager Test: " + lastSession.getNOfET() / lastSession.getnOfTotalMethod() + "\n");
-        //System.out.println("Densità Lack Of Cohesion: " + lastSession.getNOfLOC() / lastSession.getnOfTotalClasses() + "\n");
-
-        if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty()){
+        if(generalFixtureInfos.isEmpty() && eagerTestInfos.isEmpty() && lackOfCohesionInfos.isEmpty() && hardCodedTestDataInfos.isEmpty() && mysteryGuestInfos.isEmpty() && testCodeDuplicationInfos.isEmpty()){
             System.out.println("\nNon si è trovato alcuno Smell");
         } else {
             //TestSmellWindowFactory.createWindow(false, true, anActionEvent.getProject(), generalFixtureInfos, eagerTestInfos, lackOfCohesionInfos);

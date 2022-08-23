@@ -15,6 +15,15 @@ public class TestCodeDuplicationInfo extends TestSmellInfo {
         this.methodsThatCauseTestCodeDuplication = methodsThatCauseTestCodeDuplication;
     }
 
+    /* GETTERS & SETTERS */
+    public PsiClassBean getClassWithSmell() {
+        return classWithSmell;
+    }
+
+    public void setClassWithSmell(PsiClassBean classWithSmell) {
+        this.classWithSmell = classWithSmell;
+    }
+
     public ArrayList<MethodWithTestCodeDuplication> getMethodsThatCauseTestCodeDuplication() {
         return methodsThatCauseTestCodeDuplication;
     }

@@ -10,7 +10,11 @@ public class Action {
   public enum SmellKindEnum {
     GENERAL_FIXTURE,
     EAGER_TEST,
-    LACK_OF_COHESION
+    LACK_OF_COHESION,
+
+    HARD_CODED_TEST_DATA,
+    MYSTERY_GUEST,
+    TEST_CODE_DUPLICATION,
   }
 
   private ActionKindEnum actionKind;

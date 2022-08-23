@@ -12,6 +12,8 @@ import com.intellij.refactoring.extractMethod.ExtractMethodProcessor;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import com.intellij.refactoring.introduceVariable.*;
 import refactor.IRefactor;
+import stats.Action;
+import stats.Stats;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import testSmellDetection.testSmellInfo.eagerTest.EagerTestInfo;
@@ -20,6 +22,7 @@ import testSmellDetection.testSmellInfo.hardCodedTestData.HardCodedTestDataInfo;
 import testSmellDetection.testSmellInfo.hardCodedTestData.MethodWithHardCodedTestData;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class HardCodedTestDataStrategy implements IRefactor {
     private HardCodedTestDataInfo hardCodedTestDataInfo;
@@ -53,6 +56,26 @@ public class HardCodedTestDataStrategy implements IRefactor {
 
     @Override
     public void doAfterRefactor() {
+        PsiClassBean originalClassBean = hardCodedTestDataInfo.getClassWithSmell();
+        getActionForStats(originalClassBean);
+    }
 
+    /**
+     * Method that uses getter and setter's Action class, in order to obtain from psiClassBean
+     * the result of the Eager Test smell that we ne need for Stats. Finally adding the action to the session.
+     * @param psiClassBean
+     */
+    public void getActionForStats(PsiClassBean psiClassBean){
+        Action action = new Action();
+        action.setClassName(psiClassBean.getPsiClass().getName());
+        action.setMethodName(methodWithHardCodedTestData.getMethodWithHardCodedTestData().getPsiMethod().getName());
+        action.setPackageName(psiClassBean.getPsiPackage().getName());
+        action.setSmellKind(Action.SmellKindEnum.HARD_CODED_TEST_DATA);
+        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setTimestamp(new Date().getTime());
+        action.setActionCanceled(false);
+        action.setActionDone(true);
+        Stats.getInstance().getLastSession().getActions().add(action);
+        System.out.println("adding action: " + action);
     }
 }

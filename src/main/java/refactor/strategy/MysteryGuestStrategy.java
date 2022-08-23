@@ -14,16 +14,24 @@ import com.intellij.psi.PsiNewExpression;
 import com.intellij.psi.PsiStatement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
+import com.intellij.refactoring.extractclass.ExtractClassProcessor;
 import refactor.IRefactor;
+import stats.Action;
+import stats.Stats;
+import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.testSmellInfo.mysteryGuest.MethodWithMysteryGuest;
 import testSmellDetection.testSmellInfo.mysteryGuest.MysteryGuestInfo;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MysteryGuestStrategy implements IRefactor {
     private MysteryGuestInfo mysteryGuestInfo;
     private MethodWithMysteryGuest methodWithMysteryGuest;
     private Project project;
+
+    private ExtractClassProcessor processor;
+
     private Editor editor;
 
     public MysteryGuestStrategy(MethodWithMysteryGuest methodWithMysteryGuest, Project project, MysteryGuestInfo mysteryGuestInfo) {
@@ -71,8 +79,6 @@ public class MysteryGuestStrategy implements IRefactor {
 //                                }
 //                            }
 //                        }
-
-
                     });
                 });
             } catch (Exception e) {
@@ -83,6 +89,22 @@ public class MysteryGuestStrategy implements IRefactor {
 
     @Override
     public void doAfterRefactor() {
+        PsiClassBean originalClassBean = mysteryGuestInfo.getClassWithSmell();
+        getActionForStats(originalClassBean);
+    }
 
+    public void getActionForStats(PsiClassBean psiClassBean){
+        Action action = new Action();
+        action.setClassName(psiClassBean.getPsiClass().getName());
+        action.setMethodName(methodWithMysteryGuest.getMethodWithMysteryGuest().getPsiMethod().getName());
+        action.setPackageName(psiClassBean.getPsiPackage().getName());
+        action.setSmellKind(Action.SmellKindEnum.MYSTERY_GUEST);
+        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setTimestamp(new Date().getTime());
+        action.setActionCanceled(false);
+        action.setActionDone(true);
+
+        Stats.getInstance().getLastSession().getActions().add(action);
+        System.out.println("adding action:" + action);
     }
 }

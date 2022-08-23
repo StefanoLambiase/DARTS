@@ -63,8 +63,13 @@ public class TextualDetectionAction extends AnAction {
         this.lastSession.setNOfLOC(lackOfCohesionInfos.size());
 
         ArrayList<HardCodedTestDataInfo> hardCodedTestDataInfos = detector.executeDetectionForHardCodedTestData();
+        this.lastSession.setNOfHCTD(hardCodedTestDataInfos.size());
+
         ArrayList<MysteryGuestInfo> mysteryGuestInfos = detector.executeDetectionForMysteryGuest();
+        this.lastSession.setNOfMG(mysteryGuestInfos.size());
+
         ArrayList<TestCodeDuplicationInfo> testCodeDuplicationInfos = detector.executeDetectionForTestCodeDuplication();
+        this.lastSession.setNOfTCD(testCodeDuplicationInfos.size());
 
         System.out.println("\n\n ########################### ACTION - DETECTOR TESTUALE: risultato dell'analisi. ###########################\n\n");
         for(GeneralFixtureInfo info : generalFixtureInfos){
@@ -77,15 +82,13 @@ public class TextualDetectionAction extends AnAction {
             System.out.println("\n   LACK OF COHESION: " + info.toString());
         }
         for(HardCodedTestDataInfo info : hardCodedTestDataInfos){
-            System.out.println("\n   HARD CODED TEST DATA: " + info.toString());
+            System.out.print("\n HARD CODED TEST DATA: " + info.toString());
         }
-
         for(MysteryGuestInfo info : mysteryGuestInfos){
             System.out.println("\n   MYSTERY GUEST: " + info.toString());
         }
-
-        for(TestCodeDuplicationInfo info : testCodeDuplicationInfos ){
-            System.out.println("\n   TEST CODE DUPLICATION: " + info.toString());
+        for(TestCodeDuplicationInfo info : testCodeDuplicationInfos){
+            System.out.println("\n TEST CODE DUPLICATION: " + info.toString());
         }
 
         long endTime = System.currentTimeMillis();

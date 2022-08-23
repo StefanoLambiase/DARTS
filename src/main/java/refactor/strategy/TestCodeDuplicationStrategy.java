@@ -11,10 +11,13 @@ import com.intellij.psi.PsiFile;
 import com.intellij.refactoring.extractMethod.ExtractMethodHandler;
 import com.intellij.refactoring.extractMethod.PrepareFailedException;
 import refactor.IRefactor;
+import stats.Action;
+import stats.Stats;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.testSmellInfo.testCodeDuplication.MethodWithTestCodeDuplication;
 import testSmellDetection.testSmellInfo.testCodeDuplication.TestCodeDuplicationInfo;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 public class TestCodeDuplicationStrategy implements IRefactor {
     private TestCodeDuplicationInfo testCodeDuplicationInfo;
@@ -59,11 +62,31 @@ public class TestCodeDuplicationStrategy implements IRefactor {
             for (PsiElement findElement : elementsToMove) System.out.println(findElement.getText());
             ExtractMethodHandler.invokeOnElements(project, editor, file, elementsToMove);
         }
-
     }
 
     @Override
     public void doAfterRefactor() {
+        PsiClassBean originalClassBean = testCodeDuplicationInfo.getClassWithSmell();
+        getActionForStats(originalClassBean);
+    }
 
+    /**
+     * Method that uses getter and setter's Action class, in order to obtain from psiClassBean
+     * the result of the General Fixture smell that we ne need for Stats. Finally adding the action to the session.
+     * @param psiClassBean
+     */
+    public void getActionForStats(PsiClassBean psiClassBean){
+        Action action = new Action();
+        action.setClassName(psiClassBean.getPsiClass().getName());
+        action.setMethodName(methodWithTestCodeDuplication.getMethodWithTestCodeDuplication().getPsiMethod().getName());
+        action.setPackageName(psiClassBean.getPsiPackage().getName());
+        action.setSmellKind(Action.SmellKindEnum.TEST_CODE_DUPLICATION);
+        action.setActionKind(Action.ActionKindEnum.REFACTORING_PREVIEW);
+        action.setTimestamp(new Date().getTime());
+        action.setActionCanceled(false);
+        action.setActionDone(true);
+
+        Stats.getInstance().getLastSession().getActions().add(action);
+        System.out.println("adding action:" + action);
     }
 }

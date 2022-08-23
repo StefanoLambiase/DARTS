@@ -13,6 +13,14 @@ public class MysteryGuestInfo extends TestSmellInfo {
         this.methodsThatCauseMysteryGuest = methodsThatCauseMysteryGuest;
     }
 
+    public PsiClassBean getClassWithSmell() {
+        return classWithSmell;
+    }
+
+    public void setClassWithSmell(PsiClassBean classWithSmell) {
+        this.classWithSmell = classWithSmell;
+    }
+
     public ArrayList<MethodWithMysteryGuest> getMethodsThatCauseMysteryGuest() {
         return methodsThatCauseMysteryGuest;
     }
