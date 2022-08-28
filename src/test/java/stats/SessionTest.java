@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import static org.mockito.Mockito.*;
 
@@ -342,7 +343,7 @@ class SessionTest {
     public void totalClasses_Test(){
         int nOfTotalClasses = 1;
         session.setnOfTotalClasses(nOfTotalClasses);
-        assertEquals(1, session.getnOfTotalClasses());
+        assertEquals(nOfTotalClasses, session.getnOfTotalClasses());
     }
 
     /**
@@ -352,7 +353,7 @@ class SessionTest {
     public void totalMethod_Test(){
         int nOfTotalMethod = 1;
         session.setnOfTotalMethod(nOfTotalMethod);
-        assertEquals(1, session.getnOfTotalMethod());
+        assertEquals(nOfTotalMethod, session.getnOfTotalMethod());
     }
 
     /**
@@ -362,7 +363,7 @@ class SessionTest {
     public void nOfET_Test(){
         int nOfEt = 1;
         session.setNOfET(nOfEt);
-        assertEquals(1, session.getNOfET());
+        assertEquals(nOfEt, session.getNOfET());
     }
 
     /**
@@ -372,7 +373,7 @@ class SessionTest {
     public void nOfGF_Test(){
         int nOfGF = 1;
         session.setNOfGF(nOfGF);
-        assertEquals(1, session.getNOfGF());
+        assertEquals(nOfGF, session.getNOfGF());
     }
 
     /**
@@ -382,7 +383,7 @@ class SessionTest {
     public void nOfLOC_Test(){
         int nOfLOC = 1;
         session.setNOfLOC(nOfLOC);
-        assertEquals(1, session.getNOfLOC());
+        assertEquals(nOfLOC, session.getNOfLOC());
     }
 
     /**
@@ -392,7 +393,7 @@ class SessionTest {
     public void nOfHCTD_Test(){
         int nOfHCTD = 1;
         session.setNOfHCTD(nOfHCTD);
-        assertEquals(1, session.getNOfHCTD());
+        assertEquals(nOfHCTD, session.getNOfHCTD());
     }
 
     /**
@@ -402,7 +403,7 @@ class SessionTest {
     public void nOfMG_Test(){
         int nOfMG = 1;
         session.setNOfMG(nOfMG);
-        assertEquals(1, session.getNOfMG());
+        assertEquals(nOfMG, session.getNOfMG());
     }
 
     /**
@@ -412,7 +413,30 @@ class SessionTest {
     public void nOfTCD_Test(){
         int nOfTCD = 1;
         session.setNOfTCD(nOfTCD);
-        assertEquals(1, session.getNOfTCD());
+        assertEquals(nOfTCD, session.getNOfTCD());
+    }
+
+    /**
+     * TC_14_0: return fakeKind
+     */
+    @Test
+    public void kind_Test(){
+        String fakeKind = "fakeKind";
+        session.setKind(fakeKind);
+        assertEquals(fakeKind, session.getKind());
+    }
+
+    /**
+     * TC_15_0: return difference between endTime and startTime
+     */
+    @Test
+    public void executionTime_Test(){
+        long startTime = new Date().getTime();
+        long endTime = new Date().getTime();
+        long expectedResult = endTime - startTime;
+        session.setStartTime(startTime);
+        session.setEndTime(endTime);
+        assertEquals(expectedResult, session.getExecutionTime());
     }
 
     @Test
