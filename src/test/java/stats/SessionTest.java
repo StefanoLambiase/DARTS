@@ -174,7 +174,7 @@ class SessionTest {
     }
 
     /**
-     * TC_1_0 : return -1
+     * TC_3_0 : return -1
      */
     @Test
     public void densityHCTD_ZeroTotalClasses_Test(){
@@ -182,7 +182,7 @@ class SessionTest {
         assertEquals(-1, session.densityHCTD());
     }
     /**
-     * TC_1_1 : return -1
+     * TC_3_1 : return -1
      */
     @Test
     public void densityHCTD_ZeroHCTD_Test(){
@@ -191,7 +191,7 @@ class SessionTest {
         assertEquals(0, session.densityHCTD());
     }
     /**
-     * TC_1_2 : return -1
+     * TC_3_2 : return -1
      */
     @Test
     public void densityHCTD_OneToHCTD_Test(){
@@ -200,7 +200,7 @@ class SessionTest {
         assertEquals(1/1, session.densityHCTD());
     }
     /**
-     * TC_1_3 : return -1
+     * TC_3_3 : return -1
      */
     @Test
     public void densityHCTD_TwoToOne(){
@@ -209,7 +209,7 @@ class SessionTest {
         assertEquals((float)2/1, session.densityHCTD());
     }
     /**
-     * TC_1_4 : return -1
+     * TC_3_4 : return -1
      */
     @Test
     public void densityHCTD_OneToTwo_Test(){
@@ -218,7 +218,7 @@ class SessionTest {
         assertEquals((float)1/2, session.densityHCTD());
     }
     /**
-     * TC_1_5 : return -1
+     * TC_3_5 : return -1
      */
     @Test
     public void densityHCTD_TwoToTwo_Test(){
@@ -228,7 +228,7 @@ class SessionTest {
     }
 
     /**
-     * TC_1_0 : return -1
+     * TC_4_0 : return -1
      */
     @Test
     public void densityMG_ZeroTotalClasses_Test(){
@@ -236,7 +236,7 @@ class SessionTest {
         assertEquals(-1, session.densityMG());
     }
     /**
-     * TC_1_1 : return -1
+     * TC_4_1 : return -1
      */
     @Test
     public void densityMG_ZeroMG_Test(){
@@ -245,7 +245,7 @@ class SessionTest {
         assertEquals(0, session.densityMG());
     }
     /**
-     * TC_1_2 : return -1
+     * TC_4_2 : return -1
      */
     @Test
     public void densityMG_OneToOne_Test(){
@@ -254,7 +254,7 @@ class SessionTest {
         assertEquals(1/1, session.densityMG());
     }
     /**
-     * TC_1_3 : return -1
+     * TC_4_3 : return -1
      */
     @Test
     public void densityMG_TwoToOne(){
@@ -263,7 +263,7 @@ class SessionTest {
         assertEquals((float)2/1, session.densityMG());
     }
     /**
-     * TC_1_4 : return -1
+     * TC_4_4 : return -1
      */
     @Test
     public void densityMG_OneToTwo_Test(){
@@ -272,7 +272,7 @@ class SessionTest {
         assertEquals((float)1/2, session.densityMG());
     }
     /**
-     * TC_1_5 : return -1
+     * TC_4_5 : return -1
      */
     @Test
     public void densityMG_TwoToTwo_Test(){
@@ -282,7 +282,7 @@ class SessionTest {
     }
 
     /**
-     * TC_1_0 : return -1
+     * TC_5_0 : return -1
      */
     @Test
     public void densityTCD_ZeroTotalClasses_Test(){
@@ -290,7 +290,7 @@ class SessionTest {
         assertEquals(-1, session.densityTCD());
     }
     /**
-     * TC_1_1 : return -1
+     * TC_5_1 : return -1
      */
     @Test
     public void densityTCD_ZeroTCD_Test(){
@@ -299,7 +299,7 @@ class SessionTest {
         assertEquals(0, session.densityTCD());
     }
     /**
-     * TC_1_2 : return -1
+     * TC_5_2 : return -1
      */
     @Test
     public void densityTCD_OneToOne_Test(){
@@ -308,7 +308,7 @@ class SessionTest {
         assertEquals(1/1, session.densityTCD());
     }
     /**
-     * TC_1_3 : return -1
+     * TC_5_3 : return -1
      */
     @Test
     public void densityTCD_TwoToOne(){
@@ -317,7 +317,7 @@ class SessionTest {
         assertEquals((float)2/1, session.densityTCD());
     }
     /**
-     * TC_1_4 : return -1
+     * TC_5_4 : return -1
      */
     @Test
     public void densityTCD_OneToTwo_Test(){
@@ -326,7 +326,7 @@ class SessionTest {
         assertEquals((float)1/2, session.densityTCD());
     }
     /**
-     * TC_1_5 : return -1
+     * TC_5_5 : return -1
      */
     @Test
     public void densityTCD_TwoToTwo_Test(){
@@ -334,6 +334,87 @@ class SessionTest {
         session.setnOfTotalClasses(2);
         assertEquals((float)2/2, session.densityTCD());
     }
+
+    /**
+     * TC_6_0: return 1
+     */
+    @Test
+    public void totalClasses_Test(){
+        int nOfTotalClasses = 1;
+        session.setnOfTotalClasses(nOfTotalClasses);
+        assertEquals(1, session.getnOfTotalClasses());
+    }
+
+    /**
+     * TC_7_0: return 1
+     */
+    @Test
+    public void totalMethod_Test(){
+        int nOfTotalMethod = 1;
+        session.setnOfTotalMethod(nOfTotalMethod);
+        assertEquals(1, session.getnOfTotalMethod());
+    }
+
+    /**
+     * TC_8_0: return 1
+     */
+    @Test
+    public void nOfET_Test(){
+        int nOfEt = 1;
+        session.setNOfET(nOfEt);
+        assertEquals(1, session.getNOfET());
+    }
+
+    /**
+     * TC_9_0: return 1
+     */
+    @Test
+    public void nOfGF_Test(){
+        int nOfGF = 1;
+        session.setNOfGF(nOfGF);
+        assertEquals(1, session.getNOfGF());
+    }
+
+    /**
+     * TC_10_0: return 1
+     */
+    @Test
+    public void nOfLOC_Test(){
+        int nOfLOC = 1;
+        session.setNOfLOC(nOfLOC);
+        assertEquals(1, session.getNOfLOC());
+    }
+
+    /**
+     * TC_11_0: return 1
+     */
+    @Test
+    public void nOfHCTD_Test(){
+        int nOfHCTD = 1;
+        session.setNOfHCTD(nOfHCTD);
+        assertEquals(1, session.getNOfHCTD());
+    }
+
+    /**
+     * TC_12_0: return 1
+     */
+    @Test
+    public void nOfMG_Test(){
+        int nOfMG = 1;
+        session.setNOfMG(nOfMG);
+        assertEquals(1, session.getNOfMG());
+    }
+
+    /**
+     * TC_13_0: return 1
+     */
+    @Test
+    public void nOfTCD_Test(){
+        int nOfTCD = 1;
+        session.setNOfTCD(nOfTCD);
+        assertEquals(1, session.getNOfTCD());
+    }
+
     @Test
     public void getActionUnitOneElementTest(){
         Session sessionMock = Mockito.mock(Session.class);
