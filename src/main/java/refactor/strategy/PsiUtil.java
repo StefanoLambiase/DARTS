@@ -1,5 +1,11 @@
 package refactor.strategy;
 
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.JavaPsiFacade;
+import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiMethod;
+import com.intellij.psi.search.GlobalSearchScope;
+
 public class PsiUtil {
 
     /**

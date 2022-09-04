@@ -1,6 +1,6 @@
 package testSmellDetection.structuralRules;
 
-import com.intellij.psi.PsiMethod;
+import com.intellij.psi.*;
 import testSmellDetection.bean.PsiClassBean;
 import testSmellDetection.bean.PsiMethodBean;
 import utility.PsiTestSmellUtilities;

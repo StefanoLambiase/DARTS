@@ -17,6 +17,13 @@ public class Session {
   private int nOfGF = 0;
   private int nOfET = 0;
   private int nOfLOC = 0;
+
+  private int nOfMG = 0;
+
+  private int nOfHCTD = 0;
+
+  private int nOfTCD = 0;
+
   private int nOfTotalClasses = 0;
   private int nOfTotalMethods = 0;
   private String kind;
@@ -111,6 +118,30 @@ public class Session {
     this.nOfLOC = nOfLOC;
   }
 
+  public int getNOfHCTD() {
+    return nOfHCTD;
+  }
+
+  public void setNOfHCTD(int nOfHCTD){
+    this.nOfHCTD = nOfHCTD;
+  }
+
+  public int getNOfMG() {
+    return nOfMG;
+  }
+
+  public void setNOfMG(int nOfMG){
+    this.nOfMG = nOfMG;
+  }
+
+  public int getNOfTCD(){
+    return nOfTCD;
+  }
+
+  public void setNOfTCD(int nOfTCD) {
+    this.nOfTCD = nOfTCD;
+  }
+
   public float densityET(){
     if(this.getnOfTotalMethod() == 0){
       return -1;
@@ -145,6 +176,45 @@ public class Session {
         float res = (float)getNOfGF()/(float)getnOfTotalClasses();
         return res;
       }else{
+        return 0;
+      }
+    }
+  }
+
+  public float densityMG() {
+    if(getnOfTotalClasses() == 0){
+      return -1;
+    } else {
+      if (getNOfMG() != 0) {
+        float res = (float) getNOfMG() / (float) getnOfTotalClasses();
+        return res;
+      } else {
+        return 0;
+      }
+    }
+  }
+
+  public float densityHCTD() {
+    if(getnOfTotalClasses() == 0){
+      return -1;
+    } else {
+      if (getNOfHCTD() != 0) {
+        float res = (float) getNOfHCTD() / (float) getnOfTotalClasses();
+        return res;
+      } else {
+        return 0;
+      }
+    }
+  }
+
+  public float densityTCD() {
+    if(getnOfTotalClasses() == 0){
+      return -1;
+    } else {
+      if (getNOfTCD() != 0) {
+        float res = (float) getNOfTCD() / (float) getnOfTotalClasses();
+        return res;
+      } else {
         return 0;
       }
     }
